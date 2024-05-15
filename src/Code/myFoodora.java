@@ -1,25 +1,20 @@
 package Code;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 
 public class myFoodora {
-	public static void main (String [] args) throws IOException {
-		boolean loop = true;
-		// Enter data using BufferReader
-		while (loop) {
-	        BufferedReader reader = new BufferedReader(
-	            new InputStreamReader(System.in));
-	
-	        // Reading data using readLine
-	        String name = reader.readLine();
-	        if(name.equals("Exit")||name.equals("exit")){
-	        	loop = false;
-	        }
-	        else {
-	        	// Printing the read line
-	        	System.out.println(name);
-	        }
-		}
+	public static void main (String [] args) {
+		 // check if length of args array is
+        // greater than 0
+        if (args.length > 0) {
+            System.out.println(
+                "The command line arguments are:");
+
+            // iterating the args array and printing
+            // the command line arguments
+            for (String val : args)
+                System.out.println(val);
+        }
+        else
+            System.out.println("No command line "
+                               + "arguments found.");
 	}
 }
