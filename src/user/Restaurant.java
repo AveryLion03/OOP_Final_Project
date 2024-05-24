@@ -19,6 +19,30 @@ public class Restaurant extends User {
         this.visited = visited;
         this.available = available;
     }
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Customer[] getVisited() {
+		return visited;
+	}
+
+	public void setVisited(Customer[] visited) {
+		this.visited = visited;
+	}
+
+	public Courier[] getAvailable() {
+		return available;
+	}
+
+	public void setAvailable(Courier[] available) {
+		this.available = available;
+	}
    
     
     /*
