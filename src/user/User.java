@@ -9,6 +9,7 @@ public class User {
     
     
     //Adjust to number of users that are automatically loaded. if three users are automatically loaded, counter should start at 4
+    //theoretically we´d have a database with users, count the entries and then add 1
     private static int counter=0;
 
     // Constructor
@@ -21,7 +22,7 @@ public class User {
     }
     
     //getters and setters for everything EXCEPT:
-    //no get password because noone should have access to it
+    //no get password because no one should have access to it?
     //no set ID because it is assigned automatically through the counter
 
 	public String getUsername() {
@@ -50,7 +51,7 @@ public class User {
     
     
 /*
- * *getters and setter?
+ * 
  *login()
 
 *register()

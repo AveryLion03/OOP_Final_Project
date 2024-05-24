@@ -11,13 +11,35 @@ public class Person extends User {
         this.name = name;
         this.surname = surname;
     }
+    
+    
 
-    // get  full name
-    public String getName() {
+    public String getSurname() {
+		return surname;
+	}
+
+
+
+	public void setSurname(String surname) {
+		this.surname = surname;
+	}
+
+
+
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	public String getName() {
+		return name;
+	}
+
+
+
+	// get  full name
+    public String getFullName() {
         return name + " " + surname;
     }
     
-    /*
-     * other methods- getters, setters?
-     */
+    //no other methods?
 }

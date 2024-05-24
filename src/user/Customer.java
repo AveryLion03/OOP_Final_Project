@@ -48,9 +48,20 @@ public class Customer extends Person {
 		return fidelity;
 	}
 
+	//make sure that user only enters one of the valid options-- this feels like bad coding
 	public void setFidelity(String fidelity) {
-		this.fidelity = fidelity;
+	    try {
+	        if (fidelity.equals("none") || fidelity.equals("basic") || fidelity.equals("point") || fidelity.equals("lottery")) {
+	            this.fidelity = fidelity;
+	        } else {
+	            throw new IllegalArgumentException("Invalid fidelity value. Options are none,basic, point or lottery ");
+	        }
+	    } catch (IllegalArgumentException e) {
+	        System.out.println(e.getMessage());
+	        
+	    }
 	}
+
 
 	public int getPoints() {
 		return points;
