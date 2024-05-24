@@ -1,17 +1,21 @@
 package Code;
+import java.util.ArrayList;
 import java.util.Scanner;
 import user.*;
 import food.*;
 
 public class myFoodora {
 	protected Restaurant avail [];
-	private User list [];
-	private static int userLoggedIn;
+	protected Courier drivers [];
+	protected Customer list [];
+	protected static int userLoggedIn;
 	
-	public myFoodora(Restaurant[] avail, User[] list, int userLog) {
+	@SuppressWarnings("static-access")
+	public myFoodora(Restaurant[] avail, Courier [] driv, Customer[] list, int userLog) {
 		super();
 		this.avail = avail;
 		this.list = list;
+		this.drivers = driv;
 		this.userLoggedIn = userLog;
 	}
 
@@ -21,20 +25,20 @@ public class myFoodora {
 	protected static void setUserLoggedIn(int val) {
 		userLoggedIn = val;
 	}
-
-	public Restaurant[] getAvail() {
+	//Only available for managers -> Prints out list of customers
+	protected Restaurant[] showRestaurants() {
 		return avail;
 	}
 
-	protected void setAvail(Restaurant[] avail) {
+	protected void setRestaurants(Restaurant[] avail) {
 		this.avail = avail;
 	}
-
-	public User[] getList() {
-		return list;
+	//Only available for managers -> Prints out list of customers
+	protected void showCustomers() {
+		//return list;
 	}
 
-	protected void setList(User[] list) {
+	protected void setCustomerList(Customer[] list) {
 		this.list = list;
 	}
 	public static void printCommands () {
@@ -70,20 +74,43 @@ public class myFoodora {
 		}
 	}
 
+	
+	//Process Commands?
+	public static void processCommands(String lines) {
+		
+	}
 	public static void main (String [] args) {
 		 // check if length of args array is
+		
+		//Run initialization program:
+		Scanner scanner = new Scanner("startUp.txt");
+	    ArrayList<String> lines = new ArrayList<>(); // just something to hold the lines of the text file seperately
+	    while (scanner.hasNextLine()){
+	        lines.add(scanner.nextLine());          // read all lines of the text file
+	    }
+	    for (int i = 0; i< lines.size(); i++) {
+	    	
+	    }
+
         // greater than 0
-		String use;
+		boolean exit = false;
 		try (Scanner inputLine = new Scanner(System.in)) {
-			while(true) {
-				use = inputLine.nextLine();
-				use = use.toLowerCase();
-				if(use.equals("help")) {
+			while(!exit) {
+				//Read first command -> decide what to do from here
+				String s = (inputLine.next()).toString();
+				s = s.toLowerCase();
+				if(s.equals("help")) {
 					printCommands();
 				}
-				else {
-					setUserLoggedIn(Integer.valueOf(use));
-					System.out.print(getUserLoggedIn());
+				else if(s.equals("login")) {
+					//Compare to user list -> username and password
+					setUserLoggedIn(inputLine.nextInt());
+					System.out.println(getUserLoggedIn());
+				}
+				else if (s.equals("logout")){
+					setUserLoggedIn(0);
+					//System.out.println(getUserLoggedIn());
+					//printCommands();
 				}
 			}
 		}

@@ -10,12 +10,12 @@ public class User {
     
     //Adjust to number of users that are automatically loaded. if three users are automatically loaded, counter should start at 4
     //theoretically we´d have a database with users, count the entries and then add 1
-    private static int counter=0;
+    private static int counter = 0;
 
     // Constructor
     public User(int ID, String username, String password, String userType) {
-        User.counter ++;
-    	this.ID = ID;
+        //User.counter ++;
+    	this.ID = User.counter++;
         this.username = username;
         this.password = password;
         this.userType = userType;
