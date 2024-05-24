@@ -6,7 +6,7 @@ public class Manager extends Person {
 	
 	
 
-	//Constructer
+	//Constructor
 	public Manager(int ID, String username, String password, String userType, String name, String surname) {
 		super(ID, username, password, userType, name, surname);
 		
