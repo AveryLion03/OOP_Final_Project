@@ -1,12 +1,10 @@
-Users
-Suzie, Lee, suzlee, 12345, 12.34, 56.78, suzie.lee@example.com, "+1(234)567-8901", None
-John, Cena, jCena, abc123, 23.45, 67.89, john.cena@example.com, "+1(345)678-9012", None
-Mike, Johnson, MJonTop, MJ23GOAT, 34.56, 78.90, mike.johnson@example.com, "+1(456)789-0123", None
-John, Smith, johnsmith1, password123, 45.67, 89.01, john.smith@example.com, "+1(567)890-1234", None
-Jane, Doe, janedoe2, qwerty456, 56.78, 90.12, jane.doe@example.com, "+1(678)901-2345", None
-Robert, Brown, robertbrown3, pass7890, 67.89, 01.23, robert.brown@example.com, "+1(789)012-3456", None
-Emily, Davis, emilydavis4, securepass1, 78.90, 12.34, emily.davis@example.com, "+1(890)123-4567", None
-
-Managers
-Michael Johnson michj5 abcdef123
-Sarah Wilson sarahW6 zxcvbn456
+suzlee, 12345, Customer, Suzie, Lee, suzie.lee@example.com, "+1(234)567-8901", 12.34, 56.78
+jCena, abc123, Customer, John, Cena, john.cena@example.com, "+1(345)678-9012", 23.45, 67.89
+MJonTop, MJ23GOAT, Customer, Mike, Johnson, mike.johnson@example.com, "+1(456)789-0123", 34.56, 78.90
+johnsmith1, password123, Customer, John, Smith, john.smith@example.com, "+1(567)890-1234", 45.67, 89.01
+janedoe2, qwerty456, Customer, Jane, Doe, jane.doe@example.com, "+1(678)901-2345", 56.78, 90.12
+robertbrown3, pass7890, Customer, Robert, Brown, robert.brown@example.com, "+1(789)012-3456", 67.89, 01.23
+emilydavis4, securepass1, Customer, Emily, Davis, emily.davis@example.com, "+1(890)123-4567", 78.90, 12.34
+michj5, abcdef123, Manager, Michael, Johnson
+sarahW6, zxcvbn456, Manager, Sarah, Wilson
+end

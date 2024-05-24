@@ -11,8 +11,8 @@ public class Customer extends Person {
     protected int points;
 
     // Constructor
-    public Customer(int ID, String username, String password, String userType, String name, String surname, String email, String cellNumber, Location loc) {
-        super(ID, username, password, userType, name, surname); // Call to the superclass constructor
+    public Customer(String username, String password, String userType, String name, String surname, String email, String cellNumber, Location loc) {
+        super(username, password, userType, name, surname); // Call to the superclass constructor
         this.email = email;
         this.cellNumber = cellNumber;
         this.loc = loc;

@@ -6,8 +6,8 @@ public class Person extends User {
     protected String surname;
 
     // Constructor
-    public Person(int ID, String username, String password, String userType, String name, String surname) {
-        super(ID, username, password, userType); // Call to the superclass constructor
+    public Person(String username, String password, String userType, String name, String surname) {
+        super(username, password, userType); // Call to the superclass constructor
         this.name = name;
         this.surname = surname;
     }

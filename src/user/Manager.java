@@ -7,8 +7,8 @@ public class Manager extends Person {
 	
 
 	//Constructor
-	public Manager(int ID, String username, String password, String userType, String name, String surname) {
-		super(ID, username, password, userType, name, surname);
+	public Manager(String username, String password, String userType, String name, String surname) {
+		super(username, password, userType, name, surname);
 		
 	}
 

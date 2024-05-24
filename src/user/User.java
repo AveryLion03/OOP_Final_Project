@@ -13,7 +13,7 @@ public class User {
     private static int counter = 0;
 
     // Constructor
-    public User(int ID, String username, String password, String userType) {
+    public User(String username, String password, String userType) {
         //User.counter ++;
     	this.ID = User.counter++;
         this.username = username;
