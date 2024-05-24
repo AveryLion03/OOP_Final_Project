@@ -13,7 +13,7 @@ public class myFoodora {
     protected static ArrayList<Customer> cust = new ArrayList<>();
     protected static ArrayList<Manager> manager = new ArrayList<>();
     private static Boolean run = true;
-    protected static int userLoggedIn;
+    protected static int userLoggedIn = 0;
 	
 	@SuppressWarnings("static-access")
 	public myFoodora(ArrayList<Restaurant> restaurants, ArrayList<Courier> driv, ArrayList<Customer> list, ArrayList<Manager> manag, int userLog) {
@@ -142,22 +142,36 @@ public class myFoodora {
 				exitLoop();
 				return;
 			}
-			//Login Function -> Need to be able to handle incorrect format -> i.e., respond with how to correctly login
+			// login <username> <password>
 			else if (elements[0].toLowerCase().equals("login")) {
-			    // login <username> <password>
+				if(getUserLoggedIn() != 0) {
+					System.out.println("User already logged in. Logout first");
+					return;
+				}
+				if(elements.length < 3 || elements.length > 3) {
+					System.out.println("Invalid Login Format -> login <username> <password>");
+					return;
+				}
 				for(int i = 0; i < myFoodora.manager.size(); i++) {
 					if((elements[1].trim()).equals(myFoodora.manager.get(i).getUsername()) && (elements[2].trim()).equals(myFoodora.manager.get(i).getPassword())) {
 						System.out.printf("Login Successful. Welcome, %s%n", myFoodora.manager.get(i).getFullName());
+						setUserLoggedIn(1);
 						break;
 					}
 				}
 				
 			}
+			// logout <>
 			else if (elements[0].toLowerCase().equals("logout")) {
-			    // logout <>
+				if(getUserLoggedIn() == 0) System.out.println("No Users Logged In");
+				else {
+					setUserLoggedIn(0);
+					System.out.println("Logout Successful");
+				}
 			}
+			// registerRestaurant <name> <address> <username> <password>
 			else if (elements[0].toLowerCase().equals("registerrestaurant")) {
-			    // registerRestaurant <name> <address> <username> <password>
+				
 			}
 			else if (elements[0].toLowerCase().equals("registercustomer")) {
 			    // registerCustomer <firstName> <lastName> <username> <address> <password>
