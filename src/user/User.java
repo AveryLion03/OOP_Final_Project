@@ -15,7 +15,7 @@ public class User {
     // Constructor
     public User(String username, String password, String userType) {
         //User.counter ++;
-    	this.ID = User.counter++;
+    	this.ID = ++User.counter;
         this.username = username;
         this.password = password;
         this.userType = userType;
@@ -47,6 +47,9 @@ public class User {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	public String getPassword() {
+		return password;
 	}
     
     

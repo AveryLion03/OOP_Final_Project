@@ -5,6 +5,12 @@ johnsmith1, password123, Customer, John, Smith, john.smith@example.com, "+1(567)
 janedoe2, qwerty456, Customer, Jane, Doe, jane.doe@example.com, "+1(678)901-2345", 56.78, 90.12
 robertbrown3, pass7890, Customer, Robert, Brown, robert.brown@example.com, "+1(789)012-3456", 67.89, 01.23
 emilydavis4, securepass1, Customer, Emily, Davis, emily.davis@example.com, "+1(890)123-4567", 78.90, 12.34
-michj5, abcdef123, Manager, Michael, Johnson
-sarahW6, zxcvbn456, Manager, Sarah, Wilson
-end
+ceo, 123456789, Manager, Michael, Johnson
+noob, abcdefg, Manager, Sarah, Wilson
+burgerpalace_admin, burger123, Restaurant, Burger Palace, 40.7128, -74.0060, None, None
+pizzahaven_admin, pizza456, Restaurant, Pizza Haven, 34.0522, -118.2437, None, None
+tacojunction_admin, taco789, Restaurant, Taco Junction, 51.5074, -0.1278, None, None
+sushi_admin, sushipass, Restaurant, Sushi Harbor, 35.6895, 139.6917, None, None
+pastaparadise_admin, pasta999, Restaurant, Pasta Paradise, 41.9028, 12.4964, None, None
+courier_john, pass123, Courier, John, Doe, 123456789, 0, true, 40.7128, -74.0060
+courier_emily, secret456, Courier, Emily, Smith, 987654321, 0, false, 34.0522, -118.2437

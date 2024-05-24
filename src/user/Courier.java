@@ -4,15 +4,15 @@ import Code.Location;
 
 public class Courier extends Person {
     // Protected member variables specific to Courier
-    protected int phoneNumber;
+    protected String phoneNumber;
     protected int orderCount;
     protected boolean onDuty;
     protected Location loc;
     //Order ID or somethign to assign orert to courier so they can accept
 
     // Constructor
-    public Courier(int ID, String username, String password, String userType, String name, String surname, int phoneNumber, int orderCount, boolean onDuty, Location loc) {
-        super(ID, username, password, userType, name, surname); // Call to the superclass constructor
+    public Courier(String username, String password, String userType, String name, String surname, String phoneNumber, int orderCount, boolean onDuty, Location loc) {
+        super(username, password, userType, name, surname); // Call to the superclass constructor
         this.phoneNumber = phoneNumber;
         this.orderCount = orderCount;
         this.onDuty = onDuty;
@@ -22,11 +22,11 @@ public class Courier extends Person {
     
     //All gestters and setters except set order count?
 
-	public int getPhoneNumber() {
+	public String getPhoneNumber() {
 		return phoneNumber;
 	}
 
-	public void setPhoneNumber(int phoneNumber) {
+	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
 
