@@ -8,26 +8,26 @@ import Code.Location;
 public class Restaurant extends User {
 	
     // variables specific to Restaurant
-    protected String name;
     protected Location loc;
     protected ArrayList<Customer> visited = new ArrayList<>() ;
     protected ArrayList<Courier> available = new ArrayList<>();
 
     // Constructor
     public Restaurant(String username, String password, String userType, String name, Location loc) {
-        super(username, password, userType); // Call to the superclass constructor
-        this.name = name;
+        super(username, password, userType, name); // Call to the superclass constructor
         this.loc = loc;
+        /*
         this.visited = visited;
         this.available = available;
+        */
     }
-
+    @Override
 	public String getName() {
-		return name;
+		return super.getName();
 	}
-
+	@Override
 	public void setName(String name) {
-		this.name = name;
+		super.Name = name;
 	}
 
 	public ArrayList<Customer> getVisited() {

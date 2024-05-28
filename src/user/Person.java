@@ -7,7 +7,7 @@ public class Person extends User {
 
     // Constructor
     public Person(String username, String password, String userType, String name, String surname) {
-        super(username, password, userType); // Call to the superclass constructor
+        super(username, password, userType, name); // Call to the superclass constructor
         this.name = name;
         this.surname = surname;
     }
@@ -25,15 +25,15 @@ public class Person extends User {
 	}
 
 
-
+	@Override
 	public void setName(String name) {
 		this.name = name;
 	}
 	
+	@Override
 	public String getName() {
 		return name;
 	}
-
 
 
 	// get  full name

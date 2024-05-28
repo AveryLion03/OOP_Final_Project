@@ -6,6 +6,7 @@ public class User {
     protected String username;
     protected String password;
     protected String userType;
+    protected String Name;
     
     
     //Adjust to number of users that are automatically loaded. if three users are automatically loaded, counter should start at 4
@@ -13,9 +14,10 @@ public class User {
     private static int counter = 0;
 
     // Constructor
-    public User(String username, String password, String userType) {
+    public User(String username, String password, String userType, String name) {
         //User.counter ++;
     	this.ID = ++User.counter;
+    	this.Name = name;
         this.username = username;
         this.password = password;
         this.userType = userType;
@@ -27,6 +29,13 @@ public class User {
 
 	public String getUsername() {
 		return username;
+	}
+
+	public String getName() {
+		return Name;
+	}
+	public void setName(String name) {
+		this.Name = name;
 	}
 
 	public void setUsername(String username) {
