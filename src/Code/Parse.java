@@ -368,7 +368,7 @@ public class Parse {
                     System.out.println("User does not have access to this command.");
                     return;
                 }
-                /*
+                
 
                 if (elements.length != 5) {
                     System.out.println("Invalid Command. Use following format: addDishrestaurantmenu <dishName> <dishCategory> <foodCategory> <unitPrice>");
@@ -382,10 +382,10 @@ public class Parse {
                     double unitPrice = Double.parseDouble(elements[4]);
 
                     // Create the dish object
-                    //Dishes dish = new Dishes(dishName, dishCategory, foodCategory, unitPrice);
+                    Dishes dish = new Dishes(dishName, dishCategory, foodCategory, unitPrice);
 
                     // Add the dish to the restaurant's menu
-                    //getRest().getMenu().add(dish);
+                    getRest().getMenu().addDish(dish); 
 
                     System.out.println("Dish added successfully to the restaurant's menu.");
                 } catch (NumberFormatException e) {
@@ -394,7 +394,7 @@ public class Parse {
                     System.out.println("An error occurred while adding the dish to the restaurant's menu.");
                     e.printStackTrace();
                 }
-                */
+                
             }
 			
 			// createMeal <mealName>
