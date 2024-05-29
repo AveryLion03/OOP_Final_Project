@@ -52,9 +52,18 @@ public class Restaurant extends User {
     public Menu getMenu() {
         return menu;
     }
+    public void showMeal(String m) {
+    	menu.showMeal(m);
+    }
 
-    public void setMenu(Menu menu) {
-        this.menu = menu;
+    public void addToMenu(Dishes dish) {
+        this.menu.addDish(dish);;
+    }
+    public void addDishToMeal(Meal m, Dishes dish) {
+    	this.menu.addDishToMeal(m, dish);
+    }
+    public void addMeal (Meal m) {
+    	this.menu.addMeal(m);
     }
 
     // Other methods for managing dishes, meals, and special discounts can be added here

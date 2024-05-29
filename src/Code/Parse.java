@@ -23,7 +23,7 @@ public class Parse {
 		this.m = null;
 	}
 
-	public double getUserLoggedIn() {
+	public int getUserLoggedIn() {
 		return userLoggedIn;
 	}
 	// Private variables -> What user is logged in right now?
@@ -252,9 +252,21 @@ public class Parse {
             else if (elements[0].equalsIgnoreCase("logout")) {
                 if (getUserLoggedIn() == 0) {
                     System.out.println("No Users Logged In");
-                } else {
+                } else {           
+                	int temp = getUserLoggedIn();
+                	switch (temp) {
+                    case 1:
+                        setMan(null);
+                    case 2:
+                        setRest(null);
+                    case 3:
+                        setCust(null);
+                    case 4:
+                        setCour(null);
                     setUserLoggedIn(0);
                     System.out.println("Logout Successful");
+                    return;
+                	}
                 }
             }
 		
@@ -385,13 +397,13 @@ public class Parse {
 
                 // Check if dishCategory is valid
                 if (!dishCategory.equals("starter") && !dishCategory.equals("main") && !dishCategory.equals("dessert")) {
-                    System.out.println("Invalid dish category.");
+                    System.out.println("Invalid dish category. -> starter, main, or dessert");
                     return;
                 }
 
                 // Check if foodCategory is valid
                 if (!foodCategory.equals("standard") && !foodCategory.equals("vegetarian") && !foodCategory.equals("gluten-free")) {
-                    System.out.println("Invalid food category.");
+                    System.out.println("Invalid food category. -> standard, vegetarian or gluten-free");
                     return;
                 }
 
@@ -413,114 +425,205 @@ public class Parse {
                 }
             }
 
-			
 			// createMeal <mealName>
-			else if (elements[0].toLowerCase().equals("createmeal")) {
-			    
+			else if (elements[0].equalsIgnoreCase("createmeal")) {
+				if (getUserLoggedIn() != 2) {
+                    System.out.println("User does not have access to this command.");
+                    return;
+                }
+
+                if (elements.length != 2) {
+                    System.out.println("Invalid Command. Use following format: createMeal <mealName>");
+                    return;
+                }
+                Meal m = new Meal(elements[1]);
+                try {
+                    @SuppressWarnings("resource")
+					Scanner inputLine = new Scanner(System.in);
+                    System.out.println("Please input price and note if this meal is the meal of the day: <price> <mealofDay?>");
+                    String s;
+                    String[] e;
+                    while (true) {
+                        s = inputLine.nextLine().toString();
+                        e = s.split(" ");
+                        if (e.length != 2) {
+                            System.out.println("Incorrect format. Enter in the following format: <price> <mealofDay?>");
+                        } else {
+                        	if(e[1].equalsIgnoreCase("true")|| e[1].equalsIgnoreCase("false")) break;
+                        	else {
+                        		System.out.println("Incorrect format for <mealOfDay?>. Enter in the following format: true or false");
+                        	}
+                        }
+                    }
+                    for (int i = 0; i < e.length; i++) {
+                        e[i] = e[i].trim();
+                    }
+                    m.setPrice(Double.parseDouble(e[0]));
+                    m.setDealOfDay(Boolean.parseBoolean(e[1]));
+                    getRest().addMeal(m);
+                    System.out.println("Successfully added");
+                } catch (Exception e) {
+                    System.out.println("An error occurred while creating the meal.");
+                    e.printStackTrace();
+                    return;
+                }
 			}
 			
 			// addDish2Meal <dishName> <mealName>
-			else if (elements[0].toLowerCase().equals("adddish2meal")) {
-			    
+			else if (elements[0].equalsIgnoreCase("adddish2meal")) {
+				// Check if the user has the necessary access level (2)
+			    if (getUserLoggedIn() != 2) {
+			        System.out.println("User does not have access to this command.");
+			        return;
+			    }
+			    // Validate the command format
+			    if (elements.length != 3) {
+			        System.out.println("Invalid Command. Use the following format: addDish2Meal <dishName> <mealName>");
+			        return;
+			    }
+			    // Extract dish name and meal name from the command
+			    String dishName = elements[1].trim();
+			    String mealName = elements[2].trim();
+			    // Find the target meal in the available meals
+			    Meal targetMeal = null;
+			    for (Meal meal : getRest().getMenu().getAvailMeals()) {
+			        if (meal.getMealName().equalsIgnoreCase(mealName)) {
+			            targetMeal = meal;
+			            break;
+			        }
+			    }
+			    // If target meal not found, inform user and return
+			    if (targetMeal == null) {
+			        System.out.println("Unable to find listed meal. Try again with the correct name.");
+			        return;
+			    }
+			    // Find the target dish in the available dishes
+			    Dishes targetDish = null;
+			    for (Dishes dish : getRest().getMenu().getAvailDishes()) {
+			        if (dish.getDishName().equalsIgnoreCase(dishName)) {
+			            targetDish = dish;
+			            break;
+			        }
+			    }
+			    // If target dish not found, inform user and return
+			    if (targetDish == null) {
+			        System.out.println("Unable to find listed dish. Try again with the correct name.");
+			        return;
+			    }
+			    // Add dish to meal
+			    targetMeal.addDishToMeal(targetDish);
+			    System.out.println("Successfully added");
 			}
+
 			
-			// showMeal <mealName>
-			else if (elements[0].toLowerCase().equals("showmeal")) {
-			    
+			// showMeal <mealName> EDIT THIS TO INCLUDE ALL ASPECTS
+			else if (elements[0].equalsIgnoreCase("showmeal")) {
+				// Check if the user has the necessary access level (2)
+			    if (getUserLoggedIn() != 2) {
+			        System.out.println("User does not have access to this command.");
+			        return;
+			    }
+			    // Validate the command format
+			    if (elements.length != 2) {
+			        System.out.println("Invalid Command. Use the following format: showMeal <mealName>");
+			        return;
+			    }
+			    getRest().showMeal(elements[1].trim());
+			    return;
 			}
 			
 			// saveMeal <mealName>
-			else if (elements[0].toLowerCase().equals("savemeal")) {
+			else if (elements[0].equalsIgnoreCase("savemeal")) {
 			    
 			}
 			
 			// setSpecialOffer <mealName>
-			else if (elements[0].toLowerCase().equals("setspecialoffer")) {
+			else if (elements[0].equalsIgnoreCase("setspecialoffer")) {
 			    
 			}
 			
 			// removeFromSpecialOffer <mealName>
-			else if (elements[0].toLowerCase().equals("removefromspecialoffer")) {
+			else if (elements[0].equalsIgnoreCase("removefromspecialoffer")) {
 			   
 			}
 			
 			// createOrder <restaurantName> <orderName>
-			else if (elements[0].toLowerCase().equals("createorder")) {
+			else if (elements[0].equalsIgnoreCase("createorder")) {
 			    
 			}
 			
 			// addItem2Order <orderName> <itemName>
-			else if (elements[0].toLowerCase().equals("additem2order")) {
+			else if (elements[0].equalsIgnoreCase("additem2order")) {
 			    
 			}
 			
 			// endOrder <orderName> <date>
-			else if (elements[0].toLowerCase().equals("endorder")) {
+			else if (elements[0].equalsIgnoreCase("endorder")) {
 			    
 			}
 			
 			// onDuty <username>
-			else if (elements[0].toLowerCase().equals("onduty")) {
+			else if (elements[0].equalsIgnoreCase("onduty")) {
 			    
 			}
 			
 			// offDuty <username>
-			else if (elements[0].toLowerCase().equals("offduty")) {
+			else if (elements[0].equalsIgnoreCase("offduty")) {
 			    
 			}
 			
 			// findDeliverer <orderName>
-			else if (elements[0].toLowerCase().equals("finddeliverer")) {
+			else if (elements[0].equalsIgnoreCase("finddeliverer")) {
 			    
 			}
 			
 			// setDeliveryPolicy <delPolicyName>
-			else if (elements[0].toLowerCase().equals("setdeliverypolicy")) {
+			else if (elements[0].equalsIgnoreCase("setdeliverypolicy")) {
 			   
 			}
 			
 			// setProfitPolicy <ProfitPolicyName>
-			else if (elements[0].toLowerCase().equals("setprofitpolicy")) {
+			else if (elements[0].equalsIgnoreCase("setprofitpolicy")) {
 			    
 			}
 			
 			// associateCard <userName> <cardType>
-			else if (elements[0].toLowerCase().equals("associatecard")) {
+			else if (elements[0].equalsIgnoreCase("associatecard")) {
 			    
 			}
 			
 			// showCourierDeliveries <>
-			else if (elements[0].toLowerCase().equals("showcourierdeliveries")) {
+			else if (elements[0].equalsIgnoreCase("showcourierdeliveries")) {
 			    
 			}
 			
 			// showRestaurantTop <>
-			else if (elements[0].toLowerCase().equals("showrestauranttop")) {
+			else if (elements[0].equalsIgnoreCase("showrestauranttop")) {
 			    
 			}
 			
 			// showCustomers <>
-			else if (elements[0].toLowerCase().equals("showcustomers")) {
+			else if (elements[0].equalsIgnoreCase("showcustomers")) {
 			    
 			}
 			
 			// showMenuItem <restaurant-name>
-			else if (elements[0].toLowerCase().equals("showmenuitem")) {
+			else if (elements[0].equalsIgnoreCase("showmenuitem")) {
 			    
 			}
 			
 			// showTotalProfit <>
-			else if (elements[0].toLowerCase().equals("showtotalprofit")) {
+			else if (elements[0].equalsIgnoreCase("showtotalprofit")) {
 			    
 			}
 			
 			// showTotalProfit <startDate> <endDate>
-			else if (elements[0].toLowerCase().equals("showtotalprofitperiod")) {
+			else if (elements[0].equalsIgnoreCase("showtotalprofitperiod")) {
 			    
 			}
 			
 			// runTest <testScenario-file>
-			else if (elements[0].toLowerCase().equals("runtest")) {
+			else if (elements[0].equalsIgnoreCase("runtest")) {
 			    
 			}
 			
