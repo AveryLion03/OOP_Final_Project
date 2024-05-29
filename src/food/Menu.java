@@ -4,19 +4,15 @@ import java.util.ArrayList;
 
 public class Menu {
     // Variables
-	protected ArrayList<Dishes> dish = new ArrayList<>();
-	protected ArrayList<Meal> meals = new ArrayList<>();
+	protected ArrayList<Dishes> dish;
+	protected ArrayList<Meal> meals;
 
     // Constructor with parameters
-    public Menu(ArrayList<Dishes> dish, ArrayList<Meal> meal) {
-        this.dish = dish;
-        this.meals = meal;
-    }
 
     // Empty constructor
     public Menu() {
-    	this.dish = null;
-    	this.meals = null;
+    	this.dish = new ArrayList<>();
+    	this.meals = new ArrayList<>();
     }
 
 	public void addDish(Dishes dish) {

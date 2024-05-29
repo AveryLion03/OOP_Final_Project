@@ -368,24 +368,41 @@ public class Parse {
                     System.out.println("User does not have access to this command.");
                     return;
                 }
-                
 
                 if (elements.length != 5) {
                     System.out.println("Invalid Command. Use following format: addDishrestaurantmenu <dishName> <dishCategory> <foodCategory> <unitPrice>");
                     return;
                 }
 
+                // Valid options for dishCategory and foodCategory
+                String[] validDishCategories = {"starter", "main", "dessert"};
+                String[] validFoodCategories = {"standard", "vegetarian", "gluten-free"};
+
+                String dishName = elements[1];
+                String dishCategory = elements[2].toLowerCase();
+                String foodCategory = elements[3].toLowerCase();
+                double unitPrice;
+
+                // Check if dishCategory is valid
+                if (!dishCategory.equals("starter") && !dishCategory.equals("main") && !dishCategory.equals("dessert")) {
+                    System.out.println("Invalid dish category.");
+                    return;
+                }
+
+                // Check if foodCategory is valid
+                if (!foodCategory.equals("standard") && !foodCategory.equals("vegetarian") && !foodCategory.equals("gluten-free")) {
+                    System.out.println("Invalid food category.");
+                    return;
+                }
+
                 try {
-                    String dishName = elements[1];
-                    String dishCategory = elements[2];
-                    String foodCategory = elements[3];
-                    double unitPrice = Double.parseDouble(elements[4]);
+                    unitPrice = Double.parseDouble(elements[4]);
 
                     // Create the dish object
                     Dishes dish = new Dishes(dishName, dishCategory, foodCategory, unitPrice);
 
                     // Add the dish to the restaurant's menu
-                    getRest().getMenu().addDish(dish); 
+                    getRest().getMenu().addDish(dish);
 
                     System.out.println("Dish added successfully to the restaurant's menu.");
                 } catch (NumberFormatException e) {
@@ -394,8 +411,8 @@ public class Parse {
                     System.out.println("An error occurred while adding the dish to the restaurant's menu.");
                     e.printStackTrace();
                 }
-                
             }
+
 			
 			// createMeal <mealName>
 			else if (elements[0].toLowerCase().equals("createmeal")) {
