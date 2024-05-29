@@ -1,61 +1,61 @@
 package user;
 
 import java.util.ArrayList;
-
+import food.*;
 import Code.Location;
 
-
 public class Restaurant extends User {
-	
-    // variables specific to Restaurant
-    protected Location loc;
-    protected ArrayList<Customer> visited = new ArrayList<>() ;
-    protected ArrayList<Courier> available = new ArrayList<>();
+    
+    // Variables specific to Restaurant
+    private Location loc;
+    private ArrayList<Customer> visited = new ArrayList<>();
+    private ArrayList<Courier> available = new ArrayList<>();
+    private Menu menu = new Menu(); // Initialize with an empty menu
 
     // Constructor
     public Restaurant(String username, String password, String userType, String name, Location loc) {
-        super(username, password, userType, name); // Call to the superclass constructor
+        super(username, password, userType, name);
         this.loc = loc;
-        /*
-        this.visited = visited;
-        this.available = available;
-        */
     }
-    @Override
-	public String getName() {
-		return super.getName();
-	}
-	@Override
-	public void setName(String name) {
-		super.Name = name;
-	}
 
-	public ArrayList<Customer> getVisited() {
-		return visited;
-	}
+    // Getters and setters
+    public Location getLocation() {
+        return loc;
+    }
 
-	public void setVisited(ArrayList<Customer> visited) {
-		this.visited = visited;
-	}
+    public void setLocation(Location loc) {
+        this.loc = loc;
+    }
 
-	public ArrayList<Courier> getAvailable() {
-		return available;
-	}
+    public ArrayList<Customer> getVisitedCustomers() {
+        return new ArrayList<>(visited); // Return a copy to maintain encapsulation
+    }
 
-	public void setAvailable(ArrayList<Courier> available) {
-		this.available = available;
-	}
-   
-    
-    /*
-     * manageDish()
+    public void addVisitedCustomer(Customer customer) {
+        visited.add(customer);
+    }
 
-	manageMeal()
+    public ArrayList<Courier> getAvailableCouriers() {
+        return new ArrayList<>(available); // Return a copy to maintain encapsulation
+    }
 
-	manageMenu()
+    public void addAvailableCourier(Courier courier) {
+        if (!available.contains(courier)) {
+            available.add(courier);
+        }
+    }
 
-	setSpecial() -> can set 5%, 10% and remove discount
-	
-	getters and setters
-     */
+    public void removeAvailableCourier(Courier courier) {
+        available.remove(courier);
+    }
+
+    public Menu getMenu() {
+        return menu;
+    }
+
+    public void setMenu(Menu menu) {
+        this.menu = menu;
+    }
+
+    // Other methods for managing dishes, meals, and special discounts can be added here
 }

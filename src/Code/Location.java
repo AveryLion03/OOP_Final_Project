@@ -12,11 +12,18 @@ public class Location {
     public Location(double lat, double lon) {
         this.lat = lat;
         this.lon = lon;
-        
-    
     /*
      * getters, setters, toString?
      */
+    }
+    public void setLocation(double lat, double lon) {
+    	this.lat = lat;
+    	this.lon = lon;
+    }
+    
+    public Double[] getLocation() {
+    	Double [] e = {this.lat, this.lon};
+    	return e;
     }
 }
     

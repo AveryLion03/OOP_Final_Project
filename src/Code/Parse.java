@@ -3,29 +3,68 @@ package Code;
 import java.util.ArrayList;
 import java.util.Scanner;
 import user.*;
+import food.*;
 
 public class Parse {
 	protected ArrayList<User> members;
     private static Boolean run = true;
     protected int userLoggedIn = 0;
+    private Restaurant r;
+    private Customer c;
+    private Courier d;
+    private Manager m;
     
     public Parse(ArrayList<User> mem) {
 		super();
 		this.members = mem;
+		this.r = null;
+		this.c = null;
+		this.d = null;
+		this.m = null;
 	}
 
 	public double getUserLoggedIn() {
 		return userLoggedIn;
 	}
+	// Private variables -> What user is logged in right now?
+	protected void setCust(Customer cus) {
+		this.c = cus;
+	}
+	protected Customer getCust() {
+		return this.c;
+	}
+	protected void setRest(Restaurant rest) {
+		this.r = rest;
+	}
+	protected Restaurant getRest() {
+		return this.r;
+	}
+	protected void setMan(Manager man) {
+		this.m = man;
+	}
+	protected Manager getMan() {
+		return this.m;
+	}
+	protected void setCour(Courier cour) {
+		this.d = cour;
+	}
+	protected Courier getCour() {
+		return this.d;
+	}
+	
+	// Should we continue CLUI?
 	public void exitLoop() {
 		run = false;
 	}
 	public Boolean getLoop() {
 		return run;
 	}
+	
+	// Set what type of user is logged in
 	protected void setUserLoggedIn(int val) {
 		userLoggedIn = val;
 	}
+	
 	//Only available for managers -> Prints out list of Restaurants
 	protected void showRestaurants() {
 		//print out restaurants available
@@ -53,6 +92,8 @@ public class Parse {
 			}
 		}
 	}
+	
+	// Shows available commands for current user of CLUI
 	public void printCommands () {
 		/*This will print out all available commands for each type of customer
 		 * SHOULD I MAKE A .txt DOCUMENT TO READ OFF COMMANDS?
@@ -90,232 +131,383 @@ public class Parse {
 	}
 
 	//Process Commands?
-	public void processCommands(Boolean init, String lines){
-		String[] elements;
-		if(init) {
-			elements = lines.split(",");
-			for(int i = 0; i < elements.length; i++) {
-				elements[i] = elements[i].trim();
-			}
-		}
-		else {
-			elements = lines.split(" ");
-			for(int i = 0; i < elements.length; i++) {
-				elements[i] = elements[i].trim();
-			}
-		}		
-		/*
-		 *  Initialization Methods (startUp.txt) -> Customers, Managers, Restaurants, Couriers
-		 */
-		if(init) {
-			if(elements[2].toLowerCase().equals("customer")) {
-				//String username, String password, String userType, String name, String surname, String email, String cellNumber, Location loc
-				Location loc = new Location (Double.parseDouble(elements[7]), Double.parseDouble(elements[8]));
-				Customer n = new Customer (elements[0], elements [1], elements [2], elements [3], elements [4], elements [5], elements[6], loc);
-				members.add(n);
-				System.out.println("Customer Added");
-			}
-			else if(elements[2].toLowerCase().equals("manager")){
-				Manager m = new Manager (elements[0], elements[1], elements [2], elements[3], elements[4]);
-				members.add(m);
-				System.out.println("Manager Added");
-			}
-			else if(elements[2].toLowerCase().equals("restaurant")) {
-				Location loc = new Location (Double.parseDouble(elements[4]), Double.parseDouble(elements[5]));
-				Restaurant r = new Restaurant (elements[0], elements[1], elements [2], elements[3], loc);
-				members.add(r);
-				System.out.println("Restaurant Added");
-			}
-			else if(elements[2].toLowerCase().equals("courier")) {
-				Location loc = new Location (Double.parseDouble(elements[8]), Double.parseDouble(elements[9]));
-				Courier c = new Courier(elements[0], elements[1], elements [2], elements[3], elements[4], elements[5], Integer.parseInt(elements[6]), Boolean.parseBoolean(elements[7]), loc);
-				members.add(c);
-				System.out.println("Courier Added");
-			}
-		}
-		/*
-		 * User Interface commands
-		 */
-		else {
-			// Skip Enter key press (no commands)
-			if(elements[0].trim().length() == 0) return;
-			// Check if User wants to end terminal
-			else if(elements[0].toLowerCase().equals("end")) {
-				exitLoop();
-				return;
-			}
-			// login <username> <password>
-			else if (elements[0].toLowerCase().equals("login")) {
-				if(getUserLoggedIn() != 0) {
-					System.out.println("User already logged in. Logout first");
-					return;
-				}
-				if(elements.length != 3) {
-					System.out.println("Invalid Login Format -> login <username> <password>");
-					return;
-				}
-				// Login for managers
-				for(int i = 0; i < members.size(); i++) {
-					if((elements[1].trim()).equals(members.get(i).getUsername()) && (elements[2].trim()).equals(members.get(i).getPassword())) {
-						System.out.printf("Login Successful. Welcome, %s%n", members.get(i).getName());
-						if(members.get(i).getUserType().equalsIgnoreCase("Manager"))setUserLoggedIn(1);
-						else if(members.get(i).getUserType().equalsIgnoreCase("Restaurant"))setUserLoggedIn(2);
-						else if(members.get(i).getUserType().equalsIgnoreCase("Customer"))setUserLoggedIn(3);
-						else setUserLoggedIn(4);
-						return;
-					}
-				}
-				
-				System.out.println("User not found. Try again using correct Username or Password");
-				
+	
+    public void processCommands(Boolean init, String lines) {
+        String[] elements;
+        if (init) {
+            elements = lines.split(",");
+        } else {
+            elements = lines.split(" ");
+        }
+
+        for (int i = 0; i < elements.length; i++) {
+            elements[i] = elements[i].trim();
+        }
+
+        /*
+         *  Initialization Methods (startUp.txt) -> Customers, Managers, Restaurants, Couriers
+         */
+        if (init) {
+            if (elements.length >= 3) {
+                String elementType = elements[2].toLowerCase(); // Ensure elements[2] exists before calling toLowerCase()
+
+                try {
+                    if (elementType.equals("customer") && elements.length >= 9) {
+                        Location loc = new Location(Double.parseDouble(elements[7]), Double.parseDouble(elements[8]));
+                        Customer n = new Customer(elements[0], elements[1], elements[2], elements[3], elements[4], elements[5], elements[6], loc);
+                        members.add(n);
+                        //System.out.println("Customer Added");
+                    } else if (elementType.equals("manager") && elements.length >= 5) {
+                        Manager m = new Manager(elements[0], elements[1], elements[2], elements[3], elements[4]);
+                        members.add(m);
+                        //System.out.println("Manager Added");
+                    } else if (elementType.equals("restaurant") && elements.length >= 6) {
+                        Location loc = new Location(Double.parseDouble(elements[4]), Double.parseDouble(elements[5]));
+                        Restaurant r = new Restaurant(elements[0], elements[1], elements[2], elements[3], loc);
+                        members.add(r);
+                        //System.out.println("Restaurant Added");
+                    } else if (elementType.equals("courier") && elements.length >= 10) {
+                        Location loc = new Location(Double.parseDouble(elements[8]), Double.parseDouble(elements[9]));
+                        Courier c = new Courier(elements[0], elements[1], elements[2], elements[3], elements[4], elements[5], Integer.parseInt(elements[6]), Boolean.parseBoolean(elements[7]), loc);
+                        members.add(c);
+                        //System.out.println("Courier Added");
+                    } else {
+                        System.out.println("Insufficient elements for member creation.");
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid numeric format in input data.");
+                }
+            } else {
+                System.out.println("Insufficient elements for processing.");
+            }
+        }
+
+
+	/*
+	 * User Interface commands
+	 */
+        else {
+            // Skip Enter key press (no commands)
+            if (elements.length == 0 || elements[0].trim().isEmpty()) {
+                return;
+            }
+            
+            // Check if User wants to end terminal
+            else if (elements[0].equalsIgnoreCase("end")) {
+                exitLoop();
+                return;
+            }
+            
+            // login <username> <password>
+            else if (elements[0].equalsIgnoreCase("login")) {
+                if (getUserLoggedIn() != 0) {
+                    System.out.println("User already logged in. Logout first");
+                    return;
+                }
+                if (elements.length != 3) {
+                    System.out.println("Invalid Login Format -> login <username> <password>");
+                    return;
+                }
+                
+                // Login for managers
+                for (int i = 0; i < members.size(); i++) {
+                    String username = elements[1].trim();
+                    String password = elements[2].trim();
+                    
+                    if (username.equals(members.get(i).getUsername()) && 
+                        password.equals(members.get(i).getPassword())) {
+                        
+                        String userType = members.get(i).getUserType().toLowerCase();
+                        
+                        System.out.printf("Login Successful. Welcome, %s%n", members.get(i).getName());
+                        
+                        switch (userType) {
+                            case "manager":
+                                setMan((Manager) members.get(i));
+                                setUserLoggedIn(1);
+                                break;
+                            case "restaurant":
+                                setRest((Restaurant) members.get(i));
+                                setUserLoggedIn(2);
+                                break;
+                            case "customer":
+                                setCust((Customer) members.get(i));
+                                setUserLoggedIn(3);
+                                break;
+                            case "courier":
+                                setCour((Courier) members.get(i));
+                                setUserLoggedIn(4);
+                                break;
+                            default:
+                                break;
+                        }
+                        return;
+                    }
+                }
+                
+                System.out.println("User not found or invalid credentials. Try again with correct username and password.");
+            }
+            
+            // logout
+            else if (elements[0].equalsIgnoreCase("logout")) {
+                if (getUserLoggedIn() == 0) {
+                    System.out.println("No Users Logged In");
+                } else {
+                    setUserLoggedIn(0);
+                    System.out.println("Logout Successful");
+                }
+            }
+		
+         // help
+            else if (elements[0].equalsIgnoreCase("help")) {
+                System.out.println("Here are your available commands:");
+                printCommands();
+            }
+
+            // Check if user is logged in
+            else if (getUserLoggedIn() == 0) {
+                System.out.println("Login first before using commands. Type 'help' for more information");
+            }
+
+            // registerRestaurant <name> <Latitude> <Longitude> <username> <password>
+            else if (elements[0].equalsIgnoreCase("registerrestaurant")) {
+                if (getUserLoggedIn() != 1) {
+                    System.out.println("User cannot access this command");
+                    return;
+                }
+
+                if (elements.length != 6) {
+                    System.out.println("Invalid Command. Use following format: registerRestaurant <name> <Latitude> <Longitude> <username> <password>");
+                    return;
+                }
+
+                try {
+                    Location loc = new Location(Double.parseDouble(elements[2]), Double.parseDouble(elements[3]));
+                    Restaurant r = new Restaurant(elements[4], elements[5], "Restaurant", elements[1], loc);
+                    System.out.println("Successfully added");
+                    members.add(r);
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid latitude or longitude format.");
+                } catch (Exception e) {
+                    System.out.println("An error occurred while registering the restaurant.");
+                    e.printStackTrace();
+                }
+            }
+
+            // registerCustomer <firstName> <lastName> <username> <Latitude> <Longitude> <password>
+            else if (elements[0].equalsIgnoreCase("registercustomer")) {
+                if (getUserLoggedIn() != 1) {
+                    System.out.println("User cannot access this command");
+                    return;
+                }
+
+                if (elements.length != 7) {
+                    System.out.println("Invalid Command. Use following format: registerCustomer <firstName> <lastName> <username> <Latitude> <Longitude> <password>");
+                    return;
+                }
+
+                try {
+                    Location loc = new Location(Double.parseDouble(elements[4]), Double.parseDouble(elements[5]));
+                    Customer c = new Customer(elements[3], elements[6], "Customer", elements[1], elements[2], "blank@gmail.com", "***-***-****", loc);
+                    System.out.println("Successfully added");
+                    members.add(c);
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid latitude or longitude format.");
+                } catch (Exception e) {
+                    System.out.println("An error occurred while registering the customer.");
+                    e.printStackTrace();
+                }
+            }
+
+            // registerCourier <firstName> <lastName> <username> <position> <password>
+            else if (elements[0].equalsIgnoreCase("registercourier")) {
+                if (getUserLoggedIn() != 1) {
+                    System.out.println("User cannot access this command");
+                    return;
+                }
+
+                if (elements.length != 6) {
+                    System.out.println("Invalid Command. Use following format: registerCourier <firstName> <lastName> <username> <position> <password>");
+                    return;
+                }
+
+                Courier d = new Courier(elements[3], elements[5], "Courier", elements[1], elements[2], "***-***-****", 0, false, new Location(0, 0));
+                try {
+                    @SuppressWarnings("resource")
+					Scanner inputLine = new Scanner(System.in);
+                    System.out.println("Please input your Phone Number and Location in the following format: <phone number> <Latitude> <Longitude>");
+                    String s;
+                    String[] e;
+                    while (true) {
+                        s = inputLine.nextLine().toString();
+                        e = s.split(" ");
+                        if (e.length != 3) {
+                            System.out.println("Incorrect format. Enter in the following format: <phone number> <Latitude> <Longitude>");
+                        } else {
+                            break;
+                        }
+                    }
+                    for (int i = 0; i < e.length; i++) {
+                        e[i] = e[i].trim();
+                    }
+                    d.setPhoneNumber(e[0].trim());
+                    d.getLoc().setLocation(Double.parseDouble(e[1].trim()), Double.parseDouble(e[2].trim()));
+                    System.out.println("Successfully added");
+                    members.add(d);
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid latitude or longitude format.");
+                } catch (Exception e) {
+                    System.out.println("An error occurred while registering the courier.");
+                    e.printStackTrace();
+                }
+            }
+
+            // addDishRestauarantMenu <dishName> <dishCategory> <foodCategory> <unitPrice>
+            else if (elements[0].equalsIgnoreCase("adddishrestaurantmenu")) {
+                if (getUserLoggedIn() != 2) {
+                    System.out.println("User does not have access to this command.");
+                    return;
+                }
+                /*
+
+                if (elements.length != 5) {
+                    System.out.println("Invalid Command. Use following format: addDishrestaurantmenu <dishName> <dishCategory> <foodCategory> <unitPrice>");
+                    return;
+                }
+
+                try {
+                    String dishName = elements[1];
+                    String dishCategory = elements[2];
+                    String foodCategory = elements[3];
+                    double unitPrice = Double.parseDouble(elements[4]);
+
+                    // Create the dish object
+                    //Dishes dish = new Dishes(dishName, dishCategory, foodCategory, unitPrice);
+
+                    // Add the dish to the restaurant's menu
+                    //getRest().getMenu().add(dish);
+
+                    System.out.println("Dish added successfully to the restaurant's menu.");
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid unit price format.");
+                } catch (Exception e) {
+                    System.out.println("An error occurred while adding the dish to the restaurant's menu.");
+                    e.printStackTrace();
+                }
+                */
+            }
+			
+			// createMeal <mealName>
+			else if (elements[0].toLowerCase().equals("createmeal")) {
+			    
 			}
 			
-			// logout <>
-			else if (elements[0].toLowerCase().equals("logout")) {
-				if(getUserLoggedIn() == 0) System.out.println("No Users Logged In");
-				else {
-					setUserLoggedIn(0);
-					System.out.println("Logout Successful");
-				}
-			}
-			// help <>
-			else if (elements[0].toLowerCase().equals("help")) {
-				System.out.println("Here are your available commands:");
-				printCommands();
-			}
-			// Check to ensure we are logged in first
-			else if(getUserLoggedIn() == 0) System.out.println("Login first before using commands. Type 'help' for more information");
-			// registerRestaurant <name> <address> <username> <password> 
-			else if (elements[0].toLowerCase().equals("registerrestaurant")) {
-				if(getUserLoggedIn() != 1) {
-					System.out.println("User cannot access this command");
-					return;
-				}
-				//Invalid command
-				if(elements.length != 6) {
-					System.out.println("Invalid Command. Use following format: registerRestaurant <name> <address> <username> <password>");
-					return;
-				}
-				//ADD TRY AND CATCH FOR INVALID INPUT LOCATION?
-				Location loc = new Location (Double.parseDouble(elements[2]), Double.parseDouble(elements[3]));
-				Restaurant r = new Restaurant(elements[4], elements[5], "Restaurant", elements[1], loc);
-				System.out.println("Successfully added");
-				members.add(r);
-			}
-			// registerCustomer <firstName> <lastName> <username> <address> <password>
-			else if (elements[0].toLowerCase().equals("registercustomer")) {
-				if(getUserLoggedIn() != 1) {
-					System.out.println("User cannot access this command");
-					return;
-				}
-				//Invalid command
-				if(elements.length != 7) {
-					System.out.println("Invalid Command. Use following format: registerCustomer <firstName> <lastName> <username> <address> <password>");
-					return;
-				}
-				//ADD TRY AND CATCH FOR INVALID INPUT LOCATION?
-				//String username, String password, String userType, String name, String surname, String email, String cellNumber, Location loc
-				Location loc = new Location (Double.parseDouble(elements[4]), Double.parseDouble(elements[5]));
-				Customer c = new Customer(elements[3], elements[6], "Customer", elements[1], elements[2], "blank@gmail.com", "***-***-****", loc);
-				Scanner inputLine = new Scanner(System.in);
-				System.out.println("Please input your email and phone number in the following format: <email> <phone number>");
-				String s = (inputLine.nextLine()).toString();
-				String[] e = s.split(" ");
-				for(int i = 0; i < e.length; i++) {
-					e[i] = e[i].trim();
-				}
-				c.setCellNumber(e[1]);
-				c.setEmail(e[0]);
-				System.out.println("Successfully added");
-				members.add(c);
-			}
-			// registerCourier <firstName> <lastName> <username> <position> <password>
-			else if (elements[0].toLowerCase().equals("registercourier")) {
-				if(getUserLoggedIn() != 1) {
-					System.out.println("User cannot access this command");
-					return;
-				}
-				//Invalid command
-				if(elements.length != 6) {
-					System.out.println("Invalid Command. Use following format: registerCourier <firstName> <lastName> <username> <position> <password>");
-					return;
-				}
-				//ADD TRY AND CATCH FOR INVALID INPUT LOCATION?
-				//String username, String password, String userType, String name, String surname, String phoneNumber, int orderCount, boolean onDuty, Location loc
-				Location loc = new Location(0, 0);
-				Courier d = new Courier(elements[3], elements[5], "Courier", elements[1], elements[2], "***-***-****", 0, false, loc);
-				System.out.println("Successfully added");
-				members.add(d);
-			}
-			else if (elements[0].toLowerCase().equals("adddishrestaurantmenu")) {
-			    // addDishRestauarantMenu <dishName> <dishCategory> <foodCategory> <unitPrice>
-			}
-			else if (elements[0].toLowerCase().equals("createmeal")) {
-			    // createMeal <mealName>
-			}
+			// addDish2Meal <dishName> <mealName>
 			else if (elements[0].toLowerCase().equals("adddish2meal")) {
-			    // addDish2Meal <dishName> <mealName>
+			    
 			}
+			
+			// showMeal <mealName>
 			else if (elements[0].toLowerCase().equals("showmeal")) {
-			    // showMeal <mealName>
+			    
 			}
+			
+			// saveMeal <mealName>
 			else if (elements[0].toLowerCase().equals("savemeal")) {
-			    // saveMeal <mealName>
+			    
 			}
+			
+			// setSpecialOffer <mealName>
 			else if (elements[0].toLowerCase().equals("setspecialoffer")) {
-			    // setSpecialOffer <mealName>
+			    
 			}
+			
+			// removeFromSpecialOffer <mealName>
 			else if (elements[0].toLowerCase().equals("removefromspecialoffer")) {
-			    // removeFromSpecialOffer <mealName>
+			   
 			}
+			
+			// createOrder <restaurantName> <orderName>
 			else if (elements[0].toLowerCase().equals("createorder")) {
-			    // createOrder <restaurantName> <orderName>
+			    
 			}
+			
+			// addItem2Order <orderName> <itemName>
 			else if (elements[0].toLowerCase().equals("additem2order")) {
-			    // addItem2Order <orderName> <itemName>
+			    
 			}
+			
+			// endOrder <orderName> <date>
 			else if (elements[0].toLowerCase().equals("endorder")) {
-			    // endOrder <orderName> <date>
+			    
 			}
+			
+			// onDuty <username>
 			else if (elements[0].toLowerCase().equals("onduty")) {
-			    // onDuty <username>
+			    
 			}
+			
+			// offDuty <username>
 			else if (elements[0].toLowerCase().equals("offduty")) {
-			    // offDuty <username>
+			    
 			}
+			
+			// findDeliverer <orderName>
 			else if (elements[0].toLowerCase().equals("finddeliverer")) {
-			    // findDeliverer <orderName>
+			    
 			}
+			
+			// setDeliveryPolicy <delPolicyName>
 			else if (elements[0].toLowerCase().equals("setdeliverypolicy")) {
-			    // setDeliveryPolicy <delPolicyName>
+			   
 			}
+			
+			// setProfitPolicy <ProfitPolicyName>
 			else if (elements[0].toLowerCase().equals("setprofitpolicy")) {
-			    // setProfitPolicy <ProfitPolicyName>
+			    
 			}
+			
+			// associateCard <userName> <cardType>
 			else if (elements[0].toLowerCase().equals("associatecard")) {
-			    // associateCard <userName> <cardType>
+			    
 			}
+			
+			// showCourierDeliveries <>
 			else if (elements[0].toLowerCase().equals("showcourierdeliveries")) {
-			    // showCourierDeliveries <>
+			    
 			}
+			
+			// showRestaurantTop <>
 			else if (elements[0].toLowerCase().equals("showrestauranttop")) {
-			    // showRestaurantTop <>
+			    
 			}
+			
+			// showCustomers <>
 			else if (elements[0].toLowerCase().equals("showcustomers")) {
-			    // showCustomers <>
+			    
 			}
+			
+			// showMenuItem <restaurant-name>
 			else if (elements[0].toLowerCase().equals("showmenuitem")) {
-			    // showMenuItem <restaurant-name>
+			    
 			}
+			
+			// showTotalProfit <>
 			else if (elements[0].toLowerCase().equals("showtotalprofit")) {
-			    // showTotalProfit <>
+			    
 			}
+			
+			// showTotalProfit <startDate> <endDate>
 			else if (elements[0].toLowerCase().equals("showtotalprofitperiod")) {
-			    // showTotalProfit <startDate> <endDate>
+			    
 			}
+			
+			// runTest <testScenario-file>
 			else if (elements[0].toLowerCase().equals("runtest")) {
-			    // runTest <testScenario-file>
+			    
 			}
+			
+			// Invalid command -> Try again
 			else {
 				System.out.println("\033[0;31mInvalid Command\033[0m");
 			}
