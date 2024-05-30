@@ -1,6 +1,9 @@
 package user;
 
-import Code.Location;
+import java.util.ArrayList;
+
+import Code.*;
+import food.*;
 
 public class Customer extends Person {
     // Variables specific to Customer
@@ -9,14 +12,18 @@ public class Customer extends Person {
     private Location loc;
     private String fidelity;
     private int points;
+    protected ArrayList<Order> pastOrders;
+    protected Order activeOrder;
 
     // Constructor
     public Customer(String username, String password, String userType, String name, String surname, String email, String cellNumber, Location loc) {
         super(username, password, userType, name, surname); // Call to the superclass constructor
         this.email = email;
+        this.pastOrders = new ArrayList<>(); //Past orders!
+        this.activeOrder = null;
         this.cellNumber = cellNumber;
         this.loc = loc;
-        this.fidelity = "none"; // Default fidelity
+        this.fidelity = "Basic"; // Default fidelity
         this.points = 0; // Default points
     }
 
@@ -68,7 +75,35 @@ public class Customer extends Person {
     // Setter for points
     // Depending on your system design, you may choose to set points directly or through some other mechanism.
     // If points are managed internally by the system, you might not need this setter.
-    public void setPoints(int points) {
-        this.points = points;
+    public boolean pointsDiscount(int points) {
+        if(this.fidelity.equalsIgnoreCase("Point"))	{
+        	this.points += points;
+        	if(this.points >= 100) { //If We have reached over 100 points, we receive a discount!
+        		return true;
+        	}
+        }
+        return false;
+    }
+    
+    public void createOrder(String orderName) {
+    	Order o = new Order(orderName);
+    	this.activeOrder = o;
+    }
+    
+    // No need to check if meal exists in menu. This should be done in Parse class -> Only sent to add2Order if its valid.
+    public void add2Order(Meal m, Dishes d) {
+    	if(m != null) {
+    		this.activeOrder.addMeal(m);
+    	}
+    	if(d != null) {
+    		this.activeOrder.addDish(d);
+    	}
+    	return;
+    }
+    
+    public void finalizeOrder (String date) {
+    	this.activeOrder.setDate(date);
+    	pastOrders.add(this.activeOrder);
+    	// Send it to restaurant -> Now they get to deal with finding a driver.
     }
 }

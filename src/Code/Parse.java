@@ -6,8 +6,10 @@ import user.*;
 import food.*;
 
 public class Parse {
-	protected ArrayList<User> members;
+	protected ArrayList<User> activeMembers;
+	protected ArrayList<User> deactiveMembers;
     private static Boolean run = true;
+    private Meal newMeal;
     protected int userLoggedIn = 0;
     private Restaurant r;
     private Customer c;
@@ -16,7 +18,9 @@ public class Parse {
     
     public Parse(ArrayList<User> mem) {
 		super();
-		this.members = mem;
+		this.activeMembers = mem;
+		this.deactiveMembers = new ArrayList<>();
+		this.newMeal = null;
 		this.r = null;
 		this.c = null;
 		this.d = null;
@@ -30,6 +34,14 @@ public class Parse {
 	protected void setCust(Customer cus) {
 		this.c = cus;
 	}
+	protected Meal getNewMeal() {
+		return this.newMeal;
+	}
+	protected void setNewMeal(Meal m, boolean set) {
+		if(set) this.newMeal = m;
+		else this.newMeal = null;
+	}
+	
 	protected Customer getCust() {
 		return this.c;
 	}
@@ -68,27 +80,27 @@ public class Parse {
 	//Only available for managers -> Prints out list of Restaurants
 	protected void showRestaurants() {
 		//print out restaurants available
-		for(int i = 0; i < members.size(); i++) {
-			if(members.get(i).getUserType().equalsIgnoreCase("Restaurant")) {
-				System.out.println(members.get(i).getName());
+		for(int i = 0; i < activeMembers.size(); i++) {
+			if(activeMembers.get(i).getUserType().equalsIgnoreCase("Restaurant")) {
+				System.out.println(activeMembers.get(i).getName());
 			}
 		}
 	}
 	//Only available for managers -> Prints out list of customers
 	protected void showCustomers() {
 		//return list;
-		for(int i = 0; i < members.size(); i++) {
-			if(members.get(i).getUserType().equalsIgnoreCase("Customer")) {
-				System.out.println(members.get(i).getName());
+		for(int i = 0; i < activeMembers.size(); i++) {
+			if(activeMembers.get(i).getUserType().equalsIgnoreCase("Customer")) {
+				System.out.println(activeMembers.get(i).getName());
 			}
 		}
 	}
 	//Only available for managers -> Prints out list of Couriers
 	protected void showCouriers() {
 		//return list;
-		for(int i = 0; i < members.size(); i++) {
-			if(members.get(i).getUserType().equalsIgnoreCase("Courier")) {
-				System.out.println(members.get(i).getName());
+		for(int i = 0; i < activeMembers.size(); i++) {
+			if(activeMembers.get(i).getUserType().equalsIgnoreCase("Courier")) {
+				System.out.println(activeMembers.get(i).getName());
 			}
 		}
 	}
@@ -132,7 +144,8 @@ public class Parse {
 
 	//Process Commands?
 	
-    public void processCommands(Boolean init, String lines) {
+    @SuppressWarnings("unused")
+	public void processCommands(Boolean init, String lines) {
         String[] elements;
         if (init) {
             elements = lines.split(",");
@@ -155,21 +168,21 @@ public class Parse {
                     if (elementType.equals("customer") && elements.length >= 9) {
                         Location loc = new Location(Double.parseDouble(elements[7]), Double.parseDouble(elements[8]));
                         Customer n = new Customer(elements[0], elements[1], elements[2], elements[3], elements[4], elements[5], elements[6], loc);
-                        members.add(n);
+                        activeMembers.add(n);
                         //System.out.println("Customer Added");
                     } else if (elementType.equals("manager") && elements.length >= 5) {
                         Manager m = new Manager(elements[0], elements[1], elements[2], elements[3], elements[4]);
-                        members.add(m);
+                        activeMembers.add(m);
                         //System.out.println("Manager Added");
                     } else if (elementType.equals("restaurant") && elements.length >= 6) {
                         Location loc = new Location(Double.parseDouble(elements[4]), Double.parseDouble(elements[5]));
                         Restaurant r = new Restaurant(elements[0], elements[1], elements[2], elements[3], loc);
-                        members.add(r);
+                        activeMembers.add(r);
                         //System.out.println("Restaurant Added");
                     } else if (elementType.equals("courier") && elements.length >= 10) {
                         Location loc = new Location(Double.parseDouble(elements[8]), Double.parseDouble(elements[9]));
                         Courier c = new Courier(elements[0], elements[1], elements[2], elements[3], elements[4], elements[5], Integer.parseInt(elements[6]), Boolean.parseBoolean(elements[7]), loc);
-                        members.add(c);
+                        activeMembers.add(c);
                         //System.out.println("Courier Added");
                     } else {
                         System.out.println("Insufficient elements for member creation.");
@@ -210,32 +223,32 @@ public class Parse {
                 }
                 
                 // Login for managers
-                for (int i = 0; i < members.size(); i++) {
+                for (int i = 0; i < activeMembers.size(); i++) {
                     String username = elements[1].trim();
                     String password = elements[2].trim();
                     
-                    if (username.equals(members.get(i).getUsername()) && 
-                        password.equals(members.get(i).getPassword())) {
+                    if (username.equals(activeMembers.get(i).getUsername()) && 
+                        password.equals(activeMembers.get(i).getPassword())) {
                         
-                        String userType = members.get(i).getUserType().toLowerCase();
+                        String userType = activeMembers.get(i).getUserType().toLowerCase();
                         
-                        System.out.printf("Login Successful. Welcome, %s%n", members.get(i).getName());
+                        System.out.printf("Login Successful. Welcome, %s%n", activeMembers.get(i).getName());
                         
                         switch (userType) {
                             case "manager":
-                                setMan((Manager) members.get(i));
+                                setMan((Manager) activeMembers.get(i));
                                 setUserLoggedIn(1);
                                 break;
                             case "restaurant":
-                                setRest((Restaurant) members.get(i));
+                                setRest((Restaurant) activeMembers.get(i));
                                 setUserLoggedIn(2);
                                 break;
                             case "customer":
-                                setCust((Customer) members.get(i));
+                                setCust((Customer) activeMembers.get(i));
                                 setUserLoggedIn(3);
                                 break;
                             case "courier":
-                                setCour((Courier) members.get(i));
+                                setCour((Courier) activeMembers.get(i));
                                 setUserLoggedIn(4);
                                 break;
                             default:
@@ -297,7 +310,7 @@ public class Parse {
                     Location loc = new Location(Double.parseDouble(elements[2]), Double.parseDouble(elements[3]));
                     Restaurant r = new Restaurant(elements[4], elements[5], "Restaurant", elements[1], loc);
                     System.out.println("Successfully added");
-                    members.add(r);
+                    activeMembers.add(r);
                 } catch (NumberFormatException e) {
                     System.out.println("Invalid latitude or longitude format.");
                 } catch (Exception e) {
@@ -321,8 +334,33 @@ public class Parse {
                 try {
                     Location loc = new Location(Double.parseDouble(elements[4]), Double.parseDouble(elements[5]));
                     Customer c = new Customer(elements[3], elements[6], "Customer", elements[1], elements[2], "blank@gmail.com", "***-***-****", loc);
+                    try {
+                        @SuppressWarnings("resource")
+    					Scanner inputLine = new Scanner(System.in);
+                        System.out.println("Please input your Email and Phone Number in the following format: <Email> <Phone_Number>");
+                        //System.out.println("For Fidelity Card, there are three options: Basic, Point and Lottery");
+                        String s;
+                        String[] e;
+                        while (true) {
+                            s = inputLine.nextLine().toString();
+                            e = s.split(" ");
+                            if (e.length != 2) {
+                                System.out.println("Incorrect format. Enter in the following format: <Email> <Phone_Number>");
+                            } else {
+                                break;
+                            }
+                        }
+                        for (int i = 0; i < e.length; i++) {
+                            e[i] = e[i].trim();
+                        }
+                        c.setCellNumber(e[1].trim());
+                        c.setEmail(e[0].trim().toUpperCase());
+                    } catch (Exception e) {
+                        System.out.println("An error occurred while registering the Customer.");
+                        e.printStackTrace();
+                    }
                     System.out.println("Successfully added");
-                    members.add(c);
+                    activeMembers.add(c);
                 } catch (NumberFormatException e) {
                     System.out.println("Invalid latitude or longitude format.");
                 } catch (Exception e) {
@@ -365,7 +403,7 @@ public class Parse {
                     d.setPhoneNumber(e[0].trim());
                     d.getLoc().setLocation(Double.parseDouble(e[1].trim()), Double.parseDouble(e[2].trim()));
                     System.out.println("Successfully added");
-                    members.add(d);
+                    activeMembers.add(d);
                 } catch (NumberFormatException e) {
                     System.out.println("Invalid latitude or longitude format.");
                 } catch (Exception e) {
@@ -387,7 +425,8 @@ public class Parse {
                 }
 
                 // Valid options for dishCategory and foodCategory
-                String[] validDishCategories = {"starter", "main", "dessert"};
+                @SuppressWarnings("unused")
+				String[] validDishCategories = {"starter", "main", "dessert"};
                 String[] validFoodCategories = {"standard", "vegetarian", "gluten-free"};
 
                 String dishName = elements[1];
@@ -438,30 +477,9 @@ public class Parse {
                 }
                 Meal m = new Meal(elements[1]);
                 try {
-                    @SuppressWarnings("resource")
-					Scanner inputLine = new Scanner(System.in);
-                    System.out.println("Please input price and note if this meal is the meal of the day: <price> <mealofDay?>");
-                    String s;
-                    String[] e;
-                    while (true) {
-                        s = inputLine.nextLine().toString();
-                        e = s.split(" ");
-                        if (e.length != 2) {
-                            System.out.println("Incorrect format. Enter in the following format: <price> <mealofDay?>");
-                        } else {
-                        	if(e[1].equalsIgnoreCase("true")|| e[1].equalsIgnoreCase("false")) break;
-                        	else {
-                        		System.out.println("Incorrect format for <mealOfDay?>. Enter in the following format: true or false");
-                        	}
-                        }
-                    }
-                    for (int i = 0; i < e.length; i++) {
-                        e[i] = e[i].trim();
-                    }
-                    m.setPrice(Double.parseDouble(e[0]));
-                    m.setDealOfDay(Boolean.parseBoolean(e[1]));
-                    getRest().addMeal(m);
-                    System.out.println("Successfully added");
+                    //getRest().addMeal(m);
+                    setNewMeal(m, true);
+                    System.out.println("Successfully created");
                 } catch (Exception e) {
                     System.out.println("An error occurred while creating the meal.");
                     e.printStackTrace();
@@ -492,6 +510,10 @@ public class Parse {
 			            break;
 			        }
 			    }
+			    // Check to see if meal has not been saved.
+			    if(getNewMeal()!= null && mealName.equalsIgnoreCase(getNewMeal().getMealName())) {
+			    	targetMeal = getNewMeal();
+			    }
 			    // If target meal not found, inform user and return
 			    if (targetMeal == null) {
 			        System.out.println("Unable to find listed meal. Try again with the correct name.");
@@ -511,8 +533,14 @@ public class Parse {
 			        return;
 			    }
 			    // Add dish to meal
-			    targetMeal.addDishToMeal(targetDish);
-			    System.out.println("Successfully added");
+			    targetMeal.addDish(targetDish);
+			    if(targetMeal.equals(getNewMeal())) {
+			    	System.out.println("Successfully added to new meal. Save Meal to add to menu");
+			    	return;
+			    }
+			    else {
+			    	System.out.println("Successfully added to meal. Menu has been updated");
+			    }
 			}
 
 			
@@ -534,19 +562,89 @@ public class Parse {
 			
 			// saveMeal <mealName>
 			else if (elements[0].equalsIgnoreCase("savemeal")) {
-			    
+				// Check if the user has the necessary access level (2)
+			    if (getUserLoggedIn() != 2) {
+			        System.out.println("User does not have access to this command.");
+			        return;
+			    }
+			    // Validate the command format
+			    if (elements.length != 2) {
+			        System.out.println("Invalid Command. Use the following format: saveMeal <mealName>");
+			        return;
+			    }
+			    if(elements[1].trim().equalsIgnoreCase(getNewMeal().getMealName())) {
+			    	getRest().getMenu().addMeal(getNewMeal());
+			    	System.out.println("Successfully added meal to menu.");
+			    	setNewMeal(null, false);
+			    	return;
+			    }
+			    else {
+			    	System.out.println("Unable to find correct meal. Please try again using the name used earlier in createMeal command");
+			    }
 			}
 			
-			// setSpecialOffer <mealName>
+			// setSpecialOffer <mealName> WORK ON PRICING FUNCTIONS!!
 			else if (elements[0].equalsIgnoreCase("setspecialoffer")) {
-			    
+				// Check if the user has the necessary access level (2)
+			    if (getUserLoggedIn() != 2) {
+			        System.out.println("User does not have access to this command.");
+			        return;
+			    }
+			    // Validate the command format
+			    if (elements.length != 2) {
+			        System.out.println("Invalid Command. Use the following format: setSpecialOffer <mealName>");
+			        return;
+			    }
+			    for (Meal m : getRest().getMenu().getAvailMeals()) {
+			    	if(m.getMealName().equalsIgnoreCase(elements[1].trim())) {
+			    		getRest().getMenu().addSpecial(m, getRest().getDiscountFactor());
+			    		System.out.printf("Successfully added %s to Weekly Specials%n", m.getMealName());
+				        return;
+			    	}
+			    }
+			    System.out.println("Unable to find meal in listed menu. Try again with correct meal name.");
+		        return;
 			}
 			
 			// removeFromSpecialOffer <mealName>
 			else if (elements[0].equalsIgnoreCase("removefromspecialoffer")) {
-			   
+				// Check if the user has the necessary access level (2)
+			    if (getUserLoggedIn() != 2) {
+			        System.out.println("User does not have access to this command.");
+			        return;
+			    }
+			    // Validate the command format
+			    if (elements.length != 2) {
+			        System.out.println("Invalid Command. Use the following format: removeFromSpecialOffer <mealName>");
+			        return;
+			    }
+			    for (Meal m : getRest().getMenu().getAvailMeals()) {
+			    	if(m.getMealName().equalsIgnoreCase(elements[1].trim())) {
+			    		getRest().getMenu().removeSpecial(m, getRest().getDiscountFactor());
+			    		System.out.printf("Successfully removed %s from Weekly Specials%n", m.getMealName());
+				        return;
+			    	}
+			    }
+			    System.out.println("Unable to find meal in listed menu. Try again with correct meal name.");
+		        return;
 			}
 			
+            // setDiscountPercentage <discount-Factor>
+     		else if (elements[0].equalsIgnoreCase("setDiscountPercentage")) {
+     		// Check if the user has the necessary access level (2)
+			    if (getUserLoggedIn() != 2) {
+			        System.out.println("User does not have access to this command.");
+			        return;
+			    }
+			    // Validate the command format
+			    if (elements.length != 2) {
+			        System.out.println("Invalid Command. Use the following format: setDiscountPercentage <discount-Factor>");
+			        return;
+			    }
+			    getRest().setDiscountFactor(Double.parseDouble(elements[1]));
+			    System.out.println("Successfully changed Discount-Factor");
+			    return;
+     		}
 			// createOrder <restaurantName> <orderName>
 			else if (elements[0].equalsIgnoreCase("createorder")) {
 			    
