@@ -3,6 +3,8 @@ package Code;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
+
+import Commands.*;
 import user.*;
 import food.*;
 
@@ -30,6 +32,9 @@ public class myFoodora {
 
         System.out.println("Initialization File Complete! CLUI Now Active");
 
+        // Create a command visitor
+        CommandVisitor commandExecutor = new CommandExecutor();
+
         // Begin Command Line User Interface (CLUI)
         try (Scanner inputLine = new Scanner(System.in)) {
             while (foodSys.getLoop()) {
@@ -37,7 +42,7 @@ public class myFoodora {
                 System.out.flush();
                 String command = inputLine.nextLine().trim();
                 if (!command.isEmpty()) { // Check if the command is empty
-                    foodSys.processCommands(false, command);
+                    foodSys.acceptCommandVisitor(command, commandExecutor);
                 }
             }
         } catch (Exception e) {

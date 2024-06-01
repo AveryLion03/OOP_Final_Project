@@ -1,7 +1,9 @@
-package Code;
+package Commands;
 
 import java.util.ArrayList;
 import java.util.Scanner;
+
+import Code.Location;
 import user.*;
 import food.*;
 
@@ -195,6 +197,30 @@ public class Parse {
 		}
 	}
 
+	
+	public void acceptCommandVisitor(String command, CommandVisitor visitor) {
+        if (command.startsWith("setDeliveryPolicy") || command.startsWith("setProfitPolicy") ||
+            command.startsWith("associateCard") || command.startsWith("showCourierDeliveries") ||
+            command.startsWith("showRestaurantTop") || command.startsWith("showCustomers") ||
+            command.startsWith("showMenuItem") || command.startsWith("showTotalProfit") ||
+            command.startsWith("registerRestaurant") || command.startsWith("registerCustomer") ||
+            command.startsWith("registerCourier")) {
+            visitor.visitManagerCommand(command);
+        } else if (command.startsWith("createOrder") || command.startsWith("addItem2Order") ||
+                   command.startsWith("endOrder")) {
+            visitor.visitCustomerCommand(command);
+        } else if (command.startsWith("onDuty") || command.startsWith("offDuty")) {
+            visitor.visitCourierCommand(command);
+        } else if (command.startsWith("findDeliverer") || command.startsWith("addDishRestauarantMenu") ||
+                   command.startsWith("createMeal") || command.startsWith("addDish2Meal") ||
+                   command.startsWith("showMeal") || command.startsWith("saveMeal") ||
+                   command.startsWith("setSpecialOffer") || command.startsWith("removeFromSpecialOffer")) {
+            visitor.visitRestaurantCommand(command);
+        } else {
+            visitor.visitAnyoneCommand(command);
+        }
+    } 
+	
 	//Process Commands
 	
     @SuppressWarnings("unused")
@@ -827,6 +853,34 @@ public class Parse {
 			
 			// findDeliverer <orderName>
 			else if (elements[0].equalsIgnoreCase("finddeliverer")) {
+				if (getUserLoggedIn() != 1) {
+			        System.out.println("User does not have access to this command.");
+			        return;
+			    }
+			    // Validate the command format
+			    if (elements.length != 2) {
+			        System.out.println("Invalid Command. Use the following format: findDeliverer <orderName>");
+			        return;
+			    }
+			    ArrayList<Customer> c = new ArrayList<>();
+			    ArrayList<Courier> d = new ArrayList<>();
+			    for ( User u : this.activeMembers) {
+			    	if(u.getUserType().equalsIgnoreCase("Customer")) {
+			    		c.add((Customer)u);
+			    	}
+			    }
+			    /*
+			    for ( User u : this.activeMembers) {
+			    	if(u.getUserType().equalsIgnoreCase("Courier")) {
+			    		d.add((Courier)u);
+			    	}
+			    }
+			    */
+			    for(Customer cust : c) {
+			    	if(cust.findOrder(elements[1].trim())) {
+			    		// Find deliverer based on delivery policy... Implement this
+			    	}
+			    }
 			    
 			}
 			

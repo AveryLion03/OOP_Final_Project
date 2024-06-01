@@ -117,4 +117,12 @@ public class Customer extends Person {
     public boolean checkOrder(String order) {
     	return(this.activeOrder.getOrderName().equalsIgnoreCase(order));
     }
+    public boolean findOrder(String order) {
+    	for(Order o : this.pastOrders) {
+    		if(o.getOrderName().equalsIgnoreCase(order)) {
+    			return true;
+    		}
+    	}
+    	return false;
+    }
 }
