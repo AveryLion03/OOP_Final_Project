@@ -9,13 +9,14 @@ import user.*;
 import food.*;
 
 public class myFoodora {
-    
     public static void main(String[] args) {
-        // Have User be one giant ArrayList?
+        // Initialize an ArrayList of User
         ArrayList<User> users = new ArrayList<>();
+        
+        // Create a Parse instance with the users list
         Parse foodSys = new Parse(users);
-
-        // Run initialization program
+        
+        // Run the initialization program
         File start = new File("Code/startUp.txt");
         ArrayList<String> lines = new ArrayList<>(); // To hold the lines of the text file separately
         try (Scanner scanner = new Scanner(start)) {
@@ -23,7 +24,7 @@ public class myFoodora {
                 lines.add(scanner.nextLine());
             }
             for (String line : lines) {
-                foodSys.processCommands(true, line);
+                foodSys.processCommands(line);
             }
         } catch (FileNotFoundException e) {
             System.err.println("Error: File not found: " + e.getMessage());
@@ -32,11 +33,9 @@ public class myFoodora {
 
         System.out.println("Initialization File Complete! CLUI Now Active");
 
-        // Create a command visitor
-        CommandVisitor commandExecutor = new CommandExecutor();
-
         // Begin Command Line User Interface (CLUI)
         try (Scanner inputLine = new Scanner(System.in)) {
+            CommandExecutor commandExecutor = new CommandExecutor(foodSys.getSystemState());
             while (foodSys.getLoop()) {
                 System.out.print(">> ");
                 System.out.flush();
