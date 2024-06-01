@@ -1,6 +1,8 @@
 package user;
 
 import Code.Location;
+
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class Courier extends Person {
@@ -9,7 +11,6 @@ public class Courier extends Person {
     protected int orderCount;
     protected boolean onDuty;
     protected Location loc;
-    // Order ID or something to assign order to courier so they can accept
 
     // Constructor
     public Courier(String username, String password, String userType, String name, String surname, String phoneNumber, int orderCount, boolean onDuty, Location loc) {
@@ -49,6 +50,10 @@ public class Courier extends Person {
         return orderCount;
     }
 
+    public boolean onDuty() {
+        return this.onDuty;
+    }
+
     // Override equals and hashCode methods
     @Override
     public boolean equals(Object o) {
@@ -65,6 +70,24 @@ public class Courier extends Person {
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), phoneNumber, orderCount, onDuty, loc);
+    }
+
+    // Override toString method
+    @Override
+    public String toString() {
+        return "Courier " + name +" " + surname + ": " + orderCount;
+        		
+        		/*
+	        		"Courier{" +
+	                "username='" + username + '\'' +
+	                ", name='" + name + '\'' +
+	                ", surname='" + surname + '\'' +
+	                ", phoneNumber='" + phoneNumber + '\'' +
+	                ", orderCount=" + orderCount +
+	                ", onDuty=" + onDuty +
+	                ", location=" + loc +
+	                '}';
+         		*/
     }
 
     // Other methods, such as acceptDelivery()

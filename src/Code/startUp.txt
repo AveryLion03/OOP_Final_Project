@@ -12,5 +12,5 @@ pizzahaven_admin, pizza456, Restaurant, Pizza Haven, 34.0522, -118.2437, None, N
 tacojunction_admin, taco789, Restaurant, Taco Junction, 51.5074, -0.1278, None, None
 sushi_admin, sushipass, Restaurant, Sushi Harbor, 35.6895, 139.6917, None, None
 pastaparadise_admin, pasta999, Restaurant, Pasta Paradise, 41.9028, 12.4964, None, None
-courier_john, pass123, Courier, John, Doe, 123456789, 0, true, 40.7128, -74.0060
-courier_emily, secret456, Courier, Emily, Smith, 987654321, 0, false, 34.0522, -118.2437
+courier_john, pass123, Courier, John, Doe, 123456789, 10, true, 40.7128, -74.0060
+courier_emily, secret456, Courier, Emily, Smith, 987654321, 5, false, 34.0522, -118.2437

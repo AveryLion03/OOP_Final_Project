@@ -85,9 +85,17 @@ public class Customer extends Person {
         return false;
     }
     
-    public void createOrder(String orderName) {
+    public void createOrder(String orderName, Restaurant r) {
     	Order o = new Order(orderName);
+    	o.setRestaurant(r);
     	this.activeOrder = o;
+    }
+    
+    public Restaurant getRestaurant(String orderName) {
+    	if(activeOrder.getOrderName().equalsIgnoreCase(orderName)) {
+    		return activeOrder.getRestaurant();
+    	}
+    	else return null;
     }
     
     // No need to check if meal exists in menu. This should be done in Parse class -> Only sent to add2Order if its valid.
@@ -105,5 +113,8 @@ public class Customer extends Person {
     	this.activeOrder.setDate(date);
     	pastOrders.add(this.activeOrder);
     	// Send it to restaurant -> Now they get to deal with finding a driver.
+    }
+    public boolean checkOrder(String order) {
+    	return(this.activeOrder.getOrderName().equalsIgnoreCase(order));
     }
 }

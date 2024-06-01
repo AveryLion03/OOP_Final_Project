@@ -105,6 +105,28 @@ public class Parse {
 		}
 	}
 	
+	public static void bubbleSortCouriersByDeliveries(ArrayList<Courier> couriers) {
+        int n = couriers.size();
+        boolean swapped;
+
+        // Traverse through all elements in the list
+        for (int i = 0; i < n - 1; i++) {
+            swapped = false;
+            // Last i elements are already sorted
+            for (int j = 0; j < n - i - 1; j++) {
+                // Swap if the element found is less than the next element
+                if (couriers.get(j).getOrderCount() < couriers.get(j + 1).getOrderCount()) {
+                    Courier temp = couriers.get(j);
+                    couriers.set(j, couriers.get(j + 1));
+                    couriers.set(j + 1, temp);
+                    swapped = true;
+                }
+            }
+            // If no two elements were swapped by inner loop, then break
+            if (!swapped) break;
+        }
+    }
+	
 	// Shows available commands for current user of CLUI
 	public void printCommands () {
 		/*This will print out all available commands for each type of customer
@@ -116,33 +138,64 @@ public class Parse {
 		 * Courier = 4
 		 */
 		if(userLoggedIn == 0) {
-			System.out.println("Login <username> <password>");
-			System.out.println("End <>");
-			System.out.println("runTest <testScenario-file>");
+			// Commands Available for Anyone
+			System.out.println("Commands Available for Anyone:");
+			System.out.println("1. Login <username> <password>");
+			System.out.println("2. logout <>");
+	        System.out.println("3. runTest <testScenario-file>");
+	        System.out.println("4. help <>");
+	        System.out.println("5. end <>");
+	        
 		}
 		//Manager Commands
 		else if (userLoggedIn == 1) {
-			System.out.println("Commands Available for Managers:");
-			//Print out table of commands
+			// Commands Available for Managers
+	        System.out.println("Commands Available for Managers:");
+	        System.out.println("1. setDeliveryPolicy <delPolicyName>");
+	        System.out.println("2. setProfitPolicy <ProfitPolicyName>");
+	        System.out.println("3. associateCard <userName> <cardType>");
+	        System.out.println("4. showCourierDeliveries <>");
+	        System.out.println("5. showRestaurantTop <>");
+	        System.out.println("6. showCustomers <>");
+	        System.out.println("7. showMenuItem <restaurant-name>");
+	        System.out.println("8. showTotalProfit <>");
+	        System.out.println("9. showTotalProfit <startDate> <endDate>");
+	        System.out.println("10. registerRestaurant <name> <address> <username> <password>");
+	        System.out.println("11. registerCustomer <firstName> <lastName> <username> <address> <password>");
+	        System.out.println("12. registerCourier <firstName> <lastName> <username> <position> <password>");
 		}
 		//Restaurant Commands
 		else if (userLoggedIn == 2) {
-			System.out.println("Commands Available for Restaurants:");
-			//Print out table of commands
+			// Commands Available for Restaurants
+	        System.out.println("Commands Available for Restaurants:");
+	        System.out.println("1. findDeliverer <orderName>");
+	        System.out.println("2. addDishRestauarantMenu <dishName> <dishCategory> <foodCategory> <unitPrice>");
+	        System.out.println("3. createMeal <mealName>");
+	        System.out.println("4. addDish2Meal <dishName> <mealName>");
+	        System.out.println("5. showMeal <mealName>");
+	        System.out.println("6. saveMeal <mealName>");
+	        System.out.println("7. setSpecialOffer <mealName>");
+	        System.out.println("8. removeFromSpecialOffer <mealName>");
+
 		}
 		//Customer Commands
 		else if (userLoggedIn == 3) {
-			System.out.println("Commands Available for Customers:");
-			//Print out table of commands
+			 // Commands Available for Customers
+	        System.out.println("Commands Available for Customers:");
+	        System.out.println("1. createOrder <restaurantName> <orderName>");
+	        System.out.println("2. addItem2Order <orderName> <itemName>");
+	        System.out.println("3. endOrder <orderName> <date>");
 		}
 		//Courier Commands
 		else {
-			System.out.println("Commands Available for Couriers:");
-			//Print out table of commands
+			// Commands Available for Couriers
+	        System.out.println("Commands Available for Couriers:");
+	        System.out.println("1. onDuty <username>");
+	        System.out.println("2. offDuty <username>");
 		}
 	}
 
-	//Process Commands?
+	//Process Commands
 	
     @SuppressWarnings("unused")
 	public void processCommands(Boolean init, String lines) {
@@ -159,6 +212,10 @@ public class Parse {
 
         /*
          *  Initialization Methods (startUp.txt) -> Customers, Managers, Restaurants, Couriers
+         *  
+         *  ADD IN MENUS -> Meals, dishes, etc.
+         *  ADD IN PAST ORDERS -> order name, food, restaurant, etc.
+         *  ADD IN PAST DRIVERS, etc.
          */
         if (init) {
             if (elements.length >= 3) {
@@ -285,7 +342,7 @@ public class Parse {
 		
          // help
             else if (elements[0].equalsIgnoreCase("help")) {
-                System.out.println("Here are your available commands:");
+                //System.out.println("Here are your available commands:");
                 printCommands();
             }
 
@@ -645,29 +702,127 @@ public class Parse {
 			    System.out.println("Successfully changed Discount-Factor");
 			    return;
      		}
-			// createOrder <restaurantName> <orderName>
+			// createOrder <restaurantName> <orderName> ADD IN CHECK IF THERE IS A CURRENT ORDER ALREADY OPEN
+            //Should print out menu available for customer
 			else if (elements[0].equalsIgnoreCase("createorder")) {
+				if (getUserLoggedIn() != 3) {
+			        System.out.println("User does not have access to this command.");
+			        return;
+			    }
+			    // Validate the command format
+			    if (elements.length != 3) {
+			        System.out.println("Invalid Command. Use the following format: createOrder <restaurantName> <orderName>");
+			        return;
+			    }
+			    for(User u : this.activeMembers) {
+			    	if(u.getUserType().equalsIgnoreCase("Restaurant")) {
+			    		Restaurant r = (Restaurant) u;
+			    		getCust().createOrder(elements[2].trim(), r);
+				        System.out.println("Order Successfully created. Add items to your order and save it to confirm.");
+			    		return;
+			    	}
+			    }
+			    System.out.println("Unable to find Restaurant. Try again using correct name.");
 			    
 			}
 			
 			// addItem2Order <orderName> <itemName>
 			else if (elements[0].equalsIgnoreCase("additem2order")) {
+				if (getUserLoggedIn() != 3) {
+			        System.out.println("User does not have access to this command.");
+			        return;
+			    }
+			    // Validate the command format
+			    if (elements.length != 3) {
+			        System.out.println("Invalid Command. Use the following format: addItem2Order <orderName> <itemName>");
+			        return;
+			    }
+			    Restaurant r = getCust().getRestaurant(elements[1].trim());
+			    Meal mealItem = null;
+			    Dishes dishItem = null;
+			    for (Meal m : r.getMenu().getAvailMeals()) {
+			    	if(elements[2].trim().equalsIgnoreCase(m.getMealName())) {
+			    		mealItem = m;
+			    	}
+			    }
+			    for (Dishes d : r.getMenu().getAvailDishes()) {
+			    	if(elements[2].trim().equalsIgnoreCase(d.getDishName())) {
+			    		dishItem = d;
+			    	}
+			    }
 			    
+			    if(mealItem != null || dishItem != null) {
+			    	getCust().add2Order(mealItem, dishItem);
+			    	return;
+			    }
+			    System.out.println("Unable to find food item. Try again using correct name");
+			    return;
 			}
 			
-			// endOrder <orderName> <date>
+			// endOrder <orderName> <date> //HOW DO WE PAY?! ALLOCATE DRIVER, etc.
 			else if (elements[0].equalsIgnoreCase("endorder")) {
+				if (getUserLoggedIn() != 3) {
+			        System.out.println("User does not have access to this command.");
+			        return;
+			    }
+			    // Validate the command format
+			    if (elements.length != 3) {
+			        System.out.println("Invalid Command. Use the following format: endOrder <orderName> <date>");
+			        return;
+			    }
 			    
+			    if(getCust().checkOrder(elements[1].trim())) {
+			    	getCust().finalizeOrder(elements[2].trim());
+			    	System.out.println("Order successfully ended. Sending to myFoodora manager and Restaurant for processing.");
+			    	return;
+			    }
+			    System.out.println("Unable to find order name. Try again using correct order name");
 			}
 			
 			// onDuty <username>
 			else if (elements[0].equalsIgnoreCase("onduty")) {
-			    
+				if (getUserLoggedIn() != 4) {
+			        System.out.println("User does not have access to this command.");
+			        return;
+			    }
+			    // Validate the command format
+			    if (elements.length != 2) {
+			        System.out.println("Invalid Command. Use the following format: onDuty <username>");
+			        return;
+			    }
+			    if(getCour().getUsername().equals(elements[1].trim())) {
+				    if(getCour().onDuty()) {
+				    	System.out.printf("%s is already on duty%n", getCour().getName());
+				    	return;
+				    }
+			    	System.out.printf("%s is now on duty%n", getCour().getName());
+				    getCour().setOnDuty(true);
+				    return;
+			    }
+			    System.out.println("Incorrect username. Try again using correct username (CASE SENSITIVE)");
 			}
 			
 			// offDuty <username>
 			else if (elements[0].equalsIgnoreCase("offduty")) {
-			    
+				if (getUserLoggedIn() != 4) {
+			        System.out.println("User does not have access to this command.");
+			        return;
+			    }
+			    // Validate the command format
+			    if (elements.length != 2) {
+			        System.out.println("Invalid Command. Use the following format: offDuty <username>");
+			        return;
+			    }
+			    if(getCour().getUsername().equals(elements[1].trim())) {
+			    	if(!getCour().onDuty()) {
+				    	System.out.printf("%s is already off duty%n", getCour().getName());
+				    	return;
+				    }
+				    System.out.printf("%s is now off duty%n", getCour().getName());
+				    getCour().setOnDuty(false);
+				    return;
+			    }
+			    System.out.println("Incorrect username. Try again using correct username (CASE SENSITIVE)");
 			}
 			
 			// findDeliverer <orderName>
@@ -692,17 +847,67 @@ public class Parse {
 			
 			// showCourierDeliveries <>
 			else if (elements[0].equalsIgnoreCase("showcourierdeliveries")) {
-			    
+				if (getUserLoggedIn() != 1) {
+			        System.out.println("User does not have access to this command.");
+			        return;
+			    }
+			    // Validate the command format
+			    if (elements.length != 1) {
+			        System.out.println("Invalid Command. Use the following format: showCustomers <>");
+			        return;
+			    }
+			    ArrayList<Courier> best = new ArrayList<>();
+			    for (User u : this.activeMembers) {
+			    	if(u.getUserType().equalsIgnoreCase("Courier")) {
+			    		best.add((Courier) u);
+			    	}
+			    }
+			    bubbleSortCouriersByDeliveries(best);
+			    for (Courier courier : best) {
+		            System.out.println(courier);
+		        }
 			}
 			
 			// showRestaurantTop <>
 			else if (elements[0].equalsIgnoreCase("showrestauranttop")) {
-			    
+				if (getUserLoggedIn() != 1) {
+			        System.out.println("User does not have access to this command.");
+			        return;
+			    }
+			    // Validate the command format
+			    if (elements.length != 1) {
+			        System.out.println("Invalid Command. Use the following format: showCustomers <>");
+			        return;
+			    }
+			    ArrayList<Courier> best = new ArrayList<>();
+			    for (User u : this.activeMembers) {
+			    	if(u.getUserType().equalsIgnoreCase("Courier")) {
+			    		best.add((Courier) u);
+			    	}
+			    }
+			    bubbleSortCouriersByDeliveries(best);
+			    for (Courier courier : best) {
+		            System.out.println(courier);
+		        }
 			}
 			
 			// showCustomers <>
 			else if (elements[0].equalsIgnoreCase("showcustomers")) {
-			    
+				if (getUserLoggedIn() != 1) {
+			        System.out.println("User does not have access to this command.");
+			        return;
+			    }
+			    // Validate the command format
+			    if (elements.length != 1) {
+			        System.out.println("Invalid Command. Use the following format: showCustomers <>");
+			        return;
+			    }
+			    for (User u : this.activeMembers) {
+			    	if(u.getUserType().equalsIgnoreCase("Customer")) {
+			    		Customer a = (Customer) u;
+			    		System.out.printf("** %s%n",a.getFullName());
+			    	}
+			    }
 			}
 			
 			// showMenuItem <restaurant-name>
