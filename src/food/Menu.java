@@ -29,7 +29,7 @@ public class Menu {
 	public void addDishToMeal(Meal m, Dishes dish) {
 		for (Meal meals : this.meals) {
 			if(meals.equals(m)) {
-				meals.addDish(dish);
+				meals.addDishes(dish);
 			}
 		}
 	}
@@ -66,12 +66,31 @@ public class Menu {
 	public void showMeal(String m) {
 		for (Meal meals : this.meals) {
 			if(meals.getMealName().equalsIgnoreCase(m)) {
-				meals.print();
+				System.out.println(meals);
 				return;
 			}
 		}
 		System.out.println("Meal not found. Try again with correct name");
 		return;
 	}
+	
+	@Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Menu: \n");
+        sb.append("Dishes: \n");
+        for (Dishes d : dish) {
+            sb.append(d.toString()).append("\n");
+        }
+        sb.append("Meals: \n");
+        for (Meal m : meals) {
+            sb.append(m.toString()).append("\n");
+        }
+        sb.append("Specials: \n");
+        for (Meal s : specials) {
+            sb.append(s.toString()).append("\n");
+        }
+        return sb.toString();
+    }
     // Getters and setters for the member variables can be added if needed
 }

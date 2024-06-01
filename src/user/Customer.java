@@ -12,14 +12,13 @@ public class Customer extends Person {
     private Location loc;
     private String fidelity;
     private int points;
-    protected ArrayList<Order> pastOrders;
     protected Order activeOrder;
 
     // Constructor
     public Customer(String username, String password, String userType, String name, String surname, String email, String cellNumber, Location loc) {
         super(username, password, userType, name, surname); // Call to the superclass constructor
         this.email = email;
-        this.pastOrders = new ArrayList<>(); //Past orders!
+        // this.pastOrders = new ArrayList<>(); //Past orders!
         this.activeOrder = null;
         this.cellNumber = cellNumber;
         this.loc = loc;
@@ -85,44 +84,7 @@ public class Customer extends Person {
         return false;
     }
     
-    public void createOrder(String orderName, Restaurant r) {
-    	Order o = new Order(orderName);
-    	o.setRestaurant(r);
-    	this.activeOrder = o;
-    }
-    
-    public Restaurant getRestaurant(String orderName) {
-    	if(activeOrder.getOrderName().equalsIgnoreCase(orderName)) {
-    		return activeOrder.getRestaurant();
-    	}
-    	else return null;
-    }
-    
-    // No need to check if meal exists in menu. This should be done in Parse class -> Only sent to add2Order if its valid.
-    public void add2Order(Meal m, Dishes d) {
-    	if(m != null) {
-    		this.activeOrder.addMeal(m);
-    	}
-    	if(d != null) {
-    		this.activeOrder.addDish(d);
-    	}
-    	return;
-    }
-    
-    public void finalizeOrder (String date) {
-    	this.activeOrder.setDate(date);
-    	pastOrders.add(this.activeOrder);
-    	// Send it to restaurant -> Now they get to deal with finding a driver.
-    }
-    public boolean checkOrder(String order) {
-    	return(this.activeOrder.getOrderName().equalsIgnoreCase(order));
-    }
-    public boolean findOrder(String order) {
-    	for(Order o : this.pastOrders) {
-    		if(o.getOrderName().equalsIgnoreCase(order)) {
-    			return true;
-    		}
-    	}
-    	return false;
+    public Order getActiveOrder() {
+    	return this.activeOrder;
     }
 }

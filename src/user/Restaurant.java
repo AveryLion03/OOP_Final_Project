@@ -2,7 +2,7 @@ package user;
 
 import java.util.ArrayList;
 import food.*;
-import Code.Location;
+import java.util.Random;
 
 public class Restaurant extends User {
     
@@ -65,6 +65,24 @@ public class Restaurant extends User {
 
     public Menu getMenu() {
         return menu;
+    }
+    
+    public void getMenu(String fidelity) {
+    	if(fidelity.equalsIgnoreCase("Basic")) {
+    		
+    	}
+    	else if(fidelity.equalsIgnoreCase("Points")) {
+    		System.out.println(this.menu);
+    	}
+    	else if(fidelity.equalsIgnoreCase("Lottery")) {
+    		// Create a Random object
+            Random rand = new Random();
+            // Generate a random number between 1 and 10
+            int randomNumber = rand.nextInt(10) + 1;
+            if(randomNumber == 2) {
+            	System.out.println("Your next meal is free!");
+            }
+    	}
     }
 
     public void addToMenu(Dishes dish) {

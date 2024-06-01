@@ -1,4 +1,4 @@
-package Code;
+package user;
 
 
 //Should this be a class or an interface

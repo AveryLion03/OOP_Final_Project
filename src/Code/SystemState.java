@@ -1,13 +1,14 @@
-package Commands;
+package Code;
 
 import java.util.ArrayList;
 import user.*;
-import Code.*;
 import food.*;
 
 public class SystemState {
     protected ArrayList<User> activeMembers;
     protected ArrayList<User> deactiveMembers;
+    protected ArrayList<Order> activeOrders;
+    protected ArrayList<Order> completedOrders;
     private static Boolean run = true;
     private Meal newMeal;
     protected int userLoggedIn = 0;
@@ -17,8 +18,10 @@ public class SystemState {
     private Manager m;
 
     public SystemState() {
-        this.activeMembers = new ArrayList<>();
+        this.activeMembers = new ArrayList<>() ;
         this.deactiveMembers = new ArrayList<>();
+        this.activeOrders = new ArrayList<>();
+        this.completedOrders = new ArrayList<>();
         this.newMeal = null;
         this.r = null;
         this.c = null;
@@ -29,6 +32,13 @@ public class SystemState {
     // Getters and setters for the state variables
     public ArrayList<User> getActiveMembers() { return activeMembers; }
     public ArrayList<User> getDeactiveMembers() { return deactiveMembers; }
+    public void addActiveOrder(Order o) { this.activeOrders.add(o);}
+    public void addCompletedOrder (Order o) {
+    	this.activeOrders.remove(o);
+    	this.completedOrders.add(o);
+    }
+    public void setActiveMembers(ArrayList<User> activeMembers) { this.activeMembers = activeMembers; }
+    public ArrayList<Order> getActiveOrders(){ return this.activeOrders;}
     public Boolean getRun() { return run; }
     public void setRun(Boolean run) { this.run = run; }
     public Meal getNewMeal() { return newMeal; }
@@ -50,8 +60,8 @@ public class SystemState {
     }
 
     // Show Restaurants
-    protected void showRestaurants() {
-        for (User user : activeMembers) {
+    public void showRestaurants() {
+        for (User user : getActiveMembers()) {
             if (user.getUserType().equalsIgnoreCase("Restaurant")) {
                 System.out.println(user.getName());
             }
@@ -60,7 +70,7 @@ public class SystemState {
 
     // Show Customers
     protected void showCustomers() {
-        for (User user : activeMembers) {
+        for (User user : getActiveMembers()) {
             if (user.getUserType().equalsIgnoreCase("Customer")) {
                 System.out.println(user.getName());
             }
@@ -69,11 +79,26 @@ public class SystemState {
 
     // Show Couriers
     protected void showCouriers() {
-        for (User user : activeMembers) {
+        for (User user : getActiveMembers()) {
             if (user.getUserType().equalsIgnoreCase("Courier")) {
                 System.out.println(user.getName());
             }
         }
+    }
+    
+    public ArrayList<Courier> getAvailableCourier(){ //MAKE THIS BASED ON DELIVERY POLICY
+    	ArrayList<Courier> available = new ArrayList<>();
+    	Courier c = null;
+    	for (User user : getActiveMembers()) {
+            if (user.getUserType().equalsIgnoreCase("Courier")) {
+            	c = (Courier) user;
+            	if(c.available()) {
+            		available.add(c);
+            	}
+            }
+        }
+    	bubbleSortCouriersByDeliveries(available);
+    	return available;
     }
 
     // Bubble Sort Couriers By Deliveries
@@ -100,7 +125,7 @@ public class SystemState {
         switch (userLoggedIn) {
             case 0:
                 System.out.println("Commands Available for Anyone:");
-                System.out.println("1. Login <username> <password>");
+                System.out.println("1. login <username> <password>");
                 System.out.println("2. logout <>");
                 System.out.println("3. runTest <testScenario-file>");
                 System.out.println("4. help <>");
@@ -129,19 +154,29 @@ public class SystemState {
                 System.out.println("4. addDish2Meal <dishName> <mealName>");
                 System.out.println("5. showMeal <mealName>");
                 System.out.println("6. saveMeal <mealName>");
-                System.out.println("7. setSpecialOffer <mealName>");
-                System.out.println("8. removeFromSpecialOffer <mealName>");
+                System.out.println("7. removeFromSpecialOffer <mealName>");
+                System.out.println("8. setSpecialOffer <mealName>");
+                System.out.println("9. setDiscountPercentage <discount-Factor>");
                 break;
             case 3:
                 System.out.println("Commands Available for Customers:");
                 System.out.println("1. createOrder <restaurantName> <orderName>");
                 System.out.println("2. addItem2Order <orderName> <itemName>");
                 System.out.println("3. endOrder <orderName> <date>");
+                System.out.println("4. registerFidelity <option> -> option = register or unregister");
+                System.out.println("5. accountInformation <>"); // Should give user information regarding order history, fidelity card, etc.
+                System.out.println("6. setNotification <option> -> option = register or unregister");
+                System.out.println("7. showRestaurants <>");
                 break;
             case 4:
                 System.out.println("Commands Available for Couriers:");
                 System.out.println("1. onDuty <username>");
                 System.out.println("2. offDuty <username>");
+                System.out.println("3. acceptDelivery <response> -> response = true or false");
+                System.out.println("4. finishDelivery <response> -> response = true");
+                System.out.println("5. getOrderPos <>");
+                System.out.println("6. updatePosition <latitude> <longitude>");
+                
                 break;
             default:
                 System.out.println("Invalid user type");

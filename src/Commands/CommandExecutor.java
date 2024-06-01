@@ -35,7 +35,7 @@ public class CommandExecutor implements CommandVisitor {
                 Location loc = new Location(Double.parseDouble(command[2]), Double.parseDouble(command[3]));
                 Restaurant r = new Restaurant(command[4], command[5], "Restaurant", command[1], loc);
                 System.out.println("Successfully added");
-                systemState.activeMembers.add(r);
+                systemState.getActiveMembers().add(r);
             } catch (NumberFormatException e) {
                 System.out.println("Invalid latitude or longitude format.");
             } catch (Exception e) {
@@ -85,7 +85,7 @@ public class CommandExecutor implements CommandVisitor {
                     e.printStackTrace();
                 }
                 System.out.println("Successfully added");
-                systemState.activeMembers.add(c);
+                systemState.getActiveMembers().add(c);
             } catch (NumberFormatException e) {
                 System.out.println("Invalid latitude or longitude format.");
             } catch (Exception e) {
@@ -128,7 +128,7 @@ public class CommandExecutor implements CommandVisitor {
                 d.setPhoneNumber(e[0].trim());
                 d.getLoc().setLocation(Double.parseDouble(e[1].trim()), Double.parseDouble(e[2].trim()));
                 System.out.println("Successfully added");
-                systemState.activeMembers.add(d);
+                systemState.getActiveMembers().add(d);
             } catch (NumberFormatException e) {
                 System.out.println("Invalid latitude or longitude format.");
             } catch (Exception e) {
@@ -149,25 +149,19 @@ public class CommandExecutor implements CommandVisitor {
 		        System.out.println("Invalid Command. Use the following format: findDeliverer <orderName>");
 		        return;
 		    }
-		    ArrayList<Customer> c = new ArrayList<>();
-		    ArrayList<Courier> d = new ArrayList<>();
-		    for ( User u : systemState.activeMembers) {
-		    	if(u.getUserType().equalsIgnoreCase("Customer")) {
-		    		c.add((Customer)u);
+		    Courier c = (systemState.getAvailableCourier()).get(0);
+		    if(c == null) {
+		    	System.out.println("No couriers available at this time. Try again later.");
+		    	return;
+		    }
+		    Order order = null;
+		    for (Order o : systemState.getActiveOrders()) {
+		    	if(o.getOrderName().equalsIgnoreCase(command[1].trim())) {
+		    		order = o; 
+		    		break;
 		    	}
 		    }
-		    /*
-		    for ( User u : this.activeMembers) {
-		    	if(u.getUserType().equalsIgnoreCase("Courier")) {
-		    		d.add((Courier)u);
-		    	}
-		    }
-		    */
-		    for(Customer cust : c) {
-		    	if(cust.findOrder(command[1].trim())) {
-		    		// Find deliverer based on delivery policy... Implement this
-		    	}
-		    }
+		    c.setOrder(order);
 		    
 		}
 		
@@ -198,7 +192,7 @@ public class CommandExecutor implements CommandVisitor {
 		        return;
 		    }
 		    ArrayList<Courier> best = new ArrayList<>();
-		    for (User u : systemState.activeMembers) {
+		    for (User u : systemState.getActiveMembers()) {
 		    	if(u.getUserType().equalsIgnoreCase("Courier")) {
 		    		best.add((Courier) u);
 		    	}
@@ -221,7 +215,7 @@ public class CommandExecutor implements CommandVisitor {
 		        return;
 		    }
 		    ArrayList<Courier> best = new ArrayList<>();
-		    for (User u : systemState.activeMembers) {
+		    for (User u : systemState.getActiveMembers()) {
 		    	if(u.getUserType().equalsIgnoreCase("Courier")) {
 		    		best.add((Courier) u);
 		    	}
@@ -243,7 +237,7 @@ public class CommandExecutor implements CommandVisitor {
 		        System.out.println("Invalid Command. Use the following format: showCustomers <>");
 		        return;
 		    }
-		    for (User u : systemState.activeMembers) {
+		    for (User u : systemState.getActiveMembers()) {
 		    	if(u.getUserType().equalsIgnoreCase("Customer")) {
 		    		Customer a = (Customer) u;
 		    		System.out.printf("** %s%n",a.getFullName());
@@ -253,7 +247,26 @@ public class CommandExecutor implements CommandVisitor {
 		
 		// showMenuItem <restaurant-name>
 		else if (command[0].equalsIgnoreCase("showmenuitem")) {
-		    
+			if (systemState.getUserLoggedIn() != 1) {
+		        System.out.println("User does not have access to this command.");
+		        return;
+		    }
+		    // Validate the command format
+		    if (command.length != 2) {
+		        System.out.println("Invalid Command. Use the following format: showMenuItem <restaurant-name>");
+		        return;
+		    }
+		    Restaurant r = null;
+		    for (User u : systemState.getActiveMembers()) {
+		    	if(u.getName().equalsIgnoreCase(command[1])) {
+		    		r = (Restaurant)u;
+		    	}
+		    }
+		    if(r == null) {
+		    	System.out.println("Unable to find restaurant. Try again with the correct name.");
+		    	return;
+		    }
+		    System.out.println(r.getMenu());
 		}
 		
 		// showTotalProfit <>
@@ -287,10 +300,14 @@ public class CommandExecutor implements CommandVisitor {
 		        System.out.println("Invalid Command. Use the following format: createOrder <restaurantName> <orderName>");
 		        return;
 		    }
-		    for(User u : systemState.activeMembers) {
+		    for(User u : systemState.getActiveMembers()) {
 		    	if(u.getUserType().equalsIgnoreCase("Restaurant")) {
 		    		Restaurant r = (Restaurant) u;
-		    		systemState.getC().createOrder(command[2].trim(), r);
+		    		Order o = new Order(command[2].trim());
+		    		o.setRestaurant(r);
+		    		o.setCustomer((Customer)u);
+		    		systemState.addActiveOrder(o);
+		    		//r.getMenu(((Customer)u.).getFidelity);
 			        System.out.println("Order Successfully created. Add items to your order and save it to confirm.");
 		    		return;
 		    	}
@@ -310,7 +327,7 @@ public class CommandExecutor implements CommandVisitor {
 		        System.out.println("Invalid Command. Use the following format: addItem2Order <orderName> <itemName>");
 		        return;
 		    }
-		    Restaurant r = systemState.getC().getRestaurant(command[1].trim());
+		    Restaurant r = systemState.getC().getActiveOrder().getRestaurant(null);
 		    Meal mealItem = null;
 		    Dishes dishItem = null;
 		    for (Meal m : r.getMenu().getAvailMeals()) {
@@ -325,7 +342,7 @@ public class CommandExecutor implements CommandVisitor {
 		    }
 		    
 		    if(mealItem != null || dishItem != null) {
-		    	systemState.getC().add2Order(mealItem, dishItem);
+		    	systemState.getC().getActiveOrder().add2Order(mealItem, dishItem);
 		    	return;
 		    }
 		    System.out.println("Unable to find food item. Try again using correct name");
@@ -344,12 +361,19 @@ public class CommandExecutor implements CommandVisitor {
 		        return;
 		    }
 		    
-		    if(systemState.getC().checkOrder(command[1].trim())) {
-		    	systemState.getC().finalizeOrder(command[2].trim());
-		    	System.out.println("Order successfully ended. Sending to myFoodora manager and Restaurant for processing.");
+		    if(systemState.getC().getActiveOrder().getOrderName().equalsIgnoreCase(command[1].trim())) {
+		    	systemState.getC().getActiveOrder().finalizeOrder(command[2].trim());
+		    	System.out.println("Order successfully ended. Sending to Restaurant for processing.");
 		    	return;
 		    }
 		    System.out.println("Unable to find order name. Try again using correct order name");
+		}
+		else if (command[0].equalsIgnoreCase("showRestaurants")) {
+			if (systemState.getUserLoggedIn() != 3) {
+		        System.out.println("User does not have access to this command.");
+		        return;
+		    }
+		    systemState.showRestaurants();
 		}
     }
 
@@ -532,7 +556,7 @@ public class CommandExecutor implements CommandVisitor {
 		        return;
 		    }
 		    // Add dish to meal
-		    targetMeal.addDish(targetDish);
+		    targetMeal.addDishes(targetDish);
 		    if(targetMeal.equals(systemState.getNewMeal())) {
 		    	System.out.println("Successfully added to new meal. Save Meal to add to menu");
 		    	return;
@@ -672,32 +696,32 @@ public class CommandExecutor implements CommandVisitor {
             }
             
             // Login for managers
-            for (int i = 0; i < systemState.activeMembers.size(); i++) {
+            for (int i = 0; i < systemState.getActiveMembers().size(); i++) {
                 String username = command[1].trim();
                 String password = command[2].trim();
                 
-                if (username.equals(systemState.activeMembers.get(i).getUsername()) && 
-                    password.equals(systemState.activeMembers.get(i).getPassword())) {
+                if (username.equals(systemState.getActiveMembers().get(i).getUsername()) && 
+                    password.equals(systemState.getActiveMembers().get(i).getPassword())) {
                     
-                    String userType = systemState.activeMembers.get(i).getUserType().toLowerCase();
+                    String userType = systemState.getActiveMembers().get(i).getUserType().toLowerCase();
                     
-                    System.out.printf("Login Successful. Welcome, %s%n", systemState.activeMembers.get(i).getName());
+                    System.out.printf("Login Successful. Welcome, %s%n", systemState.getActiveMembers().get(i).getName());
                     
                     switch (userType) {
                         case "manager":
-                        	systemState.setM((Manager) systemState.activeMembers.get(i));
+                        	systemState.setM((Manager) systemState.getActiveMembers().get(i));
                         	systemState.setUserLoggedIn(1);
                             break;
                         case "restaurant":
-                        	systemState.setR((Restaurant) systemState.activeMembers.get(i));
+                        	systemState.setR((Restaurant) systemState.getActiveMembers().get(i));
                         	systemState.setUserLoggedIn(2);
                             break;
                         case "customer":
-                        	systemState.setC((Customer) systemState.activeMembers.get(i));
+                        	systemState.setC((Customer) systemState.getActiveMembers().get(i));
                         	systemState.setUserLoggedIn(3);
                             break;
                         case "courier":
-                        	systemState.setD((Courier) systemState.activeMembers.get(i));
+                        	systemState.setD((Courier) systemState.getActiveMembers().get(i));
                         	systemState.setUserLoggedIn(4);
                             break;
                         default:

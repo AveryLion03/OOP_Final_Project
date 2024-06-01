@@ -1,9 +1,8 @@
 package user;
 
-import Code.Location;
-
 import java.util.ArrayList;
 import java.util.Objects;
+import food.*;
 
 public class Courier extends Person {
     // Protected member variables specific to Courier
@@ -11,7 +10,7 @@ public class Courier extends Person {
     protected int orderCount;
     protected boolean onDuty;
     protected Location loc;
-
+    protected Order currentJob;
     // Constructor
     public Courier(String username, String password, String userType, String name, String surname, String phoneNumber, int orderCount, boolean onDuty, Location loc) {
         super(username, password, userType, name, surname); // Call to the superclass constructor
@@ -19,13 +18,27 @@ public class Courier extends Person {
         this.orderCount = orderCount;
         this.onDuty = onDuty;
         this.loc = loc;
+        this.currentJob = null;
     }
 
     // Getters and setters
     public String getPhoneNumber() {
         return phoneNumber;
     }
+    
+    public boolean available() {
+    	if(currentJob == null) {
+    		return true;
+    	}
+    	return false;
+    }
+    public void setOrder(Order o) {
+    	this.currentJob = o;
+    }
 
+    public void finishJob() {
+    	this.currentJob = null;
+    }
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }

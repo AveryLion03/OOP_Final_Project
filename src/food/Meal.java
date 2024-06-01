@@ -2,26 +2,32 @@ package food;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Scanner;
 
 public class Meal {
     // Member variables
     protected String mealName;
-    protected List<Dishes> dishes;
+    protected Dishes dessert;
+    protected Dishes main;
+    protected Dishes starter;
     protected double price;
     protected boolean deal;
     protected double discount_rate;
 
     // Constructor
-    public Meal(String mealName, List<Dishes> dishes, double price, boolean deal) {
+    public Meal(String mealName, double price, boolean deal) {
         this.mealName = mealName.toUpperCase();
-        this.dishes = dishes != null ? dishes : new ArrayList<>();
+        this.dessert = null;
+        this.starter = null;
+        this.main = null;
         this.price = price;
         this.deal = deal;
         this.discount_rate = 10.0;
     }
         // Single argument constructor
     public Meal(String mealName) {
-        this(mealName, new ArrayList<>(), 0.0, false);
+        this(mealName, 0.0, false);
     }
 
     // Getters
@@ -33,9 +39,6 @@ public class Meal {
     }
     protected void setDeal(boolean deal) {
     	this.deal = deal;
-    }
-    public List<Dishes> getDishes() {
-        return new ArrayList<>(dishes); // Return a copy to prevent external modification
     }
 
     public double getPrice() {
@@ -51,20 +54,51 @@ public class Meal {
     	this.discount_rate = newDiscount;
     }
 
-    public void setDishes(List<Dishes> dishes) {
-        if (dishes != null) {
-            this.dishes = new ArrayList<>(dishes); // Create a new list to prevent external modifications
+    public void addDishes(Dishes dish) {
+    	// System.out.println(dish.dishCategory);
+        if (dish.dishCategory.equalsIgnoreCase("Starter")) {
+            handleDishAddition(dish, starter, "Starter");
+        } else if (dish.dishCategory.equalsIgnoreCase("Main")) {
+            handleDishAddition(dish, main, "Main");
+        } else if (dish.dishCategory.equalsIgnoreCase("Dessert")) {
+            handleDishAddition(dish, dessert, "Dessert");
         }
     }
 
-    public void addDish(Dishes dish) {
-        if (dish != null) {
-            this.dishes.add(dish);
-            if(this.deal) this.price += dish.getUnitPrice() * (1 / this.discount_rate); // Add in the discount factor of meal of week
-            else this.price += dish.getUnitPrice() * 0.95; // Add in the discount factor of 5%
-            
+    private void handleDishAddition(Dishes dish, Dishes existingDish, String category) {
+        if (existingDish != null) {
+            System.out.printf("Warning: You are replacing the current %s in this meal: %s. Do you want to continue? Y/N%n", category, existingDish.getDishName());
+            Scanner scanner = new Scanner(System.in);
+            String input = scanner.nextLine().trim().toLowerCase();
+            if (input.equals("y")) {
+                assignDish(dish, category);
+            } else {
+                System.out.println("Change to menu has been canceled");
+            }
+        } else {
+            assignDish(dish, category);
         }
     }
+
+    private void assignDish(Dishes dish, String category) {
+        switch (category.toLowerCase()) {
+            case "starter":
+                this.starter = new Dishes(dish);
+                break;
+            case "main":
+                this.main = new Dishes(dish);
+                break;
+            case "dessert":
+                this.dessert = new Dishes(dish);
+                break;
+        }
+        if (deal) {
+            price += dish.getUnitPrice() * (1 / discount_rate); // Add in the discount factor of meal of week
+        } else {
+            price += dish.getUnitPrice() * 0.95; // Add in the discount factor of 5%
+        }
+    }
+
 
     public void setPrice(double price) {
         if (price >= 0) {
@@ -100,59 +134,50 @@ public class Meal {
         }
     }
 
-    // Method to print all dishes in the meal
-    public void printDishes() {
-        for (Dishes dish : dishes) {
-            System.out.println(dish);
-        }
-    }
-
     @Override
     public boolean equals(Object obj) {
-    	// Check if the object is compared with itself
+        // Check if the object is compared with itself
         if (this == obj) {
             return true;
         }
-        // Check if the object is an instance of Meal
+        // Check if the object is null or of a different class
         if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
         // Typecast obj to Meal so that we can compare data members
         Meal meal = (Meal) obj;
         // Compare the data members and return accordingly
-        if (Double.compare(meal.price, price) != 0) {
-            return false;
-        }
-        if (mealName != null ? !mealName.equals(meal.mealName) : meal.mealName != null) {
-            return false;
-        }
-        if (dishes != null ? !dishes.equals(meal.dishes) : meal.dishes != null) {
-            return false;
-        }
+        return Double.compare(meal.price, price) == 0 &&
+                deal == meal.deal &&
+                Double.compare(meal.discount_rate, discount_rate) == 0 &&
+                Objects.equals(mealName, meal.mealName) &&
+                Objects.equals(dessert, meal.dessert) &&
+                Objects.equals(main, meal.main) &&
+                Objects.equals(starter, meal.starter);
+    }
 
-        return true;
-    }
     
-    public void print() {
-    	System.out.printf("%s: $%.2f%n", this.mealName, this.price);
-    	System.out.println("Starters: ");
-    	for(Dishes d : this.dishes) {
-    		if(d.getDishType().equalsIgnoreCase("Starter")) {
-    			System.out.printf("** %s **%n", d.getDishName());
-    		}
-    	}
-    	System.out.println("Main Courses: ");
-    	for(Dishes d : this.dishes) {
-    		if(d.getDishType().equalsIgnoreCase("Main")) {
-    			System.out.printf("** %s **%n", d.getDishName());
-    		}
-    	}
-    	System.out.println("Desserts: ");
-    	for(Dishes d : this.dishes) {
-    		if(d.getDishType().equalsIgnoreCase("Dessert")) {
-    			System.out.printf("** %s **%n", d.getDishName());
-    		}
-    	}
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        int count = 0;
+        sb.append("Meal Name: ").append(mealName).append("\n");
+        if (starter != null) {
+            sb.append("Starter: ").append(starter.getDishName()).append("\n");
+            count++;
+        }
+        if (main != null) {
+            sb.append("Main Course: ").append(main.getDishName()).append("\n");
+            count++;
+        }
+        if (dessert != null) {
+            sb.append("Dessert: ").append(dessert.getDishName()).append("\n");
+            count++;
+        }
+        sb.append("Price: $").append(price).append("\n");
+        sb.append("Deal: ").append(deal ? "Yes" : "No").append("\n");
+        return sb.toString();
     }
+
 }
 
