@@ -2,6 +2,7 @@ package Commands;
 import food.*;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -849,7 +850,10 @@ public class CommandExecutor implements CommandVisitor {
         // System.out.println("Executing command for anyone: " + command);
     }
     public void runTest(String filename) {
-        try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
+        // Construct the file path dynamically based on the provided filename
+        String filePath = "Commands/" + filename;
+
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;
             while ((line = br.readLine()) != null) {
                 if (!line.trim().isEmpty()) {
