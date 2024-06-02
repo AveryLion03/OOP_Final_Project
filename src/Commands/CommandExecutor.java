@@ -1,6 +1,9 @@
 package Commands;
 import food.*;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -831,8 +834,12 @@ public class CommandExecutor implements CommandVisitor {
 
 		// runTest <testScenario-file>
 		else if (command[0].equalsIgnoreCase("runtest")) {
-		    
-		}
+	            if (command.length != 2) {
+	                System.out.println("Invalid Command. Use the following format: runtest <testScenario-file>");
+	                return;
+	            }
+	            runTest(command[1]);
+	        }
 		
 		// Invalid command -> Try again
 		else {
@@ -841,4 +848,30 @@ public class CommandExecutor implements CommandVisitor {
     	
         // System.out.println("Executing command for anyone: " + command);
     }
+    public void runTest(String filename) {
+        try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                if (!line.trim().isEmpty()) {
+                    String[] command = line.split(" ");
+                    if (systemState.getUserLoggedIn() == 0) {
+                        visitAnyoneCommand(command);
+                    } else if (systemState.getUserLoggedIn() == 1) {
+                        visitManagerCommand(command);
+                    } else if (systemState.getUserLoggedIn() == 2) {
+                        visitRestaurantCommand(command);
+                    } else if (systemState.getUserLoggedIn() == 3) {
+                        visitCustomerCommand(command);
+                    } else if (systemState.getUserLoggedIn() == 4) {
+                        visitCourierCommand(command);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("An error occurred while reading the test scenario file.");
+            e.printStackTrace();
+        }
+    }
 }
+    
+

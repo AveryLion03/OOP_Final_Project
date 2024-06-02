@@ -1,0 +1,28 @@
+
+registercustomer Suzie Lee suzlee 12.34 56.78 12345
+registercustomer John Cena jCena 23.45 67.89 abc123
+registercustomer Mike Johnson MJonTop 34.56 78.90 MJ23GOAT
+registerrestaurant Burger Palace 40.7128 -74.0060 burgerpalace_admin burger123
+registerrestaurant Pizza Haven 34.0522 -118.2437 pizzahaven_admin pizza456
+registerrestaurant Taco Junction 51.5074 -0.1278 tacojunction_admin taco789
+registercourier John Doe courier_john pass123 40.7128 -74.0060
+registercourier Emily Smith courier_emily secret456 34.0522 -118.2437
+login burgerpalace_admin burger123
+addDishrestaurantmenu Burger Main standard 8.99
+addDishrestaurantmenu Fries Side vegetarian 3.99
+createMeal Combo
+addDish2Meal Burger Combo
+addDish2Meal Fries Combo
+saveMeal Combo
+setSpecialOffer Combo
+logout
+login suzlee 12345
+createOrder Burger Palace MyFirstOrder
+addItem2Order MyFirstOrder Combo
+endOrder MyFirstOrder 2023-06-01
+logout
+login jCena abc123
+createOrder Pizza Haven MySecondOrder
+addItem2Order MySecondOrder Pizza
+endOrder MySecondOrder 2023-06-01
+logout
