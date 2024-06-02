@@ -3140,3 +3140,16 @@ org.eclipse.core.runtime.CoreException: The Class File Viewer cannot handle the 
 	at org.eclipse.equinox.launcher.Main.run(Main.java:1459)
 !SUBENTRY 2 org.eclipse.jdt.ui 4 996 2024-06-02 13:33:06.186
 !MESSAGE The Class File Viewer cannot handle the given input ('org.eclipse.ui.ide.FileStoreEditorInput').
+!SESSION 2024-06-02 13:33:54.371 -----------------------------------------------
+eclipse.buildId=4.31.0.20240307-1200
+java.version=17.0.10
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=macosx, ARCH=x86_64, WS=cocoa, NL=en_DE
+Framework arguments:  -product org.eclipse.epp.package.java.product -keyring /Users/arvidehlert/.eclipse_keyring
+Command-line arguments:  -os macosx -ws cocoa -arch x86_64 -product org.eclipse.epp.package.java.product -keyring /Users/arvidehlert/.eclipse_keyring
+
+!ENTRY ch.qos.logback.classic 1 0 2024-06-02 13:33:58.402
+!MESSAGE Activated before the state location was initialized. Retry after the state location is initialized.
+
+!ENTRY ch.qos.logback.classic 1 0 2024-06-02 13:34:02.838
+!MESSAGE Logback config file: /Users/arvidehlert/Documents/GitHub/OOP_Final_Project/.metadata/.plugins/org.eclipse.m2e.logback/logback.2.6.0.20240217-1525.xml

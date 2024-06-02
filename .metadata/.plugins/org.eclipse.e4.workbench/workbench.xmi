@@ -479,7 +479,7 @@
       </children>
       <children xsi:type="menu:ToolBar" xmi:id="_yu48oBICEe-b6-wEn4hC8w" elementId="org.eclipse.ui.workbench.file">
         <tags>Draggable</tags>
-        <children xsi:type="menu:HandledToolItem" xmi:id="_y94zYCDTEe-yo7mljgSlmw" elementId="print" visible="false" iconURI="platform:/plugin/org.eclipse.ui/icons/full/etool16/print_edit.png" tooltip="Print" command="_yUHFwhICEe-b6-wEn4hC8w"/>
+        <children xsi:type="menu:HandledToolItem" xmi:id="_BMoxECDUEe-Jc4YDjw1Htg" elementId="print" visible="false" iconURI="platform:/plugin/org.eclipse.ui/icons/full/etool16/print_edit.png" tooltip="Print" command="_yUHFwhICEe-b6-wEn4hC8w"/>
       </children>
       <children xsi:type="menu:ToolBar" xmi:id="_yu5jsBICEe-b6-wEn4hC8w" elementId="group.edit" toBeRendered="false">
         <tags>toolbarSeparator</tags>
@@ -487,8 +487,8 @@
       </children>
       <children xsi:type="menu:ToolBar" xmi:id="_yu6KwBICEe-b6-wEn4hC8w" elementId="org.eclipse.ui.workbench.edit">
         <tags>Draggable</tags>
-        <children xsi:type="menu:HandledToolItem" xmi:id="_y99r4CDTEe-yo7mljgSlmw" elementId="undo" iconURI="platform:/plugin/org.eclipse.ui/icons/full/etool16/undo_edit.png" tooltip="Undo" enabled="false" command="_yUBltBICEe-b6-wEn4hC8w"/>
-        <children xsi:type="menu:HandledToolItem" xmi:id="_y99r4SDTEe-yo7mljgSlmw" elementId="redo" iconURI="platform:/plugin/org.eclipse.ui/icons/full/etool16/redo_edit.png" tooltip="Redo" enabled="false" command="_yUEo7hICEe-b6-wEn4hC8w"/>
+        <children xsi:type="menu:HandledToolItem" xmi:id="_BMr0YCDUEe-Jc4YDjw1Htg" elementId="undo" iconURI="platform:/plugin/org.eclipse.ui/icons/full/etool16/undo_edit.png" tooltip="Undo" enabled="false" command="_yUBltBICEe-b6-wEn4hC8w"/>
+        <children xsi:type="menu:HandledToolItem" xmi:id="_BMr0YSDUEe-Jc4YDjw1Htg" elementId="redo" iconURI="platform:/plugin/org.eclipse.ui/icons/full/etool16/redo_edit.png" tooltip="Redo" enabled="false" command="_yUEo7hICEe-b6-wEn4hC8w"/>
       </children>
       <children xsi:type="menu:ToolBar" xmi:id="_yu6KwRICEe-b6-wEn4hC8w" elementId="additions" toBeRendered="false">
         <tags>toolbarSeparator</tags>
@@ -512,12 +512,9 @@
       </children>
       <children xsi:type="menu:ToolBar" xmi:id="_yu6KxRICEe-b6-wEn4hC8w" elementId="org.eclipse.ui.workbench.navigate">
         <tags>Draggable</tags>
-        <children xsi:type="menu:HandledToolItem" xmi:id="_y9_hECDTEe-yo7mljgSlmw" elementId="org.eclipse.ui.window.pinEditor" iconURI="platform:/plugin/org.eclipse.ui/icons/full/etool16/pin_editor.png" tooltip="Pin Editor" enabled="false" type="Check" command="_yUHFfRICEe-b6-wEn4hC8w"/>
+        <children xsi:type="menu:HandledToolItem" xmi:id="_BMtCgCDUEe-Jc4YDjw1Htg" elementId="org.eclipse.ui.window.pinEditor" iconURI="platform:/plugin/org.eclipse.ui/icons/full/etool16/pin_editor.png" tooltip="Pin Editor" enabled="false" type="Check" command="_yUHFfRICEe-b6-wEn4hC8w"/>
       </children>
       <children xsi:type="menu:ToolBar" xmi:id="_nMnSMBT1Ee-e4uyxl438PA" elementId="org.eclipse.jdt.ui.ClassFileEditor" visible="false">
-        <tags>Draggable</tags>
-      </children>
-      <children xsi:type="menu:ToolBar" xmi:id="_K1qDkCBBEe-12_p0KqlyCg" elementId="org.eclipse.jdt.ui.CompilationUnitEditor" visible="false">
         <tags>Draggable</tags>
       </children>
       <children xsi:type="menu:ToolBar" xmi:id="_yu6KxhICEe-b6-wEn4hC8w" elementId="group.editor" toBeRendered="false">
@@ -1178,7 +1175,7 @@
     <bindings xmi:id="_yVm5_RICEe-b6-wEn4hC8w" keySequence="ALT+CR" command="_yUFP8BICEe-b6-wEn4hC8w"/>
   </bindingTables>
   <bindingTables xmi:id="_yXMOUBICEe-b6-wEn4hC8w" contributorURI="platform:/fragment/org.eclipse.e4.ui.workbench.renderers.swt.cocoa" bindingContext="_yTTM3BICEe-b6-wEn4hC8w">
-    <bindings xmi:id="_ymsbYCDTEe-yo7mljgSlmw" keySequence="M1+W" command="_yXLnRBICEe-b6-wEn4hC8w"/>
+    <bindings xmi:id="_A8I28CDUEe-Jc4YDjw1Htg" keySequence="M1+W" command="_yXLnRBICEe-b6-wEn4hC8w"/>
   </bindingTables>
   <bindingTables xmi:id="_y4NQsBICEe-b6-wEn4hC8w" bindingContext="_y4MpoBICEe-b6-wEn4hC8w"/>
   <bindingTables xmi:id="_y4PF4RICEe-b6-wEn4hC8w" bindingContext="_y4PF4BICEe-b6-wEn4hC8w"/>
@@ -2706,7 +2703,7 @@
   <addons xmi:id="_yTTM5RICEe-b6-wEn4hC8w" elementId="MinMax Addon" contributorURI="platform:/plugin/org.eclipse.platform" contributionURI="bundleclass://org.eclipse.e4.ui.workbench.addons.swt/org.eclipse.e4.ui.workbench.addons.minmax.MinMaxAddon"/>
   <addons xmi:id="_yTTM5hICEe-b6-wEn4hC8w" elementId="org.eclipse.ui.workbench.addon.0" contributorURI="platform:/plugin/org.eclipse.platform" contributionURI="bundleclass://org.eclipse.e4.ui.workbench/org.eclipse.e4.ui.internal.workbench.addons.HandlerProcessingAddon"/>
   <addons xmi:id="_yTezABICEe-b6-wEn4hC8w" elementId="SplitterAddon" contributionURI="bundleclass://org.eclipse.e4.ui.workbench.addons.swt/org.eclipse.e4.ui.workbench.addons.splitteraddon.SplitterAddon"/>
-  <addons xmi:id="_yl_QwCDTEe-yo7mljgSlmw" elementId="org.eclipse.ui.ide.addon.0" contributionURI="bundleclass://org.eclipse.ui.ide/org.eclipse.ui.internal.ide.addons.SaveAllDirtyPartsAddon"/>
+  <addons xmi:id="_IYS0IKimEeS11vbz3f9ezw" elementId="org.eclipse.ui.ide.addon.0" contributorURI="platform:/plugin/org.eclipse.ui.ide" contributionURI="bundleclass://org.eclipse.ui.ide/org.eclipse.ui.internal.ide.addons.SaveAllDirtyPartsAddon"/>
   <addons xmi:id="_dz0JgGOlEeSMMaPQU2nlzw" elementId="org.eclipse.ui.ide.application.addon.0" contributorURI="platform:/plugin/org.eclipse.ui.ide.application" contributionURI="bundleclass://org.eclipse.ui.ide.application/org.eclipse.ui.internal.ide.application.addons.ModelCleanupAddon"/>
   <addons xmi:id="_yXKZIBICEe-b6-wEn4hC8w" elementId="org.eclipse.e4.ui.workbench.renderers.swt.cocoa.CocoaUIHandler" contributionURI="bundleclass://org.eclipse.e4.ui.workbench.renderers.swt/org.eclipse.e4.ui.workbench.renderers.swt.cocoa.CocoaUIHandler"/>
   <categories xmi:id="_yT2mcBICEe-b6-wEn4hC8w" elementId="org.eclipse.team.ui.category.team" name="Version control (Team)" description="Actions that apply when working with a version control system"/>
