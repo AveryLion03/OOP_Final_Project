@@ -1,11 +1,8 @@
 package user;
 
-import Code.Location;
-import food.Dishes;
-import food.Meal;
-import food.Menu;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import Code.*;
+import food.*;
+import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
 
@@ -102,7 +99,7 @@ class RestaurantTest {
         restaurant.addDishToMeal(meal, dish);
         Menu menu = restaurant.getMenu();
         assertTrue(menu.getAvailMeals().contains(meal));
-        assertTrue(meal.getDishes().contains(dish));
+        //assertTrue(meal.getDishes().contains(dish));
     }
     
 

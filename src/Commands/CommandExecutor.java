@@ -167,17 +167,82 @@ public class CommandExecutor implements CommandVisitor {
 		
 		// setDeliveryPolicy <delPolicyName>
 		else if (command[0].equalsIgnoreCase("setdeliverypolicy")) {
-		   
+			if (systemState.getUserLoggedIn() != 1) {
+		        System.out.println("User does not have access to this command.");
+		        return;
+		    }
+		    // Validate the command format
+		    if (command.length != 2) {
+		        System.out.println("Invalid Command. Use the following format: findDeliverer <orderName>");
+		        return;
+		    }
+		    if(command[1].equalsIgnoreCase("Fast")) {
+		    	systemState.setDeliveryPolicy("Fast");
+		    	System.out.println("Delivery policy set.");
+		    	return;
+		    }
+		    else if(command[1].equalsIgnoreCase("Fair")) {
+		    	systemState.setDeliveryPolicy("Fair");
+			    System.out.println("Delivery policy set.");
+		    	return;
+		    }
+		    System.out.println("Unable to find policy name. Your two options are:\n1. Fast\n2. Fair");
+		    return;
 		}
 		
-		// setProfitPolicy <ProfitPolicyName>
+		// setProfitPolicy <ProfitPolicyName> FINISH WORKING ON THIS
 		else if (command[0].equalsIgnoreCase("setprofitpolicy")) {
-		    
+			if (systemState.getUserLoggedIn() != 1) {
+		        System.out.println("User does not have access to this command.");
+		        return;
+		    }
+		    // Validate the command format
+		    if (command.length != 2) {
+		        System.out.println("Invalid Command. Use the following format:  setProfitPolicy <ProfitPolicyName>");
+		        return;
+		    }
+		    if(command[1].equalsIgnoreCase("targetProfit_DeliveryCost")) {
+		    	systemState.setPricingPolicy("targetProfit_DeliveryCost");
+		    	System.out.println("Pricing policy set.");
+		    	return;
+		    }
+		    else if(command[1].equalsIgnoreCase("targetProfit_ServiceFee")) {
+		    	systemState.setPricingPolicy("targetProfit_ServiceFee");
+		    	System.out.println("Pricing policy set.");
+		    	return;
+		    }
+		    else if(command[1].equalsIgnoreCase("targetProfit_Markup")) {
+		    	systemState.setPricingPolicy("targetProfit_Markup");
+		    	System.out.println("Pricing policy set.");
+		    	return;
+		    }
+		    System.out.println("Unable to find policy name. Your three options are: \n1. targetProfit_DeliveryCost\n2. targetProfit_ServiceFee\n3. targetProfit_Markup");
+		    return;
 		}
 		
 		// associateCard <userName> <cardType>
 		else if (command[0].equalsIgnoreCase("associatecard")) {
-		    
+			if (systemState.getUserLoggedIn() != 1) {
+		        System.out.println("User does not have access to this command.");
+		        return;
+		    }
+		    // Validate the command format
+		    if (command.length != 3) {
+		        System.out.println("Invalid Command. Use the following format:  associateCard <userName> <cardType>");
+		        return;
+		    }
+		    Customer c = null;
+		    for (User u : systemState.getActiveMembers()) {
+		    	if(u.getUsername().equals(command[1])) {
+		    		c = (Customer) u;
+		    	}
+		    }
+		    if(c == null) {
+		    	System.out.println("Could not find user. Try again with correct username (CASE SENSITIVE).");
+		    	return;
+		    }
+		    if(c.setFidelity(command[2])) System.out.println("Successfully updated user's fidelity agreement.");
+		    return;
 		}
 		
 		// showCourierDeliveries <>
@@ -260,6 +325,7 @@ public class CommandExecutor implements CommandVisitor {
 		    for (User u : systemState.getActiveMembers()) {
 		    	if(u.getName().equalsIgnoreCase(command[1])) {
 		    		r = (Restaurant)u;
+		    		break;
 		    	}
 		    }
 		    if(r == null) {

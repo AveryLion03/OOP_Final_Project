@@ -55,12 +55,14 @@ public class Customer extends Person {
         return fidelity;
     }
 
-    public void setFidelity(String fidelity) {
+    public Boolean setFidelity(String fidelity) {
         if (isValidFidelity(fidelity)) {
             this.fidelity = fidelity;
         } else {
-            throw new IllegalArgumentException("Invalid fidelity value. Options are none, basic, point, or lottery.");
+            System.out.println("Invalid fidelity value. Options are none, basic, point, or lottery.");
+            return false;
         }
+        return true;
     }
 
     private boolean isValidFidelity(String fidelity) {

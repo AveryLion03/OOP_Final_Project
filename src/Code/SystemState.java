@@ -9,13 +9,14 @@ public class SystemState {
     protected ArrayList<User> deactiveMembers;
     protected ArrayList<Order> activeOrders;
     protected ArrayList<Order> completedOrders;
+    protected String[] systemPolicies = {"Fast", "targetProfit_Markup"}; // first index relates to delivery policy, second to profit policy
     private static Boolean run = true;
-    private Meal newMeal;
     protected int userLoggedIn = 0;
     private Restaurant r;
     private Customer c;
     private Courier d;
     private Manager m;
+    private Meal newMeal;
 
     public SystemState() {
         this.activeMembers = new ArrayList<>() ;
@@ -37,6 +38,10 @@ public class SystemState {
     	this.activeOrders.remove(o);
     	this.completedOrders.add(o);
     }
+    public void setDeliveryPolicy(String set) {this.systemPolicies[0] = set; }
+    public String getDeliveryPolicy() {return this.systemPolicies[0]; }
+    public void setPricingPolicy(String set) {this.systemPolicies[1] = set; }
+    public String getPricingPolicy() {return this.systemPolicies[1]; }
     public void setActiveMembers(ArrayList<User> activeMembers) { this.activeMembers = activeMembers; }
     public ArrayList<Order> getActiveOrders(){ return this.activeOrders;}
     public Boolean getRun() { return run; }
@@ -120,6 +125,26 @@ public class SystemState {
         }
     }
 
+    public static double haversine(double lat1, double lon1, double lat2, double lon2) {
+        final double R = 6371.0; // Earth's radius in kilometers
+        
+        // Convert latitude and longitude from degrees to radians
+        double phi1 = Math.toRadians(lat1);
+        double phi2 = Math.toRadians(lat2);
+        double deltaPhi = Math.toRadians(lat2 - lat1);
+        double deltaLambda = Math.toRadians(lon2 - lon1);
+        
+        // Haversine formula
+        double a = Math.sin(deltaPhi / 2) * Math.sin(deltaPhi / 2) +
+                   Math.cos(phi1) * Math.cos(phi2) *
+                   Math.sin(deltaLambda / 2) * Math.sin(deltaLambda / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        
+        // Calculate the distance
+        double distance = R * c;
+        
+        return distance;
+    }
     // Print Commands
     public void printCommands() {
         switch (userLoggedIn) {
