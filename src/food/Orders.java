@@ -48,6 +48,11 @@ public class Orders {
     public void sendOrder() {
         System.out.println("Order sent: " + orderName + " (ID: " + orderID + ")");
     }
+    
+ // Getter for items - nneded to run test
+    public List<String> getItems() {
+        return items;
+    }
 
     /* Getters and setters 
      * startOrder
