@@ -1,0 +1,17 @@
+login suzlee 12345
+createOrder Burger_Palace suzie_order1
+addItem2Order suzie_order1 Burger_Meal
+addItem2Order suzie_order1 Chicken_Nuggets
+endOrder suzie_order1 2024-06-05
+registerFidelity point
+accountInformation
+logout
+
+login jCena abc123
+createOrder Pizza_Haven john_order1
+addItem2Order john_order1 Family_Pizza_Meal
+addItem2Order john_order1 Tiramisu
+endOrder john_order1 2024-06-06
+registerFidelity basic
+accountInformation
+logout

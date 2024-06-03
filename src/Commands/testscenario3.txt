@@ -1,0 +1,7 @@
+login courier_john pass123
+onduty courier_john
+updatePosition 40.7128 -74.0060
+acceptDelivery true
+finishDelivery true
+offduty courier_john
+logout
