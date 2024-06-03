@@ -1,0 +1,12 @@
+login ceo 123456789
+registerrestaurant Taco_Bell 51.5074 -0.1278 taco_admin taco789
+registercustomer John Doe johndoe 40.7128 -74.0060 password123
+john.doe@example.com +1(123)456-7890
+registercourier Jane Doe janedoe Courier password123
+setdeliverypolicy Fast
+setprofitpolicy targetProfit_Markup
+associatecard johndoe basic
+showcourierdeliveries
+showrestauranttop
+showcustomers
+logout
