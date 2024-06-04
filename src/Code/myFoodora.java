@@ -19,11 +19,13 @@ public class myFoodora {
         // Run the initialization program
         File start = new File("Code/startUp.txt");
         ArrayList<String> lines = new ArrayList<>(); // To hold the lines of the text file separately
+        CommandExecutor commandExecutor = new CommandExecutor(foodSys.getSystemState());
         try (Scanner scanner = new Scanner(start)) {
             while (scanner.hasNextLine()) {
                 lines.add(scanner.nextLine());
             }
             for (String line : lines) {
+            	// foodSys.acceptCommandVisitor(line, commandExecutor);
                 foodSys.processCommands(line);
             }
         } catch (FileNotFoundException e) {
@@ -32,10 +34,9 @@ public class myFoodora {
         }
 
         System.out.println("Initialization File Complete! CLUI Now Active");
-
         // Begin Command Line User Interface (CLUI)
         try (Scanner inputLine = new Scanner(System.in)) {
-            CommandExecutor commandExecutor = new CommandExecutor(foodSys.getSystemState());
+            // CommandExecutor commandExecutor = new CommandExecutor(foodSys.getSystemState());
             while (foodSys.getLoop()) {
                 System.out.print(">> ");
                 System.out.flush();

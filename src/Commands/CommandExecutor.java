@@ -153,7 +153,7 @@ public class CommandExecutor implements CommandVisitor {
 		        System.out.println("Invalid Command. Use the following format: findDeliverer <orderName>");
 		        return;
 		    }
-		    Courier c = (systemState.getAvailableCourier()).get(0);
+		    Courier c = (systemState.getAvailableCourier()).get(0); // .getAvailableCourier creates a list of available Couriers based on delivery policy
 		    if(c == null) {
 		    	System.out.println("No couriers available at this time. Try again later.");
 		    	return;
@@ -194,7 +194,7 @@ public class CommandExecutor implements CommandVisitor {
 		    return;
 		}
 		
-		// setProfitPolicy <ProfitPolicyName> FINISH WORKING ON THIS
+		// setProfitPolicy <ProfitPolicyName> 
 		else if (command[0].equalsIgnoreCase("setprofitpolicy")) {
 			if (systemState.getUserLoggedIn() != 1) {
 		        System.out.println("User does not have access to this command.");
@@ -237,7 +237,7 @@ public class CommandExecutor implements CommandVisitor {
 		    }
 		    Customer c = null;
 		    for (User u : systemState.getActiveMembers()) {
-		    	if(u.getUsername().equals(command[1])) {
+		    	if(u.getUsername().equals((command[1]).trim())) {
 		    		c = (Customer) u;
 		    	}
 		    }
@@ -340,13 +340,89 @@ public class CommandExecutor implements CommandVisitor {
 		}
 		
 		// showTotalProfit <>
-		else if (command[0].equalsIgnoreCase("showtotalprofit")) {
-		    
+		else if (command[0].equalsIgnoreCase("showtotalprofit") && command.length == 1) {
+			if (systemState.getUserLoggedIn() != 1) {
+		        System.out.println("User does not have access to this command.");
+		        return;
+		    }
+		    // Validate the command format
+		    if (command.length != 1) {
+		        System.out.println("Invalid Command. Use the following format: showTotalProfit <>");
+		        return;
+		    }
+			double totProfit = 0.0;
+			for (Order o : systemState.getActiveOrders()) {
+		    	totProfit += o.getProfit();
+		    	
+		    }
+			for (Order o : systemState.getCompletedOrders()) {
+		    	totProfit += o.getProfit();
+		    	
+		    }
+		    System.out.printf("The total profit to date is: $%.2f%n", totProfit);
+		    return;
 		}
 		
 		// showTotalProfit <startDate> <endDate>
-		else if (command[0].equalsIgnoreCase("showtotalprofitperiod")) {
-		    
+		else if (command[0].equalsIgnoreCase("showTotalProfit")) {
+			if (systemState.getUserLoggedIn() != 1) {
+		        System.out.println("User does not have access to this command.");
+		        return;
+		    }
+		    // Validate the command format
+		    if (command.length != 3) {
+		        System.out.println("Invalid Command. Use the following format: showTotalProfit <startDate> <endDate>");
+		        return;
+		    }
+		    String [] startDate = command[1].split("/");
+		    String [] endDate = command[2].split("/");
+			double totProfit = 0.0;
+		    for (Order o : systemState.getActiveOrders()) {
+		    	// First check the years
+		    	int start = Integer.parseInt(startDate[2]);
+		    	int order = Integer.parseInt(o.getDate()[2]);
+		    	int end = Integer.parseInt(endDate[2]);
+		    	if((start <= order )&& (order <= end)) {
+		    		start = Integer.parseInt(startDate[0]);
+			    	order = Integer.parseInt(o.getDate()[0]);
+			    	end = Integer.parseInt(endDate[0]);
+			    	// Next check the months
+			    	if(start <= order && order <= end) {
+			    		// Lastly check the day
+			    		start = Integer.parseInt(startDate[1]);
+				    	order = Integer.parseInt(o.getDate()[1]);
+				    	end = Integer.parseInt(endDate[1]);
+				    	if(start <= order && order <= end) {
+				    		totProfit += o.getProfit();
+				    	}
+			    	}
+		    	}
+		    	
+		    }
+		    for (Order o : systemState.getCompletedOrders()) {
+		    	// First check the years
+		    	int start = Integer.parseInt(startDate[2]);
+		    	int order = Integer.parseInt(o.getDate()[2]);
+		    	int end = Integer.parseInt(endDate[2]);
+		    	if(start < order && order < end) {
+		    		start = Integer.parseInt(startDate[0]);
+			    	order = Integer.parseInt(o.getDate()[0]);
+			    	end = Integer.parseInt(endDate[0]);
+			    	// Next check the months
+			    	if(start < order && order < end) {
+			    		// Lastly check the day
+			    		start = Integer.parseInt(startDate[1]);
+				    	order = Integer.parseInt(o.getDate()[1]);
+				    	end = Integer.parseInt(endDate[1]);
+				    	if(start < order && order < end) {
+				    		totProfit += o.getProfit();
+				    	}
+			    	}
+		    	}
+		    	
+		    }
+		    System.out.printf("The total profit from %s to %s is: $%.2f%n", command[1], command[2], totProfit);
+		    return;
 		}
 		
 
@@ -375,8 +451,8 @@ public class CommandExecutor implements CommandVisitor {
 		    		Restaurant r = (Restaurant) u;
 		    		Order o = new Order(command[2].trim());
 		    		o.setRestaurant(r);
-		    		o.setCustomer((Customer)u);
-		    		systemState.addActiveOrder(o);
+		    		o.setCustomer(systemState.getC());
+		    		systemState.getC().setActiveOrder(o);
 		    		//r.getMenu(((Customer)u.).getFidelity);
 			        System.out.println("Order Successfully created. Add items to your order and save it to confirm.");
 		    		return;
@@ -397,7 +473,11 @@ public class CommandExecutor implements CommandVisitor {
 		        System.out.println("Invalid Command. Use the following format: addItem2Order <orderName> <itemName>");
 		        return;
 		    }
-		    Restaurant r = systemState.getC().getActiveOrder().getRestaurant(null);
+		    if(systemState.getC().getActiveOrder() == null) {
+		    	System.out.println("Invalid command. You must create an order first before adding items. See help <> for more information");
+		    	return;
+		    }
+		    Restaurant r = systemState.getC().getActiveOrder().getRestaurant();
 		    Meal mealItem = null;
 		    Dishes dishItem = null;
 		    for (Meal m : r.getMenu().getAvailMeals()) {
@@ -413,6 +493,7 @@ public class CommandExecutor implements CommandVisitor {
 		    
 		    if(mealItem != null || dishItem != null) {
 		    	systemState.getC().getActiveOrder().add2Order(mealItem, dishItem);
+		    	System.out.println("Added item to order.");
 		    	return;
 		    }
 		    System.out.println("Unable to find food item. Try again using correct name");
@@ -432,8 +513,8 @@ public class CommandExecutor implements CommandVisitor {
 		    }
 		    
 		    if(systemState.getC().getActiveOrder().getOrderName().equalsIgnoreCase(command[1].trim())) {
-		    	systemState.getC().getActiveOrder().finalizeOrder(command[2].trim());
-		    	System.out.println("Order successfully ended. Sending to Restaurant for processing.");
+		    	systemState.getC().getActiveOrder().finalizeOrder(command[2].trim(), systemState);
+		    	// System.out.println("Order successfully ended. Sending to Restaurant for processing.");
 		    	return;
 		    }
 		    System.out.println("Unable to find order name. Try again using correct order name");

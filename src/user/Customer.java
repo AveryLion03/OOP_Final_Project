@@ -89,4 +89,7 @@ public class Customer extends Person {
     public Order getActiveOrder() {
     	return this.activeOrder;
     }
+    public void setActiveOrder(Order o) {
+    	this.activeOrder = o;
+    }
 }

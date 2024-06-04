@@ -5,25 +5,42 @@ import user.*;
 import food.*;
 
 public class SystemState {
+	// Users of the system and orders
     protected ArrayList<User> activeMembers;
     protected ArrayList<User> deactiveMembers;
     protected ArrayList<Order> activeOrders;
     protected ArrayList<Order> completedOrders;
-    protected String[] systemPolicies = {"Fast", "targetProfit_Markup"}; // first index relates to delivery policy, second to profit policy
+    // Loop variable
     private static Boolean run = true;
+    //Determines the type of user logged in
     protected int userLoggedIn = 0;
+    
+    //Current users logged in
     private Restaurant r;
     private Customer c;
     private Courier d;
     private Manager m;
+    // Current order being placed
     private Meal newMeal;
-
+    // Pricing information
+    protected String[] systemPolicies = {"Fast", "targetProfit_Markup"}; // first index relates to delivery policy, second to profit policy
+    private Double markupPercent;
+    private Double deliveryCost;
+    private Double serviceFee;
+    private Double targetProfit;
+    
+    // Constructor
     public SystemState() {
         this.activeMembers = new ArrayList<>() ;
         this.deactiveMembers = new ArrayList<>();
         this.activeOrders = new ArrayList<>();
         this.completedOrders = new ArrayList<>();
         this.newMeal = null;
+        // Set these as the default values
+        this.setMarkupPercent(1.20);
+        this.setDeliveryCost(2.0);
+        this.setServiceFee(3.0);
+        this.setTargetProfit(2.0);
         this.r = null;
         this.c = null;
         this.d = null;
@@ -44,6 +61,7 @@ public class SystemState {
     public String getPricingPolicy() {return this.systemPolicies[1]; }
     public void setActiveMembers(ArrayList<User> activeMembers) { this.activeMembers = activeMembers; }
     public ArrayList<Order> getActiveOrders(){ return this.activeOrders;}
+    public ArrayList<Order> getCompletedOrders(){ return this.completedOrders;}
     public Boolean getRun() { return run; }
     public void setRun(Boolean run) { this.run = run; }
     public Meal getNewMeal() { return newMeal; }
@@ -208,4 +226,36 @@ public class SystemState {
                 break;
         }
     }
+
+	public Double getMarkupPercent() {
+		return markupPercent;
+	}
+
+	public void setMarkupPercent(Double markupPercent) {
+		this.markupPercent = markupPercent;
+	}
+
+	public Double getDeliveryCost() {
+		return deliveryCost;
+	}
+
+	public void setDeliveryCost(Double deliveryCost) {
+		this.deliveryCost = deliveryCost;
+	}
+
+	public Double getServiceFee() {
+		return serviceFee;
+	}
+
+	public void setServiceFee(Double serviceFee) {
+		this.serviceFee = serviceFee;
+	}
+
+	public Double getTargetProfit() {
+		return targetProfit;
+	}
+
+	public void setTargetProfit(Double targetProfit) {
+		this.targetProfit = targetProfit;
+	}
 }
