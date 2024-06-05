@@ -31,6 +31,7 @@ public class Courier extends Person {
     }
     public void setOrder(Order o) {
     	this.currentJobs.add(o);
+    	this.orderCount++;
     }
 
     public void finishJob(Order o) {
@@ -56,8 +57,11 @@ public class Courier extends Person {
         return loc;
     }
 
-    public void setLoc(Location loc) {
-        this.loc = loc;
+    public void setLoc(Location l) {
+        this.loc.setLocation(l);;
+    }
+    public void setLoc(Double lat, Double longitude) {
+        this.loc.setLocation(lat, longitude);;
     }
 
     public int getOrderCount() {

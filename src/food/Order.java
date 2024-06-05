@@ -11,16 +11,16 @@ import Code.*;
 
 public class Order {
 	// Order Information
-	String orderName;
-	String date;
-	Double profit;
-	boolean completedDelivery;
-	ArrayList<Meal> meals;
-	ArrayList<Dishes> dish;
+	protected String orderName;
+	protected String date;
+	protected Double profit;
+	protected boolean completedDelivery;
+	protected ArrayList<Meal> meals;
+	protected ArrayList<Dishes> dish;
 	// Users involved in Order
-	Restaurant r;
-	Courier driver;
-	Customer c;
+	protected Restaurant r;
+	protected Courier driver;
+	protected Customer c;
 	
 	public Order(String orderName, Restaurant r) {
 		this.orderName = orderName;
@@ -48,6 +48,9 @@ public class Order {
 		this.dish.add(d);
 		profit += d.getUnitPrice();
 		return;
+	}
+	public void setCompleted(Boolean t) {
+		this.completedDelivery = t;
 	}
 	public double getProfit() {
 		return this.profit;
@@ -90,11 +93,29 @@ public class Order {
     	return;
     }
     public void finalizeOrder (String date, SystemState s) {
+    	this.r.setCompletedOrders(1);
     	this.setDate(date);
     	// 
     	this.applyPolicies(s);
     	// How do I make them pay???
     	
+    	// Change the price of the order based on the Fidelity card
+    	if(c.getFidelity().equalsIgnoreCase("Lottery")) {
+    		if(c.isFreeOrder()) {
+    			this.profit = 0.0;
+    		}
+    	}
+    	else if(c.getFidelity().equalsIgnoreCase("Points")) {
+    		if(c.getPoints()>=100) {
+    			this.profit *= 0.90;
+    			c.setPoints(-100);
+    			if(this.profit > 10) {
+    				c.setPoints((int)(this.profit/10));
+    			}
+    		}
+    	}
+    	
+    	// Don't need anything for Basic or not registered in Fidelity program
     	
         @SuppressWarnings("resource")
         Scanner inputLine = new Scanner(System.in);
@@ -191,4 +212,15 @@ public class Order {
 		}
 		this.profit = (this.profit*markupPercentage) + serviceFee - deliveryCost;
 	}
+    
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("- Order Name: ").append(orderName).append("\n");
+        builder.append("- Number of Items Ordered: ").append(meals.size() + dish.size()).append("\n");
+        builder.append("- Total Price: $").append(String.format("%.2f", profit)).append("\n");
+        builder.append("- Date Ordered: ").append(date).append("\n");
+        return builder.toString();
+    }
+
 }

@@ -16,9 +16,14 @@ public class Location {
      * getters, setters, toString?
      */
     }
+    
     public void setLocation(double lat, double lon) {
     	this.lat = lat;
     	this.lon = lon;
+    }
+    public void setLocation(Location l) {
+    	this.lat = l.getLocation()[0];
+    	this.lon = l.getLocation()[1];
     }
     
     public Double[] getLocation() {

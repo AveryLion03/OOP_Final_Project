@@ -8,7 +8,7 @@ public class Restaurant extends User {
     
     // Variables specific to Restaurant
     private Location location;
-    private ArrayList<Customer> visitedCustomers;
+    private int completedOrders;
     private ArrayList<Courier> availableCouriers;
     private Menu menu;
     private Double discountFactor;
@@ -18,9 +18,9 @@ public class Restaurant extends User {
         super(username, password, userType, name);
         this.location = location;
         this.discountFactor = 10.0; // Default discount factor
-        this.visitedCustomers = new ArrayList<>();
         this.availableCouriers = new ArrayList<>();
         this.menu = new Menu(); // Initialize with an empty menu
+        this.setCompletedOrders(0);
     }
 
     // Getters and setters
@@ -39,14 +39,6 @@ public class Restaurant extends User {
     public void setDiscountFactor(Double newDiscount) {
     	menu.updateSpecialPrice(this.discountFactor, newDiscount);
         this.discountFactor = newDiscount;
-    }
-    
-    public ArrayList<Customer> getVisitedCustomers() {
-        return new ArrayList<>(visitedCustomers); // Return a copy to maintain encapsulation
-    }
-
-    public void addVisitedCustomer(Customer customer) {
-        visitedCustomers.add(customer);
     }
 
     public ArrayList<Courier> getAvailableCouriers() {
@@ -67,8 +59,9 @@ public class Restaurant extends User {
         return menu;
     }
     
-    public void getMenu(String fidelity) {
-    	if(fidelity.equalsIgnoreCase("Basic")) {
+    public void getMenu(Customer c) {
+    	String fidelity = c.getFidelity();
+    	if(fidelity.equalsIgnoreCase("Points") || fidelity == null) {
             System.out.println("****** MENU ******\n");
             System.out.println("*     Dishes     *");
     		for(Dishes d : this.getMenu().getAvailDishes()) {
@@ -81,17 +74,32 @@ public class Restaurant extends User {
     			}
     		}
     	}
-    	else if(fidelity.equalsIgnoreCase("Points")) {
+    	else if(fidelity.equalsIgnoreCase("Basic")) {
     		System.out.println(this.menu);
     	}
     	else if(fidelity.equalsIgnoreCase("Lottery")) {
+            System.out.println("****** MENU ******\n");
+            System.out.println("*     Dishes     *");
+    		for(Dishes d : this.getMenu().getAvailDishes()) {
+    			System.out.println(d);
+    		}
+    		System.out.println("\n*      Meals     *");
+    		for(Meal m : this.getMenu().getAvailMeals()) {
+    			if(!m.getDeal()) {
+    				System.out.println(m);
+    			}
+    		}  		
     		// Create a Random object
             Random rand = new Random();
-            // Generate a random number between 1 and 10
-            int randomNumber = rand.nextInt(10) + 1;
+            // Generate a random number between 0 and 9
+            int randomNumber = rand.nextInt(10);
             if(randomNumber == 2) {
             	System.out.println("Your next meal is free!");
+            	c.setFreeOrder(true);
+            	return;
             }
+            c.setFreeOrder(false);
+            return;
     	}
     }
 
@@ -111,5 +119,19 @@ public class Restaurant extends User {
         menu.showMeal(mealName);
     }
 
+	public int getCompletedOrders() {
+		return completedOrders;
+	}
+
+	public void setCompletedOrders(int completedOrders) {
+		this.completedOrders += completedOrders;
+	}
+
     // Other methods for managing dishes, meals, and special discounts can be added here
+	
+	@Override
+	public String toString() {
+	    return "Restaurant Name: " + getName() + ", Completed Orders: " + completedOrders;
+	}
+
 }

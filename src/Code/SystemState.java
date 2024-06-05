@@ -3,6 +3,8 @@ package Code;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import Commands.*;
 import user.*;
@@ -60,6 +62,14 @@ public class SystemState {
     // Getters and setters for the state variables
     public ArrayList<User> getActiveMembers() { return activeMembers; }
     public ArrayList<User> getDeactiveMembers() { return deactiveMembers; }
+    public void removeActiveMember(User u) {
+    	this.deactiveMembers.add(u);
+    	this.activeMembers.remove(u);
+    }
+    public void reactivateMember(User u) {
+    	this.activeMembers.add(u);
+    	this.deactiveMembers.remove(u);
+    }
     public void addActiveOrder(Order o) { this.activeOrders.add(o);}
     public void addCompletedOrder (Order o) {
     	this.activeOrders.remove(o);
@@ -120,24 +130,47 @@ public class SystemState {
         }
     }
     
-    public ArrayList<Courier> getAvailableCourier(){ //MAKE THIS BASED ON DELIVERY POLICY
-    	ArrayList<Courier> available = new ArrayList<>();
-    	Courier c = null;
-    	for (User user : getActiveMembers()) {
+    public ArrayList<Courier> getAvailableCourier() {
+        ArrayList<Courier> available = new ArrayList<>();
+        ArrayList<Courier> allCouriers = new ArrayList<>();
+        
+        // Filter available couriers
+        for (User user : getActiveMembers()) {
             if (user.getUserType().equalsIgnoreCase("Courier")) {
-            	c = (Courier) user;
-            	if(c.available()) {
-            		available.add(c);
-            	}
+                Courier courier = (Courier) user;
+                if (courier.available()) {
+                    allCouriers.add(courier);
+                }
             }
         }
-    	if(c == null) {
-    		// System.out.println("No couriers are available right now.");
-    		return null;
-    	}
-    	bubbleSortCouriersByDeliveries(available);
-    	return available;
+        
+        if (allCouriers.isEmpty()) {
+            // No couriers are available right now.
+            return null;
+        }
+
+        // Sort couriers based on the delivery policy
+        switch (getDeliveryPolicy()) {
+            case "Fast":
+                // Sort by shortest distance to cover
+                // Collections.sort(allCouriers, (c1, c2) -> Double.compare(c1.getDistanceToRestaurant(), c2.getDistanceToRestaurant()));
+                break;
+            case "Fair":
+                // Sort by least number of completed deliveries
+                // Collections.sort(allCouriers, Comparator.comparingInt(Courier::getCompletedDeliveries));
+                break;
+            default:
+                // Default sorting
+                break;
+        }
+
+        // Allocate orders to the sorted couriers
+        // Add all couriers to available list
+        available.addAll(allCouriers);
+
+        return available;
     }
+
 
     // Bubble Sort Couriers By Deliveries
     public void bubbleSortCouriersByDeliveries(ArrayList<Courier> couriers) {
@@ -157,27 +190,28 @@ public class SystemState {
             if (!swapped) break;
         }
     }
-
-    public static double haversine(double lat1, double lon1, double lat2, double lon2) {
-        final double R = 6371.0; // Earth's radius in kilometers
+    public void bubbleSortByCompletedDeliveries(ArrayList<Restaurant> restaurants) {
+        int n = restaurants.size();
+        boolean swapped;
         
-        // Convert latitude and longitude from degrees to radians
-        double phi1 = Math.toRadians(lat1);
-        double phi2 = Math.toRadians(lat2);
-        double deltaPhi = Math.toRadians(lat2 - lat1);
-        double deltaLambda = Math.toRadians(lon2 - lon1);
-        
-        // Haversine formula
-        double a = Math.sin(deltaPhi / 2) * Math.sin(deltaPhi / 2) +
-                   Math.cos(phi1) * Math.cos(phi2) *
-                   Math.sin(deltaLambda / 2) * Math.sin(deltaLambda / 2);
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        
-        // Calculate the distance
-        double distance = R * c;
-        
-        return distance;
+        for (int i = 0; i < n - 1; i++) {
+            swapped = false;
+            for (int j = 0; j < n - i - 1; j++) {
+                if (restaurants.get(j).getCompletedOrders() < restaurants.get(j + 1).getCompletedOrders()) {
+                    // Swap restaurants if the number of completed deliveries is greater
+                    Restaurant temp = restaurants.get(j);
+                    restaurants.set(j, restaurants.get(j + 1));
+                    restaurants.set(j + 1, temp);
+                    swapped = true;
+                }
+            }
+            // If no two elements were swapped in the inner loop, then the array is already sorted
+            if (!swapped) {
+                break;
+            }
+        }
     }
+
     // Print Commands
     public void printCommands() {
         switch (userLoggedIn) {
@@ -191,18 +225,22 @@ public class SystemState {
                 break;
             case 1:
                 System.out.println("Commands Available for Managers:");
-                System.out.println("1. setDeliveryPolicy <delPolicyName>");
-                System.out.println("2. setProfitPolicy <ProfitPolicyName>");
-                System.out.println("3. associateCard <userName> <cardType>");
-                System.out.println("4. showCourierDeliveries <>");
-                System.out.println("5. showRestaurantTop <>");
-                System.out.println("6. showCustomers <>");
-                System.out.println("7. showMenuItem <restaurant-name>");
-                System.out.println("8. showTotalProfit <>");
-                System.out.println("9. showTotalProfit <startDate> <endDate>");
+                System.out.println("1.  setDeliveryPolicy <delPolicyName>");
+                System.out.println("2.  setProfitPolicy <ProfitPolicyName>");
+                System.out.println("3.  associateCard <userName> <cardType>");
+                System.out.println("4.  showCourierDeliveries <>");
+                System.out.println("5.  showRestaurantTop <>");
+                System.out.println("6.  showCustomers <>");
+                System.out.println("7.  showMenuItem <restaurant-name>");
+                System.out.println("8.  showTotalProfit <>");
+                System.out.println("9.  showTotalProfit <startDate> <endDate>");
                 System.out.println("10. registerRestaurant <name> <address> <username> <password>");
                 System.out.println("11. registerCustomer <firstName> <lastName> <username> <address> <password>");
                 System.out.println("12. registerCourier <firstName> <lastName> <username> <position> <password>");
+                System.out.println("12. registerCourier <firstName> <lastName> <username> <position> <password>");
+                System.out.println("13. registerManager <name> <lastname> <username> <password>");
+                System.out.println("14. deactiveUser <name> <userType>");
+                System.out.println("15. activateUser <name> <userType>");
                 break;
             case 2:
                 System.out.println("Commands Available for Restaurants:");
@@ -230,11 +268,8 @@ public class SystemState {
                 System.out.println("Commands Available for Couriers:");
                 System.out.println("1. onDuty <username>");
                 System.out.println("2. offDuty <username>");
-                System.out.println("3. acceptDelivery <response> -> response = true or false");
-                System.out.println("4. finishDelivery <response> -> response = true");
-                System.out.println("5. getOrderPos <>");
-                System.out.println("6. updatePosition <latitude> <longitude>");
-                
+                System.out.println("3. finishDelivery <response> -> response = true");
+                System.out.println("4. updatePos <latitude> <longtitude>");
                 break;
             default:
                 System.out.println("Invalid user type");

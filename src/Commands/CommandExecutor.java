@@ -24,7 +24,7 @@ public class CommandExecutor implements CommandVisitor {
         // Execute manager commands
         // System.out.println("Executing manager command: " + command);
         
-    	// registerRestaurant <name> <lastname> <username> <password>
+    	// registerManager <name> <lastname> <username> <password>
         if (command[0].equalsIgnoreCase("registermanager")) {
             if (systemState.getUserLoggedIn() != 1  && !systemState.getAuto()) {
                 System.out.println("User cannot access this command");
@@ -32,7 +32,7 @@ public class CommandExecutor implements CommandVisitor {
             }
 
             if (command.length != 5) {
-                System.out.println("Invalid Command. Use following format: // registerRestaurant <name> <lastname> <username> <password>");
+                System.out.println("Invalid Command. Use following format: registerManager <name> <lastname> <username> <password>");
                 return;
             }
             try {
@@ -44,7 +44,7 @@ public class CommandExecutor implements CommandVisitor {
                 e.printStackTrace();
             }
         }
-      // registerRestaurant Burger_Palace 40.7128 -74.0060 burgerpalace_admin burger123
+      
       // registerRestaurant <name> <Latitude> <Longitude> <username> <password>
         if (command[0].equalsIgnoreCase("registerrestaurant")) {
             if (systemState.getUserLoggedIn() != 1  && !systemState.getAuto()) {
@@ -191,32 +191,7 @@ public class CommandExecutor implements CommandVisitor {
         }
         
 
-		// findDeliverer <orderName>
-		else if (command[0].equalsIgnoreCase("finddeliverer")) {
-			if (systemState.getUserLoggedIn() != 1  && !systemState.getAuto()) {
-		        System.out.println("User does not have access to this command.");
-		        return;
-		    }
-		    // Validate the command format
-		    if (command.length != 2) {
-		        System.out.println("Invalid Command. Use the following format: findDeliverer <orderName>");
-		        return;
-		    }
-		    Courier c = (systemState.getAvailableCourier()).get(0); // .getAvailableCourier creates a list of available Couriers based on delivery policy
-		    if(c == null) {
-		    	System.out.println("No couriers available at this time. Try again later.");
-		    	return;
-		    }
-		    Order order = null;
-		    for (Order o : systemState.getActiveOrders()) {
-		    	if(o.getOrderName().equalsIgnoreCase(command[1].trim())) {
-		    		order = o; 
-		    		break;
-		    	}
-		    }
-		    c.setOrder(order);
-		    
-		}
+		
 		
 		// setDeliveryPolicy <delPolicyName>
 		else if (command[0].equalsIgnoreCase("setdeliverypolicy")) {
@@ -329,18 +304,18 @@ public class CommandExecutor implements CommandVisitor {
 		    }
 		    // Validate the command format
 		    if (command.length != 1) {
-		        System.out.println("Invalid Command. Use the following format: showCustomers <>");
+		        System.out.println("Invalid Command. Use the following format: showRestaurantTop <>");
 		        return;
 		    }
-		    ArrayList<Courier> best = new ArrayList<>();
+		    ArrayList<Restaurant> best = new ArrayList<>();
 		    for (User u : systemState.getActiveMembers()) {
-		    	if(u.getUserType().equalsIgnoreCase("Courier")) {
-		    		best.add((Courier) u);
+		    	if(u.getUserType().equalsIgnoreCase("Restaurant")) {
+		    		best.add((Restaurant) u);
 		    	}
 		    }
-		    systemState.bubbleSortCouriersByDeliveries(best);
-		    for (Courier courier : best) {
-	            System.out.println(courier);
+		    systemState.bubbleSortByCompletedDeliveries(best);
+		    for (Restaurant r : best) {
+	            System.out.println(r);
 	        }
 		}
 		
@@ -389,7 +364,7 @@ public class CommandExecutor implements CommandVisitor {
 		}
 		
 		// showTotalProfit <>
-		else if (command[0].equalsIgnoreCase("showtotalprofit") && command.length == 1) {
+		else if (command[0].equalsIgnoreCase("showtotalprofit")) {
 			if (systemState.getUserLoggedIn() != 1  && !systemState.getAuto()) {
 		        System.out.println("User does not have access to this command.");
 		        return;
@@ -401,7 +376,6 @@ public class CommandExecutor implements CommandVisitor {
 		    }
 			double totProfit = 0.0;
 			for (Order o : systemState.getActiveOrders()) {
-				System.out.println(o.getProfit());
 		    	totProfit += o.getProfit();
 		    	
 		    }
@@ -475,6 +449,47 @@ public class CommandExecutor implements CommandVisitor {
 		    return;
 		}
 		
+     // deactivateUser <name> <userType>
+ 		else if (command[0].equalsIgnoreCase("deactivateUser")) {
+ 			if (systemState.getUserLoggedIn() != 1  && !systemState.getAuto()) {
+ 		        System.out.println("User does not have access to this command.");
+ 		        return;
+ 		    }
+ 		    // Validate the command format
+ 		    if (command.length != 3) {
+ 		        System.out.println("Invalid Command. Use the following format: deactivateUser <name> <userType>");
+ 		        return;
+ 		    }
+ 			for(User u : systemState.getActiveMembers()) {
+ 				if(u.getName().equalsIgnoreCase(command[1].trim()) && (u.getUserType().equalsIgnoreCase(command[2].trim()))) {
+ 					systemState.removeActiveMember(u);
+ 					System.out.println("Succesfully deactived user.");
+ 					return;
+ 				}
+ 			}
+ 			System.out.println("Unable to find user. Type the correct name and usertype");
+ 		}
+        
+     // activateUser <name> <userType>
+  		else if (command[0].equalsIgnoreCase("activateUser")) {
+  			if (systemState.getUserLoggedIn() != 1  && !systemState.getAuto()) {
+  		        System.out.println("User does not have access to this command.");
+  		        return;
+  		    }
+  		    // Validate the command format
+  		    if (command.length != 3) {
+  		        System.out.println("Invalid Command. Use the following format: activateUser <name> <userType>");
+  		        return;
+  		    }
+  			for(User u : systemState.getDeactiveMembers()) {
+  				if(u.getName().equalsIgnoreCase(command[1].trim()) && (u.getUserType().equalsIgnoreCase(command[2].trim()))) {
+  					systemState.reactivateMember(u);
+  					System.out.println("Succesfully reactivated user.");
+  					return;
+  				}
+  			}
+  			System.out.println("Unable to find user. Type the correct name and usertype");
+  		}
 
     }
 
@@ -505,7 +520,7 @@ public class CommandExecutor implements CommandVisitor {
 			    		o.setCustomer(systemState.getC());
 			    		systemState.getC().setActiveOrder(o); 
 				        System.out.println("Order Successfully created. Add items (see below) to your order and save it to confirm.");
-				        r.getMenu(o.getCustomer().getFidelity());
+				        r.getMenu(o.getCustomer());
 			    		return;
 		    		}
 		    	}
@@ -571,6 +586,75 @@ public class CommandExecutor implements CommandVisitor {
 		    }
 		    System.out.println("Unable to find order name. Try again using correct order name");
 		}
+		
+		// registerFidelity <option> 
+		else if (command[0].equalsIgnoreCase("registerfidelity")) {
+			if (systemState.getUserLoggedIn() != 3  && !systemState.getAuto()) {
+		        System.out.println("User does not have access to this command.");
+		        return;
+		    }
+		    // Validate the command format
+		    if (command.length != 2) {
+		        System.out.println("Invalid Command. Use the following format: registerFidelity <option> \nOption = Basic, Points, Lottery or Unregister");
+		        return;
+		    }
+		    if(command[1].equalsIgnoreCase("Basic")) {
+		    	systemState.getC().setFidelity("Basic");
+		    }
+		    else if(command[1].equalsIgnoreCase("Points")) {
+		    	systemState.getC().setFidelity("Point");
+		    }
+		    else if(command[1].equalsIgnoreCase("Lottery")) {
+		    	systemState.getC().setFidelity("Lottery");
+		    }
+		    else if(command[1].equalsIgnoreCase("Unregister")) {
+		    	systemState.getC().setFidelity(null);
+		    }
+		    else {
+		        System.out.println("Invalid option. \nOption = Basic, Points, Lottery or Unregister");
+		        return;
+		    }
+		    System.out.println("Successfully updated fidelity agreement.");
+		}
+		
+		// accountInformation <> 
+		// Should give user information regarding order history, fidelity card, etc.
+		else if (command[0].equalsIgnoreCase("accountinformation")) {
+			if (systemState.getUserLoggedIn() != 3  && !systemState.getAuto()) {
+		        System.out.println("User does not have access to this command.");
+		        return;
+		    }
+		    System.out.println("** Full name: " + systemState.getC().getFullName());
+		    System.out.println("** Username: " + systemState.getC().getUsername());
+		    System.out.println("** Fidelity Card: " + systemState.getC().getFidelity());
+		    System.out.println("** Orders:");
+		    int count = 0;
+		    for (Order o : systemState.getActiveOrders()) {
+		    	if(o.getCustomer().getName().equals(systemState.getC().getName())){
+		    		System.out.println(o);
+		    		count++;
+		    	}
+		    }
+		    if(count == 0) {
+		    	System.out.println("- No orders have been placed\n");
+		    }
+		}
+		
+		// setNotifcation <option> -> register or unregister
+		else if (command[0].equalsIgnoreCase("setNotification")) {
+			if (systemState.getUserLoggedIn() != 3  && !systemState.getAuto()) {
+		        System.out.println("User does not have access to this command.");
+		        return;
+		    }
+		    // Validate the command format
+		    if (command.length != 2) {
+		        System.out.println("Invalid Command. Use the following format: setNotifcation <option> \noption = register or unregister");
+		        return;
+		    }
+		    
+		    
+		}
+		// showRestaurants <>
 		else if (command[0].equalsIgnoreCase("showRestaurants")) {
 			if (systemState.getUserLoggedIn() != 3  && !systemState.getAuto()) {
 		        System.out.println("User does not have access to this command.");
@@ -630,6 +714,51 @@ public class CommandExecutor implements CommandVisitor {
 			    return;
 		    }
 		    System.out.println("Incorrect username. Try again using correct username (CASE SENSITIVE)");
+		}
+		
+		// finishDelivery <order_name>
+		else if (command[0].equalsIgnoreCase("finishDelivery")) {
+			if (systemState.getUserLoggedIn() != 4  && !systemState.getAuto()) {
+		        System.out.println("User does not have access to this command.");
+		        return;
+		    }
+		    // Validate the command format
+		    if (command.length != 2) {
+		        System.out.println("Invalid Command. Use the following format: finishDelivery <order_name>");
+		        return;
+		    }
+		    for(Order o : systemState.getActiveOrders()) {
+		    	if(o.getOrderName().equalsIgnoreCase(command[1])) {
+		    		systemState.getActiveOrders().remove(o);
+		    		systemState.getCompletedOrders().add(o);
+		    		o.setCompleted(true);
+		    		System.out.println("Order has successfully been completed. Good job");
+		    		systemState.getD().finishJob(o);
+		    		systemState.getD().setLoc(o.getCustomer().getLoc());
+		    		return;
+		    	}
+		    }
+		    System.out.println("Unable to find order name");
+		}
+		
+		// updatePos <latitude> <longitude>
+		else if (command[0].equalsIgnoreCase("updatePos")) {
+			if (systemState.getUserLoggedIn() != 4  && !systemState.getAuto()) {
+		        System.out.println("User does not have access to this command.");
+		        return;
+		    }
+		    // Validate the command format
+		    if (command.length != 3) {
+		        System.out.println("Invalid Command. Use the following format: updatePos <latitude> <longitude>");
+		        return;
+		    }
+		    try {
+		    systemState.getD().setLoc(Double.parseDouble(command[1]), Double.parseDouble(command[2]));
+		    System.out.println("Location successfully updated");
+		
+		    }catch (NumberFormatException e) {
+                System.out.println("Invalid latitude or longitude format.");
+            } 
 		}
     }
 
@@ -871,6 +1000,33 @@ public class CommandExecutor implements CommandVisitor {
 		    System.out.println("Successfully changed Discount-Factor");
 		    return;
  		}
+        
+     // findDeliverer <orderName>
+     		else if (command[0].equalsIgnoreCase("finddeliverer")) {
+     			if (systemState.getUserLoggedIn() != 2  && !systemState.getAuto()) {
+     		        System.out.println("User does not have access to this command.");
+     		        return;
+     		    }
+     		    // Validate the command format
+     		    if (command.length != 2) {
+     		        System.out.println("Invalid Command. Use the following format: findDeliverer <orderName>");
+     		        return;
+     		    }
+     		    Courier c = (systemState.getAvailableCourier()).get(0); // .getAvailableCourier creates a list of available Couriers based on delivery policy
+     		    if(c == null) {
+     		    	System.out.println("No couriers available at this time. Try again later.");
+     		    	return;
+     		    }
+     		    Order order = null;
+     		    for (Order o : systemState.getActiveOrders()) {
+     		    	if(o.getOrderName().equalsIgnoreCase(command[1].trim())) {
+     		    		order = o; 
+     		    		break;
+     		    	}
+     		    }
+     		    c.setOrder(order);
+     		    
+     		}
     }
 
     @Override

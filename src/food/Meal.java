@@ -175,7 +175,7 @@ public class Meal {
             count++;
         }
         sb.append("Price: $").append(price).append("\n");
-        sb.append("Deal: ").append(deal ? "Yes" : "No").append("\n");
+        sb.append("Special: ").append(deal ? "Yes" : "No").append("\n");
         return sb.toString();
     }
 

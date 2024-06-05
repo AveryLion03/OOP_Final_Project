@@ -12,6 +12,7 @@ public class Customer extends Person {
     private Location loc;
     private String fidelity;
     private int points;
+    private boolean freeOrder;
     protected Order activeOrder;
 
     // Constructor
@@ -24,6 +25,7 @@ public class Customer extends Person {
         this.loc = loc;
         this.fidelity = "Basic"; // Default fidelity
         this.points = 0; // Default points
+        this.setFreeOrder(false);
     }
 
     // Getters and setters
@@ -66,11 +68,14 @@ public class Customer extends Person {
     }
 
     private boolean isValidFidelity(String fidelity) {
-        return fidelity.equals("none") || fidelity.equals("basic") || fidelity.equals("point") || fidelity.equals("lottery");
+        return fidelity == null || fidelity.equalsIgnoreCase("basic") || fidelity.equalsIgnoreCase("point") || fidelity.equalsIgnoreCase("lottery");
     }
 
     public int getPoints() {
         return points;
+    }
+    public void setPoints(double p) {
+    	this.points += p;
     }
 
     // Setter for points
@@ -92,4 +97,12 @@ public class Customer extends Person {
     public void setActiveOrder(Order o) {
     	this.activeOrder = o;
     }
+
+	public boolean isFreeOrder() {
+		return freeOrder;
+	}
+
+	public void setFreeOrder(boolean freeOrder) {
+		this.freeOrder = freeOrder;
+	}
 }

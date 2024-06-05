@@ -36,11 +36,13 @@ public class Menu {
 	public void addSpecial (Meal m, Double d) {
 		m.applyDiscount(d);
 		this.specials.add(m);
+		this.meals.remove(m);
 	}
 	public void removeSpecial(Meal m, Double d) {
 	    if (this.specials != null) {
 	    	m.removeDiscount(d);
-	        boolean removed = this.specials.remove(m);
+	    	this.meals.add(m);
+	    	boolean removed = this.specials.remove(m);
 	        
 	        if (!removed) {
 	            // Handle the case where the item was not found in the list
@@ -77,16 +79,16 @@ public class Menu {
 	@Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Menu: \n");
-        sb.append("Dishes: \n");
+        sb.append("***** Menu: *****\n");
+        sb.append("*     Dishes     *\n");
         for (Dishes d : dish) {
             sb.append(d.toString()).append("\n");
         }
-        sb.append("Meals: \n");
+        sb.append("*     Meals     *\n");
         for (Meal m : meals) {
             sb.append(m.toString()).append("\n");
         }
-        sb.append("Specials: \n");
+        sb.append("*    Specials     *\n");
         for (Meal s : specials) {
             sb.append(s.toString()).append("\n");
         }
