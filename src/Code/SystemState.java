@@ -259,7 +259,8 @@ public class SystemState {
                 System.out.println("13. registerManager <name> <lastname> <username> <password>");
                 System.out.println("14. deactiveUser <name> <userType>");
                 System.out.println("15. activateUser <name> <userType>");
-                System.out.println("16. sortOrders <restaurant_name>");
+                System.out.println("16. sortOrders <sortType> <restaurant_name>");
+                System.out.println("17. removeUser <username> <userType>");
                 break;
             case 2:
                 System.out.println("Commands Available for Restaurants:");

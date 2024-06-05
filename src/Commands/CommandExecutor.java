@@ -1084,6 +1084,7 @@ public class CommandExecutor implements CommandVisitor {
  	        return;
  		}
      // sortOrders <menu_type>
+     // sortOrders <menuType> <Restaurantname>
  		else if (command[0].equalsIgnoreCase("sortorders")) {
  		    // Check if the user has the necessary access level (2 or 1)
  		    if ((systemState.getUserLoggedIn() != 2 && systemState.getUserLoggedIn() != 1) && !systemState.getAuto()) {
@@ -1091,8 +1092,12 @@ public class CommandExecutor implements CommandVisitor {
  		        return;
  		    }
  		    // Validate the command format
- 		    if (command.length != 2) {
- 		        System.out.println("Invalid Command. Use the following format: sortOrders <menu_type> \n menu_type = halfMeal or dish");
+ 		    if (command.length != 2 && systemState.getUserLoggedIn() == 2) {
+ 		        System.out.println("Invalid Command. Use the following format: sortOrders <menuType> \n menu_type = halfMeal or dish");
+ 		        return;
+ 		    }
+ 		    else if(command.length != 3 && systemState.getUserLoggedIn() == 2) {
+ 		    	System.out.println("Invalid Command. Use the following format: sortOrders <menuType> <Restaurantname> \n menu_type = halfMeal or dish");
  		        return;
  		    }
 
@@ -1100,7 +1105,18 @@ public class CommandExecutor implements CommandVisitor {
  		    ArrayList<Order> allOrders = new ArrayList<>();
  		    allOrders.addAll(systemState.getActiveOrders());
  		    allOrders.addAll(systemState.getCompletedOrders());
- 		    Restaurant currentRestaurant = systemState.getR();
+ 		    Restaurant currentRestaurant = null;
+ 		    if(systemState.getUserLoggedIn()== 1) {
+ 		    	for(User u: systemState.getActiveMembers()) {
+ 		    		if(u.getName().equalsIgnoreCase(command[2])) {
+ 		    			currentRestaurant = (Restaurant)u;
+ 		    			break;
+ 		    		}
+ 		    	}
+ 		    }
+ 		    else {
+ 		    	currentRestaurant = systemState.getR();
+ 		    }
 
  		    ArrayList<Order> restaurantOrders = new ArrayList<>();
 
