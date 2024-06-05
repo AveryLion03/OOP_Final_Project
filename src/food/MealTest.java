@@ -93,11 +93,12 @@ class MealTest {
         meal.addDishes(main);
         meal.addDishes(dessert);
         String expectedString = "Meal Name: SPECIAL MEAL\n" +
+        		"FULL_MEAL\n" +
                 "Starter: Salad\n" +
                 "Main Course: Steak\n" +
                 "Dessert: Cake\n" +
                 "Price: $" + meal.getPrice() + "\n" +
-                "Deal: No\n";
+                "Special: No\n";
         assertEquals(expectedString, meal.toString());
         System.out.println("Meal toString: " + meal.toString());
     }

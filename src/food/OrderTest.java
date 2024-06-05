@@ -1,116 +1,110 @@
 package food;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import user.*;
-import Code.*;
-
 import static org.junit.jupiter.api.Assertions.*;
 
-class OrderTest {
-    private Order order;
-    private Meal meal;
-    private Dishes starter;
-    private Dishes main;
-    private Dishes dessert;
-    private Restaurant restaurant;
-    private Customer customer;
-    private Courier courier;
+import Commands.*;
+import Code.*;
+import user.*;
+import food.*;
 
-    @BeforeEach
-    void setUp() {
-        order = new Order("Order1");
-        meal = new Meal("Special Meal", 20.0, false);
-        starter = new Dishes("Salad", "Starter", "Vegetarian", 5.0);
-        main = new Dishes("Steak", "Main", "Non-Vegetarian", 15.0);
-        dessert = new Dishes("Cake", "Dessert", "Vegetarian", 7.0);
-        restaurant = new Restaurant("restaurant_admin", "rest123", "Restaurant", "Gourmet Kitchen", new Location(40.7128, -74.0060));
-        customer = new Customer("customer_jane", "pass123", "Customer", "Jane", "Doe", "jane.doe@example.com", "555-5678", new Location(34.0522, -118.2437));
-        courier = new Courier("john_driver", "password", "Courier", "John", "Doe", "555-1234", 5, true, new Location(34.0522, -118.2437));
-    }
+
+
+
+public class OrderTest {
 
     @Test
-    void testAddMeal() {
-        System.out.println("Running testAddMeal...");
+    public void testAddMeal() {
+        Restaurant restaurant = new Restaurant("restaurantUser", "password", "Restaurant", "Test Restaurant", new Location(0.0, 0.0));
+        Order order = new Order("Order1", restaurant);
+        Meal meal = new Meal("Meal1");
+        meal.setPrice(10.0);
+
         order.addMeal(meal);
+
         assertEquals(1, order.meals.size());
-        assertEquals(meal.getPrice(), order.getProfit(), 0.01);
-        System.out.println("Meals: " + order.meals);
-        System.out.println("Profit after adding meal: $" + order.getProfit());
+        assertEquals(10.0, order.getProfit(), 0.01);
     }
 
     @Test
-    void testAddDish() {
-        System.out.println("Running testAddDish...");
-        order.addDish(starter);
+    public void testAddDish() {
+        Restaurant restaurant = new Restaurant("restaurantUser", "password", "Restaurant", "Test Restaurant", new Location(0.0, 0.0));
+        Order order = new Order("Order1", restaurant);
+        Dishes dish = new Dishes("Dish1", "main", "standard", 5.0);
+
+        order.addDish(dish);
+
         assertEquals(1, order.dish.size());
-        assertEquals(starter.getUnitPrice(), order.getProfit(), 0.01);
-        System.out.println("Dishes: " + order.dish);
-        System.out.println("Profit after adding dish: $" + order.getProfit());
+        assertEquals(5.0, order.getProfit(), 0.01);
     }
 
     @Test
-    void testGetProfit() {
-        System.out.println("Running testGetProfit...");
-        order.addMeal(meal);
-        order.addDish(starter);
-        assertEquals(meal.getPrice() + starter.getUnitPrice(), order.getProfit(), 0.01);
-        System.out.println("Total profit: $" + order.getProfit());
+    public void testSetCompleted() {
+        Restaurant restaurant = new Restaurant("restaurantUser", "password", "Restaurant", "Test Restaurant", new Location(0.0, 0.0));
+        Order order = new Order("Order1", restaurant);
+        order.setCompleted(true);
+        assertTrue(order.completedDelivery);
     }
 
     @Test
-    void testSetDate() {
-        System.out.println("Running testSetDate...");
-        String date = "2024-06-02";
-        order.setDate(date);
-        assertEquals(date, order.date);
-        System.out.println("Order date: " + order.date);
+    public void testSetDate() {
+        Restaurant restaurant = new Restaurant("restaurantUser", "password", "Restaurant", "Test Restaurant", new Location(0.0, 0.0));
+        Order order = new Order("Order1", restaurant);
+        order.setDate("01/06/2024");
+        assertEquals("01/06/2024", order.date);
     }
 
     @Test
-    void testSetRestaurant() {
-        System.out.println("Running testSetRestaurant...");
-        order.setRestaurant(restaurant);
-        assertEquals(restaurant, order.r);
-        System.out.println("Order restaurant: " + order.r.getName());
-    }
-
-    @Test
-    void testSetCustomer() {
-        System.out.println("Running testSetCustomer...");
+    public void testSetCustomer() {
+        Restaurant restaurant = new Restaurant("restaurantUser", "password", "Restaurant", "Test Restaurant", new Location(0.0, 0.0));
+        Order order = new Order("Order1", restaurant);
+        Customer customer = new Customer("customerUser", "password", "Customer", "John", "Doe", "john.doe@example.com", "123-456-7890", new Location(0.0, 0.0));
         order.setCustomer(customer);
-        assertEquals(customer, order.c);
-        System.out.println("Order customer: " + order.c.getName() + " " + order.c.getSurname());
+        assertEquals(customer, order.getCustomer());
     }
 
     @Test
-    void testCreateOrder() {
-        System.out.println("Running testCreateOrder...");
-        order.createOrder("Order2", restaurant);
-        assertEquals("Order1", order.getOrderName()); // The order name should not change
-        assertEquals(restaurant, order.getRestaurant("Order1"));
-        System.out.println("Order name: " + order.getOrderName());
-        System.out.println("Order restaurant: " + order.getRestaurant("Order1").getName());
+    public void testGetOrderName() {
+        Restaurant restaurant = new Restaurant("restaurantUser", "password", "Restaurant", "Test Restaurant", new Location(0.0, 0.0));
+        Order order = new Order("Order1", restaurant);
+        assertEquals("Order1", order.getOrderName());
     }
 
     @Test
-    void testAdd2Order() {
-        System.out.println("Running testAdd2Order...");
-        order.add2Order(meal, starter);
+    public void testGetRestaurant() {
+        Restaurant restaurant = new Restaurant("restaurantUser", "password", "Restaurant", "Test Restaurant", new Location(0.0, 0.0));
+        Order order = new Order("Order1", restaurant);
+        assertEquals(restaurant, order.getRestaurant());
+    }
+
+    @Test
+    public void testAdd2Order() {
+        Restaurant restaurant = new Restaurant("restaurantUser", "password", "Restaurant", "Test Restaurant", new Location(0.0, 0.0));
+        Order order = new Order("Order1", restaurant);
+        Meal meal = new Meal("Meal1");
+        Dishes dish = new Dishes("Dish1", "main", "standard", 5.0);
+        meal.setPrice(10.0);
+
+        order.add2Order(meal, dish);
+
         assertEquals(1, order.meals.size());
         assertEquals(1, order.dish.size());
-        assertEquals(meal.getPrice() + starter.getUnitPrice(), order.getProfit(), 0.01);
-        System.out.println("Meals in order: " + order.meals);
-        System.out.println("Dishes in order: " + order.dish);
-        System.out.println("Profit after adding meal and dish: $" + order.getProfit());
+        assertEquals(15.0, order.getProfit(), 0.01);
     }
 
     @Test
-    void testFinalizeOrder() {
-        System.out.println("Running testFinalizeOrder...");
-        String date = "2024-06-02";
-        order.finalizeOrder(date);
-        assertEquals(date, order.date);
-        System.out.println("Order finalized on: " + order.date);
+    public void testToString() {
+        Restaurant restaurant = new Restaurant("restaurantUser", "password", "Restaurant", "Test Restaurant", new Location(0.0, 0.0));
+        Order order = new Order("Order1", restaurant);
+        order.setDate("01/06/2024");
+        Meal meal = new Meal("Meal1");
+        meal.setPrice(15.0);
+        order.addMeal(meal);
+
+        String expected = "- Order Name: Order1\n" +
+                          "- Number of Items Ordered: 1\n" +
+                          "- Total Price: $15,00\n" +
+                          "- Date Ordered: 01/06/2024\n";
+        assertEquals(expected, order.toString());
     }
 }

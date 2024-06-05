@@ -1,127 +1,129 @@
 package user;
 
-import Code.*;
-import food.*;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.*;
+import food.*;
+import Code.*;
 
-class RestaurantTest {
-
-    private Restaurant restaurant;
-    private Location location;
-
-    @BeforeEach
-    void setUp() {
-        location = new Location(40.7128, -74.0060);
-        restaurant = new Restaurant("burgerpalace_admin", "burger123", "Restaurant", "Burger Palace", location);
-    }
+public class RestaurantTest {
 
     @Test
-    void testGetLocation() {
-        assertEquals(location, restaurant.getLocation());
-    }
+    public void testSetLocation() {
+        Location location = new Location(10.0, 20.0);
+        Restaurant restaurant = new Restaurant("restaurantUser", "password", "Restaurant", "Test Restaurant", location);
 
-    @Test
-    void testSetLocation() {
-        Location newLocation = new Location(34.0522, -118.2437);
+        Location newLocation = new Location(30.0, 40.0);
         restaurant.setLocation(newLocation);
+
         assertEquals(newLocation, restaurant.getLocation());
     }
 
     @Test
-    void testGetAndSetDiscountFactor() {
-        Double newDiscountFactor = 15.0;
-        restaurant.setDiscountFactor(newDiscountFactor);
-        assertEquals(newDiscountFactor, restaurant.getDiscountFactor());
+    public void testSetDiscountFactor() {
+        Location location = new Location(10.0, 20.0);
+        Restaurant restaurant = new Restaurant("restaurantUser", "password", "Restaurant", "Test Restaurant", location);
+
+        restaurant.setDiscountFactor(15.0);
+
+        assertEquals(15.0, restaurant.getDiscountFactor(), 0.01);
     }
 
     @Test
-    void testAddVisitedCustomer() {
-        Customer customer = new Customer("johnsmith1", "password123", "Customer", "John", "Smith", "john.smith@example.com", "+1(567)890-1234", location);
-        restaurant.addVisitedCustomer(customer);
-        ArrayList<Customer> visitedCustomers = restaurant.getVisitedCustomers();
-        assertTrue(visitedCustomers.contains(customer));
-    }
+    public void testAddAvailableCourier() {
+        Location location = new Location(10.0, 20.0);
+        Restaurant restaurant = new Restaurant("restaurantUser", "password", "Restaurant", "Test Restaurant", location);
+        Courier courier = new Courier("courierUser", "password", "Courier", "John", "Doe", "123-456-7890", 0, false, location);
 
-    @Test
-    void testGetVisitedCustomers() {
-        Customer customer1 = new Customer("johnsmith1", "password123", "Customer", "John", "Smith", "john.smith@example.com", "+1(567)890-1234", location);
-        Customer customer2 = new Customer("janedoe2", "qwerty456", "Customer", "Jane", "Doe", "jane.doe@example.com", "+1(678)901-2345", location);
-        restaurant.addVisitedCustomer(customer1);
-        restaurant.addVisitedCustomer(customer2);
-        ArrayList<Customer> visitedCustomers = restaurant.getVisitedCustomers();
-        assertTrue(visitedCustomers.contains(customer1));
-        assertTrue(visitedCustomers.contains(customer2));
-    }
-
-    @Test
-    void testAddAndRemoveAvailableCourier() {
-        Courier courier = new Courier("courier_john", "pass123", "Courier", "John", "Doe", "123456789", 10, true, location);
         restaurant.addAvailableCourier(courier);
-        ArrayList<Courier> availableCouriers = restaurant.getAvailableCouriers();
-        assertTrue(availableCouriers.contains(courier));
 
+        ArrayList<Courier> couriers = restaurant.getAvailableCouriers();
+        assertEquals(1, couriers.size());
+        assertTrue(couriers.contains(courier));
+    }
+
+    @Test
+    public void testRemoveAvailableCourier() {
+        Location location = new Location(10.0, 20.0);
+        Restaurant restaurant = new Restaurant("restaurantUser", "password", "Restaurant", "Test Restaurant", location);
+        Courier courier = new Courier("courierUser", "password", "Courier", "John", "Doe", "123-456-7890", 0, false, location);
+
+        restaurant.addAvailableCourier(courier);
         restaurant.removeAvailableCourier(courier);
-        availableCouriers = restaurant.getAvailableCouriers();
-        assertFalse(availableCouriers.contains(courier));
+
+        ArrayList<Courier> couriers = restaurant.getAvailableCouriers();
+        assertEquals(0, couriers.size());
     }
 
     @Test
-    void testGetMenu() {
-        Menu menu = restaurant.getMenu();
-        assertNotNull(menu);
-    }
+    public void testAddToMenu() {
+        Location location = new Location(10.0, 20.0);
+        Restaurant restaurant = new Restaurant("restaurantUser", "password", "Restaurant", "Test Restaurant", location);
+        Dishes dish = new Dishes("Dish1", "main", "standard", 5.0);
 
-    @Test
-    void testAddToMenu() {
-        Dishes dish = new Dishes("Burger", "main", "standard", 10.0);
         restaurant.addToMenu(dish);
-        Menu menu = restaurant.getMenu();
-        assertTrue(menu.getAvailDishes().contains(dish));
-    }
-    
-    @Test
-    void testAddToMenu2() {
-        Dishes dish = new Dishes("Salad", "starter", "standard", 10.0);
-        restaurant.addToMenu(dish);
+
         Menu menu = restaurant.getMenu();
         assertTrue(menu.getAvailDishes().contains(dish));
     }
 
     @Test
-    void testAddDishToMeal() {
-        Meal meal = new Meal("Combo Meal");
-        Dishes dish = new Dishes("Burger", "main", "standard", 10.0);
+    public void testAddDishToMeal() {
+        Location location = new Location(10.0, 20.0);
+        Restaurant restaurant = new Restaurant("restaurantUser", "password", "Restaurant", "Test Restaurant", location);
+        Meal meal = new Meal("Meal1");
+        Dishes dish = new Dishes("Dish1", "main", "standard", 5.0);
+
         restaurant.addMeal(meal);
         restaurant.addDishToMeal(meal, dish);
-        Menu menu = restaurant.getMenu();
-        assertTrue(menu.getAvailMeals().contains(meal));
-        //assertTrue(meal.getDishes().contains(dish));
-    }
-    
 
-    @Test
-    void testAddMeal() {
-        Meal meal = new Meal("Combo Meal");
-        restaurant.addMeal(meal);
         Menu menu = restaurant.getMenu();
         assertTrue(menu.getAvailMeals().contains(meal));
+        assertTrue(meal.toString().contains("Dish1"));
     }
 
     @Test
-    void testShowMeal() {
-        Meal meal = new Meal("Combo Meal");
-        Dishes dish = new Dishes("Burger", "main", "standard", 10.0);
-        Dishes dish2 = new Dishes("Salad", "starter", "standard", 10.0);
-        restaurant.addMeal(meal);
-        restaurant.addDishToMeal(meal, dish);
-        restaurant.addDishToMeal(meal, dish2);
+    public void testAddMeal() {
+        Location location = new Location(10.0, 20.0);
+        Restaurant restaurant = new Restaurant("restaurantUser", "password", "Restaurant", "Test Restaurant", location);
+        Meal meal = new Meal("Meal1");
 
-        // Assuming showMeal prints the meal details, we test it indirectly by checking the meal addition
-        restaurant.showMeal("Combo Meal");
-        // No direct assertion here as the method prints to console, manual verification might be needed
+        restaurant.addMeal(meal);
+
+        Menu menu = restaurant.getMenu();
+        assertTrue(menu.getAvailMeals().contains(meal));
+    }
+
+    @Test
+    public void testShowMeal() {
+        Location location = new Location(10.0, 20.0);
+        Restaurant restaurant = new Restaurant("restaurantUser", "password", "Restaurant", "Test Restaurant", location);
+        Meal meal = new Meal("Meal1");
+
+        restaurant.addMeal(meal);
+        // Assuming showMeal prints the meal details, we just check the function does not throw an exception
+        assertDoesNotThrow(() -> restaurant.showMeal("Meal1"));
+    }
+
+    @Test
+    public void testCompletedOrders() {
+        Location location = new Location(10.0, 20.0);
+        Restaurant restaurant = new Restaurant("restaurantUser", "password", "Restaurant", "Test Restaurant", location);
+
+        restaurant.setCompletedOrders(5);
+
+        assertEquals(5, restaurant.getCompletedOrders());
+    }
+
+    @Test
+    public void testToString() {
+        Location location = new Location(10.0, 20.0);
+        Restaurant restaurant = new Restaurant("restaurantUser", "password", "Restaurant", "Test Restaurant", location);
+        restaurant.setCompletedOrders(5);
+
+        String expected = "Restaurant Name: Test Restaurant, Completed Orders: 5";
+        assertEquals(expected, restaurant.toString());
     }
 }

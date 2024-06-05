@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
 
+import user.Courier;
+
 public class Meal {
     // Member variables
     protected String mealName;
@@ -195,6 +197,7 @@ public class Meal {
         sb.append("Special: ").append(deal ? "Yes" : "No").append("\n");
         return sb.toString();
     }
+    
 
 }
 
