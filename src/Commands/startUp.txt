@@ -1,0 +1,85 @@
+registercustomer Suzie Lee suzlee 12.34 56.78 12345
+suzie.lee@gmail.com +1(234)567-8901
+registercustomer John Cena jCena 23.45 67.89 abc123
+john.cena@gmail.com +1(345)678-9012
+registercustomer Mike Johnson MJonTop 34.56 78.90 MJ23GOAT
+mike.johnson@gmail.com +1(456)789-0123
+registercustomer John Smith johnsmith1 45.67 89.01 password123
+john.smith@gmail.com +1(567)890-1234
+registercustomer Jane Doe janedoe2 56.78 90.12 qwerty456
+jane.doe@gmail.com +1(678)901-2345
+registercustomer Robert Brown robertbrown3 67.89 01.23 pass7890
+robert.brown@gmail.com +1(789)012-3456
+registercustomer Emily Davis emilydavis4 78.90 12.34 securepass1
+emily.davis@gmail.com +1(890)123-4567
+
+registermanager Michael Johnson ceo 123456789
+registermanager Sarah Wilson noob abcdefg
+
+registerRestaurant Burger_Palace 40.7128 -74.0060 burgerpalace_admin burger123
+registerRestaurant Pizza_Haven 34.0522 -118.2437 pizzahaven_admin pizza456
+registerRestaurant Taco_Junction 51.5074 -0.1278 tacojunction_admin taco789
+registerRestaurant Sushi_Harbor 35.6895 139.6917 sushi_admin sushipass
+registerRestaurant Pasta_Paradise 41.9028 12.4964 pastaparadise_admin pasta999
+
+registercourier John Doe courier_john "driver" pass123
++1(234)567-8901 40.7128 -74.0060
+registercourier Emily Smith courier_emily "driver" secret456
++1(345)678-9012 34.0522 -118.2437
+
+login burgerpalace_admin burger123
+addDishrestaurantmenu Cheeseburger Main Standard 5.99
+addDishrestaurantmenu Chicken_Nuggets Main Standard 3.99
+addDishrestaurantmenu Milkshake Dessert Standard 2.99
+createmeal Burger_Meal
+addDish2meal Cheeseburger Burger_Meal
+addDish2meal Milkshake Burger_Meal
+savemeal Burger_Meal
+logout
+
+login pizzahaven_admin pizza456
+addDishrestaurantmenu Margherita_Pizza Main Standard 8.99
+addDishrestaurantmenu Pepperoni_Pizza Main Standard 9.99
+addDishrestaurantmenu Garlic_Bread Starter Standard 3.99
+addDishrestaurantmenu Tiramisu Dessert Standard 4.99
+createmeal Family_Pizza_Meal
+addDish2meal Margherita_Pizza Family_Pizza_Meal
+addDish2meal Garlic_Bread Family_Pizza_Meal
+addDish2meal Tiramisu Family_Pizza_Meal
+savemeal Family_Pizza_Meal
+logout
+
+login tacojunction_admin taco789
+addDishrestaurantmenu Beef_Taco Main Standard 2.99
+addDishrestaurantmenu Chicken_Taco Main Standard 3.49
+addDishrestaurantmenu Nachos Starter Standard 4.49
+addDishrestaurantmenu Churros Dessert Standard 3.99
+createmeal Taco_Fiesta
+addDish2meal Beef_Taco Taco_Fiesta
+addDish2meal Churros Taco_Fiesta
+savemeal Taco_Fiesta
+logout
+
+login sushi_admin sushipass
+addDishrestaurantmenu California_Roll Main Standard 6.99
+addDishrestaurantmenu Tuna_Sashimi Main Standard 8.99
+addDishrestaurantmenu Miso_Soup Starter Standard 2.99
+addDishrestaurantmenu Mochi_Ice_Cream Dessert Standard 4.99
+createmeal Sushi_Deluxe
+addDish2meal California_Roll Sushi_Deluxe
+addDish2meal Mochi_Ice_Cream Sushi_Deluxe
+savemeal Sushi_Deluxe
+logout
+
+login pastaparadise_admin pasta999
+addDishrestaurantmenu Spaghetti_Carbonara Main Standard 7.99
+addDishrestaurantmenu Lasagna Main Standard 8.99
+addDishrestaurantmenu Bruschetta Starter Standard 3.99
+addDishrestaurantmenu Tiramisu Dessert Standard 4.99
+createmeal Italian_Feast
+addDish2meal Spaghetti_Carbonara Italian_Feast
+addDish2meal Bruschetta Italian_Feast
+addDish2meal Tiramisu Italian_Feast
+savemeal Italian_Feast
+logout
+

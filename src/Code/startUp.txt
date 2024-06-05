@@ -1,57 +1,81 @@
-suzlee,12345,Customer,Suzie,Lee,suzie.lee@example.com,+1(234)567-8901,12.34,56.78
-jCena,abc123,Customer,John,Cena,john.cena@example.com,+1(345)678-9012,23.45,67.89
-MJonTop,MJ23GOAT,Customer,Mike,Johnson,mike.johnson@example.com,+1(456)789-0123,34.56,78.90
-johnsmith1,password123,Customer,John,Smith,john.smith@example.com,+1(567)890-1234,45.67,89.01
-janedoe2,qwerty456,Customer,Jane,Doe,jane.doe@example.com,+1(678)901-2345,56.78,90.12
-robertbrown3,pass7890,Customer,Robert,Brown,robert.brown@example.com,+1(789)012-3456,67.89,01.23
-emilydavis4,securepass1,Customer,Emily,Davis,emily.davis@example.com,+1(890)123-4567,78.90,12.34
-ceo,123456789,Manager,Michael,Johnson
-noob,abcdefg,Manager,Sarah,Wilson
-burgerpalace_admin,burger123,Restaurant,Burger_Palace,40.7128,-74.0060
-pizzahaven_admin,pizza456,Restaurant,Pizza_Haven,34.0522,-118.2437
-tacojunction_admin,taco789,Restaurant,Taco_Junction,51.5074,-0.1278
-sushi_admin,sushipass,Restaurant,Sushi_Harbor,35.6895,139.6917
-pastaparadise_admin,pasta999,Restaurant,Pasta_Paradise,41.9028,12.4964
-courier_john,pass123,Courier,John,Doe,123456789,10,true,40.7128,-74.0060
-courier_emily,secret456,Courier,Emily,Smith,987654321,5,false,34.0522,-118.2437
-adddishrestaurantmenu,Burger_Palace,Cheeseburger,Main,Standard,5.99
-adddishrestaurantmenu,Burger_Palace,Chicken_Nuggets,Main,Standard,3.99
-adddishrestaurantmenu,Burger_Palace,Milkshake,Dessert,Standard,2.99
-createmeal,Burger_Palace,Burger_Meal
-adddish2meal,Burger_Palace,Cheeseburger,Burger_Meal
-adddish2meal,Burger_Palace,Milkshake,Burger_Meal
-saveMeal,Burger_Palace,Burger_Meal
-adddishrestaurantmenu,Pizza_Haven,Margherita_Pizza,Main,Standard,8.99
-adddishrestaurantmenu,Pizza_Haven,Pepperoni_Pizza,Main,Standard,9.99
-adddishrestaurantmenu,Pizza_Haven,Garlic_Bread,Starter,Standard,3.99
-adddishrestaurantmenu,Pizza_Haven,Tiramisu,Dessert,Standard,4.99
-createmeal,Pizza_Haven,Family_Pizza_Meal
-adddish2meal,Pizza_Haven,Margherita_Pizza,Family_Pizza_Meal
-adddish2meal,Pizza_Haven,Garlic_Bread,Family_Pizza_Meal
-adddish2meal,Pizza_Haven,Tiramisu,Family_Pizza_Meal
-saveMeal,Pizza_Haven,Family_Pizza_Meal
-adddishrestaurantmenu,Taco_Junction,Beef_Taco,Main,Standard,2.99
-adddishrestaurantmenu,Taco_Junction,Chicken_Taco,Main,Standard,3.49
-adddishrestaurantmenu,Taco_Junction,Nachos,Starter,Standard,4.49
-adddishrestaurantmenu,Taco_Junction,Churros,Dessert,Standard,3.99
-createmeal,Taco_Junction,Taco_Fiesta
-adddish2meal,Taco_Junction,Beef_Taco,Taco_Fiesta
-adddish2meal,Taco_Junction,Churros,Taco_Fiesta
-saveMeal,Taco_Junction,Taco_Fiesta
-adddishrestaurantmenu,Sushi_Harbor,California_Roll,Main,Standard,6.99
-adddishrestaurantmenu,Sushi_Harbor,Tuna_Sashimi,Main,Standard,8.99
-adddishrestaurantmenu,Sushi_Harbor,Miso_Soup,Starter,Standard,2.99
-adddishrestaurantmenu,Sushi_Harbor,Mochi_Ice_Cream,Dessert,Standard,4.99
-createmeal,Sushi_Harbor,Sushi_Deluxe
-adddish2meal,Sushi_Harbor,California_Roll,Sushi_Deluxe
-adddish2meal,Sushi_Harbor,Mochi_Ice_Cream,Sushi_Deluxe
-saveMeal,Sushi_Harbor,Sushi_Deluxe
-adddishrestaurantmenu,Pasta_Paradise,Spaghetti_Carbonara,Main,Standard,7.99
-adddishrestaurantmenu,Pasta_Paradise,Lasagna,Main,Standard,8.99
-adddishrestaurantmenu,Pasta_Paradise,Bruschetta,Starter,Standard,3.99
-adddishrestaurantmenu,Pasta_Paradise,Tiramisu,Dessert,Standard,4.99
-createmeal,Pasta_Paradise,Italian_Feast
-adddish2meal,Pasta_Paradise,Spaghetti_Carbonara,Italian_Feast
-adddish2meal,Pasta_Paradise,Bruschetta,Italian_Feast
-adddish2meal,Pasta_Paradise,Tiramisu,Italian_Feast
-saveMeal,Pasta_Paradise,Italian_Feast
+registercustomer Suzie Lee suzlee 12.34 56.78 12345
+suzie.lee@gmail.com +1(234)567-8901
+
+registercustomer John Cena jCena 23.45 67.89 abc123
+john.cena@gmail.com +1(345)678-9012
+
+registercustomer Mike Johnson MJonTop 34.56 78.90 MJ23GOAT
+mike.johnson@gmail.com +1(456)789-0123
+
+registercustomer John Smith johnsmith1 45.67 89.01 password123
+john.smith@gmail.com +1(567)890-1234
+
+registercustomer Jane Doe janedoe2 56.78 90.12 qwerty456
+jane.doe@gmail.com +1(678)901-2345
+
+registercustomer Robert Brown robertbrown3 67.89 01.23 pass7890
+robert.brown@gmail.com +1(789)012-3456
+
+registercustomer Emily Davis emilydavis4 78.90 12.34 securepass1
+emily.davis@gmail.com +1(890)123-4567
+
+registermanager Michael Johnson ceo 123456789
+registermanager Sarah Wilson noob abcdefg
+
+registerrestaurant Burger_Palace burgerpalace_admin 40.7128 -74.0060 burger123
+registerrestaurant Pizza_Haven pizzahaven_admin 34.0522 -118.2437 pizza456
+registerrestaurant Taco_Junction tacojunction_admin 51.5074 -0.1278 taco789
+registerrestaurant Sushi_Harbor sushi_admin 35.6895 139.6917 sushipass
+registerrestaurant Pasta_Paradise pastaparadise_admin 41.9028 12.4964 pasta999
+
+registercourier John Doe courier_john 123456789 10 true 40.7128 -74.0060 pass123
++1(234)567-8901 40.7128 -74.0060
+
+registercourier Emily Smith courier_emily 987654321 5 false 34.0522 -118.2437 secret456
++1(345)678-9012 34.0522 -118.2437
+
+adddishrestaurantmenu Burger_Palace Cheeseburger Main Standard 5.99
+adddishrestaurantmenu Burger_Palace Chicken_Nuggets Main Standard 3.99
+adddishrestaurantmenu Burger_Palace Milkshake Dessert Standard 2.99
+createmeal Burger_Palace Burger_Meal
+adddish2meal Burger_Palace Cheeseburger Burger_Meal
+adddish2meal Burger_Palace Milkshake Burger_Meal
+savemeal Burger_Palace Burger_Meal
+
+adddishrestaurantmenu Pizza_Haven Margherita_Pizza Main Standard 8.99
+adddishrestaurantmenu Pizza_Haven Pepperoni_Pizza Main Standard 9.99
+adddishrestaurantmenu Pizza_Haven Garlic_Bread Starter Standard 3.99
+adddishrestaurantmenu Pizza_Haven Tiramisu Dessert Standard 4.99
+createmeal Pizza_Haven Family_Pizza_Meal
+adddish2meal Pizza_Haven Margherita_Pizza Family_Pizza_Meal
+adddish2meal Pizza_Haven Garlic_Bread Family_Pizza_Meal
+adddish2meal Pizza_Haven Tiramisu Family_Pizza_Meal
+savemeal Pizza_Haven Family_Pizza_Meal
+
+adddishrestaurantmenu Taco_Junction Beef_Taco Main Standard 2.99
+adddishrestaurantmenu Taco_Junction Chicken_Taco Main Standard 3.49
+adddishrestaurantmenu Taco_Junction Nachos Starter Standard 4.49
+adddishrestaurantmenu Taco_Junction Churros Dessert Standard 3.99
+createmeal Taco_Junction Taco_Fiesta
+adddish2meal Taco_Junction Beef_Taco Taco_Fiesta
+adddish2meal Taco_Junction Churros Taco_Fiesta
+savemeal Taco_Junction Taco_Fiesta
+
+adddishrestaurantmenu Sushi_Harbor California_Roll Main Standard 6.99
+adddishrestaurantmenu Sushi_Harbor Tuna_Sashimi Main Standard 8.99
+adddishrestaurantmenu Sushi_Harbor Miso_Soup Starter Standard 2.99
+adddishrestaurantmenu Sushi_Harbor Mochi_Ice_Cream Dessert Standard 4.99
+createmeal Sushi_Harbor Sushi_Deluxe
+adddish2meal Sushi_Harbor California_Roll Sushi_Deluxe
+adddish2meal Sushi_Harbor Mochi_Ice_Cream Sushi_Deluxe
+savemeal Sushi_Harbor Sushi_Deluxe
+
+adddishrestaurantmenu Pasta_Paradise Spaghetti_Carbonara Main Standard 7.99
+adddishrestaurantmenu Pasta_Paradise Lasagna Main Standard 8.99
+adddishrestaurantmenu Pasta_Paradise Bruschetta Starter Standard 3.99
+adddishrestaurantmenu Pasta_Paradise Tiramisu Dessert Standard 4.99
+createmeal Pasta_Paradise Italian_Feast
+adddish2meal Pasta_Paradise Spaghetti_Carbonara Italian_Feast
+adddish2meal Pasta_Paradise Bruschetta Italian_Feast
+adddish2meal Pasta_Paradise Tiramisu Italian_Feast
+savemeal Pasta_Paradise Italian_Feast

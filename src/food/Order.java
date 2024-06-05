@@ -84,6 +84,8 @@ public class Order {
     	// 
     	this.applyPolicies(s);
     	// How do I make them pay???
+    	
+    	
     	s.addActiveOrder(this);
     	// Allocate a driver
     	Courier c = s.getAvailableCourier().get(0);
@@ -105,18 +107,13 @@ public class Order {
     
     public void applyPolicies(SystemState systemState) {
 
-		String targetPolicy = systemState.getPricingPolicy(); // Assuming index 1 stores the target policy string
+		String targetPolicy = systemState.getPricingPolicy();
 		double deliveryCost = systemState.getDeliveryCost();
 		double serviceFee = systemState.getServiceFee();
 		double markupPercentage = systemState.getMarkupPercent();
-		double targetProfit;
-		// Determine the previous completed orders. Optimize based on this value
-		if(systemState.getCompletedOrders().size() != 0) {
-			targetProfit = systemState.getCompletedOrders().size()*systemState.getTargetProfit();
-		}
-		else {
-			targetProfit = systemState.getTargetProfit()*5;
-		}
+		double targetProfit = systemState.getTargetProfit() + this.profit; 
+		// We want the target of this fucntion to be as follows: targetProfit = Increased price - restaurant price
+		// Thus, targetProfit will serve as increased price in this scenario ^
 		
 		switch (targetPolicy) {
 		case "targetProfit_DeliveryCost":

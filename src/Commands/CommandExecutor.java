@@ -3,6 +3,7 @@ import food.*;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,9 +24,30 @@ public class CommandExecutor implements CommandVisitor {
         // Execute manager commands
         // System.out.println("Executing manager command: " + command);
         
-     // registerRestaurant <name> <Latitude> <Longitude> <username> <password>
+    	// registerRestaurant <name> <lastname> <username> <password>
+        if (command[0].equalsIgnoreCase("registermanager")) {
+            if (systemState.getUserLoggedIn() != 1  && !systemState.getAuto()) {
+                System.out.println("User cannot access this command");
+                return;
+            }
+
+            if (command.length != 5) {
+                System.out.println("Invalid Command. Use following format: // registerRestaurant <name> <lastname> <username> <password>");
+                return;
+            }
+            try {
+                Manager m = new Manager(command[3], command[4], "Manager", command[1], command[2]);
+                System.out.println("Successfully added manager");
+                systemState.getActiveMembers().add(m);
+            } catch (Exception e) {
+                System.out.println("An error occurred while registering the manager.");
+                e.printStackTrace();
+            }
+        }
+      // registerRestaurant Burger_Palace 40.7128 -74.0060 burgerpalace_admin burger123
+      // registerRestaurant <name> <Latitude> <Longitude> <username> <password>
         if (command[0].equalsIgnoreCase("registerrestaurant")) {
-            if (systemState.getUserLoggedIn() != 1) {
+            if (systemState.getUserLoggedIn() != 1  && !systemState.getAuto()) {
                 System.out.println("User cannot access this command");
                 return;
             }
@@ -36,9 +58,10 @@ public class CommandExecutor implements CommandVisitor {
             }
 
             try {
-                Location loc = new Location(Double.parseDouble(command[2]), Double.parseDouble(command[3]));
+            	Location loc = new Location(Double.parseDouble(command[2]), Double.parseDouble(command[3]));
+            	loc = new Location(Double.parseDouble(command[2]), Double.parseDouble(command[3]));
                 Restaurant r = new Restaurant(command[4], command[5], "Restaurant", command[1], loc);
-                System.out.println("Successfully added");
+                System.out.println("Successfully added restaurant");
                 systemState.getActiveMembers().add(r);
             } catch (NumberFormatException e) {
                 System.out.println("Invalid latitude or longitude format.");
@@ -50,7 +73,7 @@ public class CommandExecutor implements CommandVisitor {
 
         // registerCustomer <firstName> <lastName> <username> <Latitude> <Longitude> <password>
         else if (command[0].equalsIgnoreCase("registercustomer")) {
-            if (systemState.getUserLoggedIn() != 1) {
+            if (systemState.getUserLoggedIn() != 1  && !systemState.getAuto()) {
                 System.out.println("User cannot access this command");
                 return;
             }
@@ -65,30 +88,43 @@ public class CommandExecutor implements CommandVisitor {
                 Customer c = new Customer(command[3], command[6], "Customer", command[1], command[2], "blank@gmail.com", "***-***-****", loc);
                 try {
                     @SuppressWarnings("resource")
-					Scanner inputLine = new Scanner(System.in);
-                    System.out.println("Please input your Email and Phone Number in the following format: <Email> <Phone_Number>");
-                    //System.out.println("For Fidelity Card, there are three options: Basic, Point and Lottery");
+                    Scanner inputLine = new Scanner(System.in);
                     String s;
-                    String[] e;
-                    while (true) {
-                        s = inputLine.nextLine().toString();
-                        e = s.split(" ");
-                        if (e.length != 2) {
-                            System.out.println("Incorrect format. Enter in the following format: <Email> <Phone_Number>");
+                    String[] e = {"empty", "empty"};
+                    if(!systemState.getAuto()) {
+	                    while (true) {
+	                    	System.out.println("Please input your Email and Phone Number in the following format: <Email> <Phone_Number>");
+	                        s = inputLine.nextLine().toString();
+	                        e = s.split(" ");
+	                        if (e.length != 2) {
+	                            System.out.println("Incorrect format. Enter in the following format: <Email> <Phone_Number>");
+	                        } else {
+	                            break;
+	                        }
+	                    }
+                    }
+                    // Additional section for processing when systemState.getAuto() is true
+                    else {
+                        // System.out.println("Auto mode is enabled. Reading the next line...");
+                        String nextLine = null;
+                        // Read the next line from the startup.txt file
+                        BufferedReader br = systemState.getBr();
+                        nextLine = br.readLine();
+                        if (nextLine != null) {
+                            e = nextLine.split(" ");
+                            if (e.length != 2) {
+                                System.out.println("Incorrect format. Enter in the following format: <Email> <Phone_Number>");
+                            }
                         } else {
-                            break;
+                            System.out.println("No more lines found in the file.");
                         }
                     }
-                    for (int i = 0; i < e.length; i++) {
-                        e[i] = e[i].trim();
-                    }
+                    c.setEmail(e[0].trim());
                     c.setCellNumber(e[1].trim());
-                    c.setEmail(e[0].trim().toUpperCase());
                 } catch (Exception e) {
-                    System.out.println("An error occurred while registering the Customer.");
-                    e.printStackTrace();
-                }
-                System.out.println("Successfully added");
+                    System.err.println("An error occurred: " + e.getMessage());
+                }               
+                System.out.println("Successfully added customer");
                 systemState.getActiveMembers().add(c);
             } catch (NumberFormatException e) {
                 System.out.println("Invalid latitude or longitude format.");
@@ -97,10 +133,10 @@ public class CommandExecutor implements CommandVisitor {
                 e.printStackTrace();
             }
         }
-
+        // registercourier John Doe courier_john "busBoy" pass123
         // registerCourier <firstName> <lastName> <username> <position> <password>
         else if (command[0].equalsIgnoreCase("registercourier")) {
-            if (systemState.getUserLoggedIn() != 1) {
+            if (systemState.getUserLoggedIn() != 1  && !systemState.getAuto()) {
                 System.out.println("User cannot access this command");
                 return;
             }
@@ -114,24 +150,38 @@ public class CommandExecutor implements CommandVisitor {
             try {
                 @SuppressWarnings("resource")
 				Scanner inputLine = new Scanner(System.in);
-                System.out.println("Please input your Phone Number and Location in the following format: <phone number> <Latitude> <Longitude>");
                 String s;
-                String[] e;
-                while (true) {
-                    s = inputLine.nextLine().toString();
-                    e = s.split(" ");
-                    if (e.length != 3) {
-                        System.out.println("Incorrect format. Enter in the following format: <phone number> <Latitude> <Longitude>");
-                    } else {
-                        break;
-                    }
+                String[] e = {null, null, null};
+                if(!systemState.getAuto()) {
+                	System.out.println("Please input your Phone Number and Location in the following format: <phone number> <Latitude> <Longitude>");
+	                while (true) {
+	                    s = inputLine.nextLine().toString();
+	                    e = s.split(" ");
+	                    if (e.length != 3) {
+	                        System.out.println("Incorrect format. Enter in the following format: <phone number> <Latitude> <Longitude>");
+	                    } else {
+	                        break;
+	                    }
+	                }
                 }
-                for (int i = 0; i < e.length; i++) {
-                    e[i] = e[i].trim();
+                else {
+                    // System.out.println("Auto mode is enabled. Reading the next line...");
+                    String nextLine = null;
+                    // Read the next line from the startup.txt file
+                    BufferedReader br = systemState.getBr();
+                    nextLine = br.readLine();
+                    if (nextLine != null) {
+                        e = nextLine.split(" ");
+                        if (e.length != 3) {
+                            System.out.println("Incorrect format. Enter in the following format: <phone number> <Latitude> <Longitude>");
+                        }
+                    } else {
+                        System.out.println("No more lines found in the file.");
+                    }
                 }
                 d.setPhoneNumber(e[0].trim());
                 d.getLoc().setLocation(Double.parseDouble(e[1].trim()), Double.parseDouble(e[2].trim()));
-                System.out.println("Successfully added");
+                System.out.println("Successfully added courier");
                 systemState.getActiveMembers().add(d);
             } catch (NumberFormatException e) {
                 System.out.println("Invalid latitude or longitude format.");
@@ -144,7 +194,7 @@ public class CommandExecutor implements CommandVisitor {
 
 		// findDeliverer <orderName>
 		else if (command[0].equalsIgnoreCase("finddeliverer")) {
-			if (systemState.getUserLoggedIn() != 1) {
+			if (systemState.getUserLoggedIn() != 1  && !systemState.getAuto()) {
 		        System.out.println("User does not have access to this command.");
 		        return;
 		    }
@@ -171,7 +221,7 @@ public class CommandExecutor implements CommandVisitor {
 		
 		// setDeliveryPolicy <delPolicyName>
 		else if (command[0].equalsIgnoreCase("setdeliverypolicy")) {
-			if (systemState.getUserLoggedIn() != 1) {
+			if (systemState.getUserLoggedIn() != 1  && !systemState.getAuto()) {
 		        System.out.println("User does not have access to this command.");
 		        return;
 		    }
@@ -196,7 +246,7 @@ public class CommandExecutor implements CommandVisitor {
 		
 		// setProfitPolicy <ProfitPolicyName> 
 		else if (command[0].equalsIgnoreCase("setprofitpolicy")) {
-			if (systemState.getUserLoggedIn() != 1) {
+			if (systemState.getUserLoggedIn() != 1  && !systemState.getAuto()) {
 		        System.out.println("User does not have access to this command.");
 		        return;
 		    }
@@ -226,7 +276,7 @@ public class CommandExecutor implements CommandVisitor {
 		
 		// associateCard <userName> <cardType>
 		else if (command[0].equalsIgnoreCase("associatecard")) {
-			if (systemState.getUserLoggedIn() != 1) {
+			if (systemState.getUserLoggedIn() != 1  && !systemState.getAuto()) {
 		        System.out.println("User does not have access to this command.");
 		        return;
 		    }
@@ -251,7 +301,7 @@ public class CommandExecutor implements CommandVisitor {
 		
 		// showCourierDeliveries <>
 		else if (command[0].equalsIgnoreCase("showcourierdeliveries")) {
-			if (systemState.getUserLoggedIn() != 1) {
+			if (systemState.getUserLoggedIn() != 1  && !systemState.getAuto()) {
 		        System.out.println("User does not have access to this command.");
 		        return;
 		    }
@@ -274,7 +324,7 @@ public class CommandExecutor implements CommandVisitor {
 		
 		// showRestaurantTop <>
 		else if (command[0].equalsIgnoreCase("showrestauranttop")) {
-			if (systemState.getUserLoggedIn() != 1) {
+			if (systemState.getUserLoggedIn() != 1  && !systemState.getAuto()) {
 		        System.out.println("User does not have access to this command.");
 		        return;
 		    }
@@ -297,7 +347,7 @@ public class CommandExecutor implements CommandVisitor {
 		
 		// showCustomers <>
 		else if (command[0].equalsIgnoreCase("showcustomers")) {
-			if (systemState.getUserLoggedIn() != 1) {
+			if (systemState.getUserLoggedIn() != 1  && !systemState.getAuto()) {
 		        System.out.println("User does not have access to this command.");
 		        return;
 		    }
@@ -316,7 +366,7 @@ public class CommandExecutor implements CommandVisitor {
 		
 		// showMenuItem <restaurant-name>
 		else if (command[0].equalsIgnoreCase("showmenuitem")) {
-			if (systemState.getUserLoggedIn() != 1) {
+			if (systemState.getUserLoggedIn() != 1  && !systemState.getAuto()) {
 		        System.out.println("User does not have access to this command.");
 		        return;
 		    }
@@ -341,7 +391,7 @@ public class CommandExecutor implements CommandVisitor {
 		
 		// showTotalProfit <>
 		else if (command[0].equalsIgnoreCase("showtotalprofit") && command.length == 1) {
-			if (systemState.getUserLoggedIn() != 1) {
+			if (systemState.getUserLoggedIn() != 1  && !systemState.getAuto()) {
 		        System.out.println("User does not have access to this command.");
 		        return;
 		    }
@@ -365,7 +415,7 @@ public class CommandExecutor implements CommandVisitor {
 		
 		// showTotalProfit <startDate> <endDate>
 		else if (command[0].equalsIgnoreCase("showTotalProfit")) {
-			if (systemState.getUserLoggedIn() != 1) {
+			if (systemState.getUserLoggedIn() != 1  && !systemState.getAuto()) {
 		        System.out.println("User does not have access to this command.");
 		        return;
 		    }
@@ -437,7 +487,7 @@ public class CommandExecutor implements CommandVisitor {
 		// createOrder <restaurantName> <orderName> ADD IN CHECK IF THERE IS A CURRENT ORDER ALREADY OPEN
         //Should print out menu available for customer
 		if (command[0].equalsIgnoreCase("createorder")) {
-			if (systemState.getUserLoggedIn() != 3) {
+			if (systemState.getUserLoggedIn() != 3  && !systemState.getAuto()) {
 		        System.out.println("User does not have access to this command.");
 		        return;
 		    }
@@ -464,7 +514,7 @@ public class CommandExecutor implements CommandVisitor {
 		
 		// addItem2Order <orderName> <itemName>
 		else if (command[0].equalsIgnoreCase("additem2order")) {
-			if (systemState.getUserLoggedIn() != 3) {
+			if (systemState.getUserLoggedIn() != 3  && !systemState.getAuto()) {
 		        System.out.println("User does not have access to this command.");
 		        return;
 		    }
@@ -502,7 +552,7 @@ public class CommandExecutor implements CommandVisitor {
 		
 		// endOrder <orderName> <date> //HOW DO WE PAY?! ALLOCATE DRIVER, etc.
 		else if (command[0].equalsIgnoreCase("endorder")) {
-			if (systemState.getUserLoggedIn() != 3) {
+			if (systemState.getUserLoggedIn() != 3  && !systemState.getAuto()) {
 		        System.out.println("User does not have access to this command.");
 		        return;
 		    }
@@ -520,7 +570,7 @@ public class CommandExecutor implements CommandVisitor {
 		    System.out.println("Unable to find order name. Try again using correct order name");
 		}
 		else if (command[0].equalsIgnoreCase("showRestaurants")) {
-			if (systemState.getUserLoggedIn() != 3) {
+			if (systemState.getUserLoggedIn() != 3  && !systemState.getAuto()) {
 		        System.out.println("User does not have access to this command.");
 		        return;
 		    }
@@ -536,7 +586,7 @@ public class CommandExecutor implements CommandVisitor {
 
 		// onDuty <username>
 		if (command[0].equalsIgnoreCase("onduty")) {
-			if (systemState.getUserLoggedIn() != 4) {
+			if (systemState.getUserLoggedIn() != 4  && !systemState.getAuto()) {
 		        System.out.println("User does not have access to this command.");
 		        return;
 		    }
@@ -559,7 +609,7 @@ public class CommandExecutor implements CommandVisitor {
 		
 		// offDuty <username>
 		else if (command[0].equalsIgnoreCase("offduty")) {
-			if (systemState.getUserLoggedIn() != 4) {
+			if (systemState.getUserLoggedIn() != 4  && !systemState.getAuto()) {
 		        System.out.println("User does not have access to this command.");
 		        return;
 		    }
@@ -588,7 +638,7 @@ public class CommandExecutor implements CommandVisitor {
         
      // addDishRestauarantMenu <dishName> <dishCategory> <foodCategory> <unitPrice>
         if (command[0].equalsIgnoreCase("adddishrestaurantmenu")) {
-            if (systemState.getUserLoggedIn() != 2) {
+            if (systemState.getUserLoggedIn() != 2  && !systemState.getAuto()) {
                 System.out.println("User does not have access to this command.");
                 return;
             }
@@ -640,7 +690,7 @@ public class CommandExecutor implements CommandVisitor {
 
 		// createMeal <mealName>
 		else if (command[0].equalsIgnoreCase("createmeal")) {
-			if (systemState.getUserLoggedIn() != 2) {
+			if (systemState.getUserLoggedIn() != 2  && !systemState.getAuto()) {
                 System.out.println("User does not have access to this command.");
                 return;
             }
@@ -664,7 +714,7 @@ public class CommandExecutor implements CommandVisitor {
 		// addDish2Meal <dishName> <mealName>
 		else if (command[0].equalsIgnoreCase("adddish2meal")) {
 			// Check if the user has the necessary access level (2)
-		    if (systemState.getUserLoggedIn() != 2) {
+		    if (systemState.getUserLoggedIn() != 2  && !systemState.getAuto()) {
 		        System.out.println("User does not have access to this command.");
 		        return;
 		    }
@@ -721,7 +771,7 @@ public class CommandExecutor implements CommandVisitor {
 		// showMeal <mealName> EDIT THIS TO INCLUDE ALL ASPECTS
 		else if (command[0].equalsIgnoreCase("showmeal")) {
 			// Check if the user has the necessary access level (2)
-		    if (systemState.getUserLoggedIn() != 2) {
+		    if (systemState.getUserLoggedIn() != 2  && !systemState.getAuto()) {
 		        System.out.println("User does not have access to this command.");
 		        return;
 		    }
@@ -737,7 +787,7 @@ public class CommandExecutor implements CommandVisitor {
 		// saveMeal <mealName>
 		else if (command[0].equalsIgnoreCase("savemeal")) {
 			// Check if the user has the necessary access level (2)
-		    if (systemState.getUserLoggedIn() != 2) {
+		    if (systemState.getUserLoggedIn() != 2  && !systemState.getAuto()) {
 		        System.out.println("User does not have access to this command.");
 		        return;
 		    }
@@ -760,7 +810,7 @@ public class CommandExecutor implements CommandVisitor {
 		// setSpecialOffer <mealName> WORK ON PRICING FUNCTIONS!!
 		else if (command[0].equalsIgnoreCase("setspecialoffer")) {
 			// Check if the user has the necessary access level (2)
-		    if (systemState.getUserLoggedIn() != 2) {
+		    if (systemState.getUserLoggedIn() != 2  && !systemState.getAuto()) {
 		        System.out.println("User does not have access to this command.");
 		        return;
 		    }
@@ -783,7 +833,7 @@ public class CommandExecutor implements CommandVisitor {
 		// removeFromSpecialOffer <mealName>
 		else if (command[0].equalsIgnoreCase("removefromspecialoffer")) {
 			// Check if the user has the necessary access level (2)
-		    if (systemState.getUserLoggedIn() != 2) {
+		    if (systemState.getUserLoggedIn() != 2  && !systemState.getAuto()) {
 		        System.out.println("User does not have access to this command.");
 		        return;
 		    }
@@ -806,7 +856,7 @@ public class CommandExecutor implements CommandVisitor {
         // setDiscountPercentage <discount-Factor>
  		else if (command[0].equalsIgnoreCase("setDiscountPercentage")) {
  		// Check if the user has the necessary access level (2)
-		    if (systemState.getUserLoggedIn() != 2) {
+		    if (systemState.getUserLoggedIn() != 2  && !systemState.getAuto()) {
 		        System.out.println("User does not have access to this command.");
 		        return;
 		    }
@@ -920,42 +970,38 @@ public class CommandExecutor implements CommandVisitor {
 	                System.out.println("Invalid Command. Use the following format: runtest <testScenario-file>");
 	                return;
 	            }
-	            runTest(command[1]);
+	            runTest(command[1].trim());
 	        }
 		
 		// Invalid command -> Try again
 		else {
 			System.out.println("\033[0;31mInvalid Command\033[0m");
+			System.out.println("error");
 		}
     	
         // System.out.println("Executing command for anyone: " + command);
     }
     public void runTest(String filename) {
         // Construct the file path dynamically based on the provided filename
-        String filePath = "Commands/" + filename;
+        String filePath = "Commands/" + filename + ".txt";
+        systemState.setAuto(true);
+        BufferedReader r;
+		try {
+			r = new BufferedReader(new FileReader(filePath));
+			systemState.setBr(r);
+	        String line;
+			while ((line = systemState.getBr().readLine()) != null) {
+			    if (!line.trim().isEmpty()) {
+			        systemState.getFoodSys().acceptCommandVisitor(line, systemState.getCommandExecutor());
+			    }
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        System.out.println("End of file.");
+        systemState.setAuto(false); // Set auto reading off again.
 
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                if (!line.trim().isEmpty()) {
-                    String[] command = line.split(" ");
-                    if (systemState.getUserLoggedIn() == 0) {
-                        visitAnyoneCommand(command);
-                    } else if (systemState.getUserLoggedIn() == 1) {
-                        visitManagerCommand(command);
-                    } else if (systemState.getUserLoggedIn() == 2) {
-                        visitRestaurantCommand(command);
-                    } else if (systemState.getUserLoggedIn() == 3) {
-                        visitCustomerCommand(command);
-                    } else if (systemState.getUserLoggedIn() == 4) {
-                        visitCourierCommand(command);
-                    }
-                }
-            }
-        } catch (IOException e) {
-            System.out.println("An error occurred while reading the test scenario file.");
-            e.printStackTrace();
-        }
     }
 }
     

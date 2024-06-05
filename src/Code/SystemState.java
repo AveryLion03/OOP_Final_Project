@@ -1,9 +1,13 @@
 package Code;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.util.ArrayList;
+
+import Commands.*;
 import user.*;
 import food.*;
-
+// Core of our system
 public class SystemState {
 	// Users of the system and orders
     protected ArrayList<User> activeMembers;
@@ -12,6 +16,7 @@ public class SystemState {
     protected ArrayList<Order> completedOrders;
     // Loop variable
     private static Boolean run = true;
+    private Boolean auto;
     //Determines the type of user logged in
     protected int userLoggedIn = 0;
     
@@ -20,6 +25,9 @@ public class SystemState {
     private Customer c;
     private Courier d;
     private Manager m;
+    private Parse foodSys;
+    private CommandExecutor commandExecutor;
+    private BufferedReader br;
     // Current order being placed
     private Meal newMeal;
     // Pricing information
@@ -30,12 +38,13 @@ public class SystemState {
     private Double targetProfit;
     
     // Constructor
-    public SystemState() {
+    public SystemState(Parse p) {
         this.activeMembers = new ArrayList<>() ;
         this.deactiveMembers = new ArrayList<>();
         this.activeOrders = new ArrayList<>();
         this.completedOrders = new ArrayList<>();
         this.newMeal = null;
+        this.foodSys = p;
         // Set these as the default values
         this.setMarkupPercent(1.20);
         this.setDeliveryCost(2.0);
@@ -45,6 +54,7 @@ public class SystemState {
         this.c = null;
         this.d = null;
         this.m = null;
+        this.auto = true;
     }
 
     // Getters and setters for the state variables
@@ -257,5 +267,37 @@ public class SystemState {
 
 	public void setTargetProfit(Double targetProfit) {
 		this.targetProfit = targetProfit;
+	}
+
+	public Boolean getAuto() {
+		return this.auto;
+	}
+
+	public void setAuto(Boolean auto) {
+		this.auto = auto;
+	}
+
+	public Parse getFoodSys() {
+		return foodSys;
+	}
+
+	public void setFoodSys(Parse foodSys) {
+		this.foodSys = foodSys;
+	}
+
+	public CommandExecutor getCommandExecutor() {
+		return commandExecutor;
+	}
+
+	public void setCommandExecutor(CommandExecutor commandExecutor) {
+		this.commandExecutor = commandExecutor;
+	}
+
+	public BufferedReader getBr() {
+		return br;
+	}
+
+	public void setBr(BufferedReader br) {
+		this.br = br;
 	}
 }
