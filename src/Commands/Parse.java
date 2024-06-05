@@ -40,7 +40,8 @@ public class Parse {
         	    elements[0].startsWith("showmenuitem") || elements[0].startsWith("showtotalprofit") ||
         	    elements[0].startsWith("registerrestaurant") || elements[0].startsWith("registercustomer") ||
         	    elements[0].startsWith("registercourier") || elements[0].startsWith("registermanager")
-        	    || elements[0].startsWith("activateuser")|| elements[0].startsWith("deactivateuser")) {
+        	    || elements[0].startsWith("activateuser")|| elements[0].startsWith("deactivateuser")
+        	    || elements[0].startsWith("removeuser")) {
         	    // Manager commands
         	    visitor.visitManagerCommand(elements);
         	} 
@@ -60,7 +61,8 @@ public class Parse {
         	           elements[0].startsWith("createmeal") || elements[0].startsWith("adddish2meal") ||
         	           elements[0].startsWith("showmeal") || elements[0].startsWith("savemeal") ||
         	           elements[0].startsWith("setspecialoffer") || elements[0].startsWith("removefromspecialoffer") ||
-        	           elements[0].startsWith("setdiscountpercentage")) {
+        	           elements[0].startsWith("setdiscountpercentage") || elements[0].startsWith("removemeal")
+        	           ||elements[0].startsWith("removedish")||elements[0].startsWith("sortorders")) {
         	    // Restaurant commands
         	    visitor.visitRestaurantCommand(elements);
         	} 

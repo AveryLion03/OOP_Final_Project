@@ -95,6 +95,7 @@ login johnsmith1 password123
 createOrder Burger_Palace My_Order_1
 addItem2Order My_Order_1 Cheeseburger
 addItem2Order My_Order_1 Milkshake
+addItem2Order My_Order_1 burger_meal
 endOrder My_Order_1 06/07/2024
 Y
 

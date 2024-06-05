@@ -70,6 +70,24 @@ public class SystemState {
     	this.activeMembers.add(u);
     	this.deactiveMembers.remove(u);
     }
+    public void removeUser(String username, String userType) {
+    	for(User u : this.getActiveMembers()) {
+			if(u.getUsername().equalsIgnoreCase(username) && (u.getUserType().equalsIgnoreCase(userType))) {
+				this.activeMembers.remove(u);
+				System.out.println("Succesfully removed user.");
+				return;
+			}
+		}
+    	for(User u : this.getDeactiveMembers()) {
+			if(u.getUsername().equalsIgnoreCase(username) && (u.getUserType().equalsIgnoreCase(userType))) {
+				this.deactiveMembers.remove(u);
+				System.out.println("Succesfully removed user.");
+				return;
+			}
+		}
+		System.out.println("Unable to find user.");
+
+    }
     public void addActiveOrder(Order o) { this.activeOrders.add(o);}
     public void addCompletedOrder (Order o) {
     	this.activeOrders.remove(o);
@@ -241,18 +259,22 @@ public class SystemState {
                 System.out.println("13. registerManager <name> <lastname> <username> <password>");
                 System.out.println("14. deactiveUser <name> <userType>");
                 System.out.println("15. activateUser <name> <userType>");
+                System.out.println("16. sortOrders <restaurant_name>");
                 break;
             case 2:
                 System.out.println("Commands Available for Restaurants:");
-                System.out.println("1. findDeliverer <orderName>");
-                System.out.println("2. addDishRestauarantMenu <dishName> <dishCategory> <foodCategory> <unitPrice>");
-                System.out.println("3. createMeal <mealName>");
-                System.out.println("4. addDish2Meal <dishName> <mealName>");
-                System.out.println("5. showMeal <mealName>");
-                System.out.println("6. saveMeal <mealName>");
-                System.out.println("7. removeFromSpecialOffer <mealName>");
-                System.out.println("8. setSpecialOffer <mealName>");
-                System.out.println("9. setDiscountPercentage <discount-Factor>");
+                System.out.println("1.  findDeliverer <orderName>");
+                System.out.println("2.  addDishRestauarantMenu <dishName> <dishCategory> <foodCategory> <unitPrice>");
+                System.out.println("3.  createMeal <mealName>");
+                System.out.println("4.  addDish2Meal <dishName> <mealName>");
+                System.out.println("5.  showMeal <mealName>");
+                System.out.println("6.  saveMeal <mealName>");
+                System.out.println("7.  removeFromSpecialOffer <mealName>");
+                System.out.println("8.  setSpecialOffer <mealName>");
+                System.out.println("9.  setDiscountPercentage <discount-Factor>");
+                System.out.println("10. removeMeal <mealName>");
+                System.out.println("11. removeDish <dishName>");
+                System.out.println("12. sortOrders <restaurant_name>");
                 break;
             case 3:
                 System.out.println("Commands Available for Customers:");

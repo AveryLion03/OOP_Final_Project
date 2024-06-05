@@ -31,7 +31,9 @@ public class Meal {
     public Meal(String mealName) {
         this(mealName, 0.0, false);
     }
-
+    public boolean isHalfMeal() {
+    	return this.halfMeal;
+    }
     // Getters
     public String getMealName() {
         return mealName;

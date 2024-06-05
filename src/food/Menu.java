@@ -22,6 +22,12 @@ public class Menu {
     public ArrayList<Dishes> getAvailDishes(){
     	return this.dish;
     }
+    public void removeDish(Dishes d) {
+    	this.dish.remove(d);
+    }
+    public void removeMeal(Meal m) {
+    	this.meals.remove(m);
+    }
 	public void addDish(Dishes dish) {
 		// TODO Auto-generated method stub
 		this.dish.add(dish);

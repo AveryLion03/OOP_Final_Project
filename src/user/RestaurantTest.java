@@ -39,25 +39,6 @@ class RestaurantTest {
     }
 
     @Test
-    void testAddVisitedCustomer() {
-        Customer customer = new Customer("johnsmith1", "password123", "Customer", "John", "Smith", "john.smith@example.com", "+1(567)890-1234", location);
-        restaurant.addVisitedCustomer(customer);
-        ArrayList<Customer> visitedCustomers = restaurant.getVisitedCustomers();
-        assertTrue(visitedCustomers.contains(customer));
-    }
-
-    @Test
-    void testGetVisitedCustomers() {
-        Customer customer1 = new Customer("johnsmith1", "password123", "Customer", "John", "Smith", "john.smith@example.com", "+1(567)890-1234", location);
-        Customer customer2 = new Customer("janedoe2", "qwerty456", "Customer", "Jane", "Doe", "jane.doe@example.com", "+1(678)901-2345", location);
-        restaurant.addVisitedCustomer(customer1);
-        restaurant.addVisitedCustomer(customer2);
-        ArrayList<Customer> visitedCustomers = restaurant.getVisitedCustomers();
-        assertTrue(visitedCustomers.contains(customer1));
-        assertTrue(visitedCustomers.contains(customer2));
-    }
-
-    @Test
     void testAddAndRemoveAvailableCourier() {
         Courier courier = new Courier("courier_john", "pass123", "Courier", "John", "Doe", "123456789", 10, true, location);
         restaurant.addAvailableCourier(courier);

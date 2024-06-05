@@ -6,8 +6,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.*;
 
 import Code.*;
 import user.*;
@@ -449,7 +448,7 @@ public class CommandExecutor implements CommandVisitor {
 		    return;
 		}
 		
-     // deactivateUser <name> <userType>
+     // deactivateUser <username> <userType>
  		else if (command[0].equalsIgnoreCase("deactivateUser")) {
  			if (systemState.getUserLoggedIn() != 1  && !systemState.getAuto()) {
  		        System.out.println("User does not have access to this command.");
@@ -461,7 +460,7 @@ public class CommandExecutor implements CommandVisitor {
  		        return;
  		    }
  			for(User u : systemState.getActiveMembers()) {
- 				if(u.getName().equalsIgnoreCase(command[1].trim()) && (u.getUserType().equalsIgnoreCase(command[2].trim()))) {
+ 				if(u.getUsername().equalsIgnoreCase(command[1].trim()) && (u.getUserType().equalsIgnoreCase(command[2].trim()))) {
  					systemState.removeActiveMember(u);
  					System.out.println("Succesfully deactived user.");
  					return;
@@ -470,7 +469,7 @@ public class CommandExecutor implements CommandVisitor {
  			System.out.println("Unable to find user. Type the correct name and usertype");
  		}
         
-     // activateUser <name> <userType>
+     // activateUser <username> <userType>
   		else if (command[0].equalsIgnoreCase("activateUser")) {
   			if (systemState.getUserLoggedIn() != 1  && !systemState.getAuto()) {
   		        System.out.println("User does not have access to this command.");
@@ -482,7 +481,7 @@ public class CommandExecutor implements CommandVisitor {
   		        return;
   		    }
   			for(User u : systemState.getDeactiveMembers()) {
-  				if(u.getName().equalsIgnoreCase(command[1].trim()) && (u.getUserType().equalsIgnoreCase(command[2].trim()))) {
+  				if(u.getUsername().equalsIgnoreCase(command[1].trim()) && (u.getUserType().equalsIgnoreCase(command[2].trim()))) {
   					systemState.reactivateMember(u);
   					System.out.println("Succesfully reactivated user.");
   					return;
@@ -490,7 +489,19 @@ public class CommandExecutor implements CommandVisitor {
   			}
   			System.out.println("Unable to find user. Type the correct name and usertype");
   		}
-
+        // removeUser <username> <userType> 
+  		else if (command[0].equalsIgnoreCase("removeUser")) {
+  			if (systemState.getUserLoggedIn() != 1  && !systemState.getAuto()) {
+  		        System.out.println("User does not have access to this command.");
+  		        return;
+  		    }
+  		    // Validate the command format
+  		    if (command.length != 3) {
+  		        System.out.println("Invalid Command. Use the following format: removeUser <username> <userType> ");
+  		        return;
+  		    }
+  			systemState.removeUser(command[1].trim(), command[2].trim());
+  		}
     }
 
     @Override
@@ -987,7 +998,7 @@ public class CommandExecutor implements CommandVisitor {
         // setDiscountPercentage <discount-Factor>
  		else if (command[0].equalsIgnoreCase("setDiscountPercentage")) {
  		// Check if the user has the necessary access level (2)
-		    if (systemState.getUserLoggedIn() != 2  && !systemState.getAuto()) {
+		    if (systemState.getUserLoggedIn() != 2  && systemState.getUserLoggedIn() != 1  && !systemState.getAuto()) {
 		        System.out.println("User does not have access to this command.");
 		        return;
 		    }
@@ -1003,7 +1014,7 @@ public class CommandExecutor implements CommandVisitor {
         
      // findDeliverer <orderName>
      		else if (command[0].equalsIgnoreCase("finddeliverer")) {
-     			if (systemState.getUserLoggedIn() != 2  && !systemState.getAuto()) {
+     			if (systemState.getUserLoggedIn() != 2 && !systemState.getAuto()) {
      		        System.out.println("User does not have access to this command.");
      		        return;
      		    }
@@ -1027,6 +1038,122 @@ public class CommandExecutor implements CommandVisitor {
      		    c.setOrder(order);
      		    
      		}
+     // removemeal <mealName>
+		else if (command[0].equalsIgnoreCase("removemeal")) {
+			// Check if the user has the necessary access level (2)
+		    if (systemState.getUserLoggedIn() != 2  && !systemState.getAuto()) {
+		        System.out.println("User does not have access to this command.");
+		        return;
+		    }
+		    // Validate the command format
+		    if (command.length != 2) {
+		        System.out.println("Invalid Command. Use the following format: removemeal <mealName>");
+		        return;
+		    }
+		    for (Meal m : systemState.getR().getMenu().getAvailMeals()) {
+		    	if(m.getMealName().equalsIgnoreCase(command[1].trim())) {
+		    		systemState.getR().getMenu().removeMeal(m);
+		    		System.out.printf("Successfully removed %s from Menu%n", m.getMealName());
+			        return;
+		    	}
+		    }
+		    System.out.println("Unable to find meal in listed menu. Try again with correct meal name.");
+	        return;
+		}
+        
+     // removedish <dishName>
+ 		else if (command[0].equalsIgnoreCase("removemeal")) {
+ 			// Check if the user has the necessary access level (2)
+ 		    if ((systemState.getUserLoggedIn() != 2 || systemState.getUserLoggedIn() != 1)  && !systemState.getAuto()) {
+ 		        System.out.println("User does not have access to this command.");
+ 		        return;
+ 		    }
+ 		    // Validate the command format
+ 		    if (command.length != 2) {
+ 		        System.out.println("Invalid Command. Use the following format: removemeal <mealName>");
+ 		        return;
+ 		    }
+ 		    for (Dishes d : systemState.getR().getMenu().getAvailDishes()) {
+ 		    	if(d.getDishName().equalsIgnoreCase(command[1].trim())) {
+ 		    		systemState.getR().getMenu().removeDish(d);
+ 		    		System.out.printf("Successfully removed %s from Menu%n", d.getDishName());
+ 			        return;
+ 		    	}
+ 		    }
+ 		    System.out.println("Unable to find dish in listed menu. Try again with correct dish name.");
+ 	        return;
+ 		}
+     // sortOrders <menu_type>
+ 		else if (command[0].equalsIgnoreCase("sortorders")) {
+ 		    // Check if the user has the necessary access level (2 or 1)
+ 		    if ((systemState.getUserLoggedIn() != 2 && systemState.getUserLoggedIn() != 1) && !systemState.getAuto()) {
+ 		        System.out.println("User does not have access to this command.");
+ 		        return;
+ 		    }
+ 		    // Validate the command format
+ 		    if (command.length != 2) {
+ 		        System.out.println("Invalid Command. Use the following format: sortOrders <menu_type> \n menu_type = halfMeal or dish");
+ 		        return;
+ 		    }
+
+ 		    String menuType = command[1].trim().toLowerCase();
+ 		    ArrayList<Order> allOrders = new ArrayList<>();
+ 		    allOrders.addAll(systemState.getActiveOrders());
+ 		    allOrders.addAll(systemState.getCompletedOrders());
+ 		    Restaurant currentRestaurant = systemState.getR();
+
+ 		    ArrayList<Order> restaurantOrders = new ArrayList<>();
+
+ 		    // Collect orders for the current restaurant
+ 		    for (Order order : allOrders) {
+ 		        if (order.getRestaurant().equals(currentRestaurant)) {
+ 		            restaurantOrders.add(order);
+ 		        }
+ 		    }
+
+ 		    // Initialize counters for dishes or half meals
+ 		    HashMap<String, Integer> itemCountMap = new HashMap<>();
+
+ 		    switch (menuType) {
+ 		        case "halfmeal":
+ 		            // Count the number of halfMeal items
+ 		            for (Order order : restaurantOrders) {
+ 		                for (Meal meal : order.getMeals()) {
+ 		                	System.out.println(meal.isHalfMeal());
+ 		                    if (meal.isHalfMeal()) {
+ 		                        String mealName = meal.getMealName();
+ 		                        itemCountMap.put(mealName, itemCountMap.getOrDefault(mealName, 0) + 1);
+ 		                    }
+ 		                }
+ 		            }
+ 		            break;
+
+ 		        case "dish":
+ 		            // Count the occurrences of each dish in the total order history
+ 		            for (Order order : restaurantOrders) {
+ 		                for (Dishes dish : order.getDishes()) {
+ 		                    String dishName = dish.getDishName();
+ 		                    itemCountMap.put(dishName, itemCountMap.getOrDefault(dishName, 0) + 1);
+ 		                }
+ 		            }
+ 		            break;
+
+ 		        default:
+ 		            System.out.println("Invalid menu type. Use 'halfMeal' or 'dish'.");
+ 		            return;
+ 		    }
+
+ 		    // Create a list from the itemCountMap and sort it based on the count in descending order
+ 		    List<Map.Entry<String, Integer>> sortedItems = new ArrayList<>(itemCountMap.entrySet());
+ 		    sortedItems.sort((entry1, entry2) -> entry2.getValue().compareTo(entry1.getValue()));
+
+ 		    // Display the sorted items
+ 		    System.out.printf("%s sorted by number of occurrences:%n", menuType.equals("halfmeal") ? "HalfMeals" : "Dishes");
+ 		    for (Map.Entry<String, Integer> entry : sortedItems) {
+ 		        System.out.println(entry.getKey() + ": " + entry.getValue());
+ 		    }
+ 		}
+
     }
 
     @Override

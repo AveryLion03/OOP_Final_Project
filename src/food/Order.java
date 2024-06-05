@@ -36,6 +36,12 @@ public class Order {
 	public Customer getCustomer(){
 		return this.c;
 	}
+	public ArrayList<Meal> getMeals(){
+		return this.meals;
+	}
+	public ArrayList<Dishes> getDishes(){
+		return this.dish;
+	}
 	public void setDelivery(boolean t) {
 		this.completedDelivery = t;
 	}
