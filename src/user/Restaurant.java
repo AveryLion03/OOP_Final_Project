@@ -69,7 +69,17 @@ public class Restaurant extends User {
     
     public void getMenu(String fidelity) {
     	if(fidelity.equalsIgnoreCase("Basic")) {
-    		
+            System.out.println("****** MENU ******\n");
+            System.out.println("*     Dishes     *");
+    		for(Dishes d : this.getMenu().getAvailDishes()) {
+    			System.out.println(d);
+    		}
+    		System.out.println("\n*      Meals     *");
+    		for(Meal m : this.getMenu().getAvailMeals()) {
+    			if(!m.getDeal()) {
+    				System.out.println(m);
+    			}
+    		}
     	}
     	else if(fidelity.equalsIgnoreCase("Points")) {
     		System.out.println(this.menu);

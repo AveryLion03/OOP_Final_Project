@@ -10,7 +10,7 @@ public class Courier extends Person {
     protected int orderCount;
     protected boolean onDuty;
     protected Location loc;
-    protected Order currentJob;
+    protected ArrayList<Order> currentJobs;
     // Constructor
     public Courier(String username, String password, String userType, String name, String surname, String phoneNumber, int orderCount, boolean onDuty, Location loc) {
         super(username, password, userType, name, surname); // Call to the superclass constructor
@@ -18,7 +18,7 @@ public class Courier extends Person {
         this.orderCount = orderCount;
         this.onDuty = onDuty;
         this.loc = loc;
-        this.currentJob = null;
+        this.currentJobs = new ArrayList<>();
     }
 
     // Getters and setters
@@ -27,17 +27,18 @@ public class Courier extends Person {
     }
     
     public boolean available() {
-    	if(currentJob == null) {
-    		return true;
-    	}
-    	return false;
+    	return this.onDuty;
     }
     public void setOrder(Order o) {
-    	this.currentJob = o;
+    	this.currentJobs.add(o);
     }
 
-    public void finishJob() {
-    	this.currentJob = null;
+    public void finishJob(Order o) {
+    	for(Order order: this.currentJobs) {
+    		if(order.getOrderName().equals(o.getOrderName())) {
+    			order.setDelivery(true);
+    		}
+    	}
     }
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
@@ -88,7 +89,9 @@ public class Courier extends Person {
     // Override toString method
     @Override
     public String toString() {
-        return "Courier " + name +" " + surname + ": " + orderCount;
+        return "Courier " + name 
+        		+ " " + surname 
+        		+ ": " + orderCount;
         		
         		/*
 	        		"Courier{" +

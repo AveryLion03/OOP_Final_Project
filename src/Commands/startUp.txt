@@ -27,6 +27,14 @@ registercourier John Doe courier_john "driver" pass123
 registercourier Emily Smith courier_emily "driver" secret456
 +1(345)678-9012 34.0522 -118.2437
 
+login courier_john pass123
+onDuty courier_john
+logout
+
+login courier_emily secret456
+onDuty courier_emily
+logout
+
 login burgerpalace_admin burger123
 addDishrestaurantmenu Cheeseburger Main Standard 5.99
 addDishrestaurantmenu Chicken_Nuggets Main Standard 3.99
@@ -81,5 +89,36 @@ addDish2meal Spaghetti_Carbonara Italian_Feast
 addDish2meal Bruschetta Italian_Feast
 addDish2meal Tiramisu Italian_Feast
 savemeal Italian_Feast
+
 logout
+login johnsmith1 password123
+createOrder Burger_Palace My_Order_1
+addItem2Order My_Order_1 Cheeseburger
+addItem2Order My_Order_1 Milkshake
+endOrder My_Order_1 06/07/2024
+Y
+
+createOrder Pizza_Haven My_Order_2
+addItem2Order My_Order_2 Margherita_Pizza
+addItem2Order My_Order_2 Garlic_Bread
+endOrder My_Order_2 06/07/2024
+Y
+logout
+
+login janedoe2 qwerty456
+
+createOrder Taco_Junction My_Order_3
+addItem2Order My_Order_3 Beef_Taco
+addItem2Order My_Order_3 Nachos
+endOrder My_Order_3 06/07/2024
+N
+
+createOrder Sushi_Harbor My_Order_4
+addItem2Order My_Order_4 Tuna_Sashimi
+addItem2Order My_Order_4 Mochi_Ice_Cream
+endOrder My_Order_4 06/07/2024
+Y
+
+logout
+
 

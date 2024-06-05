@@ -133,7 +133,6 @@ public class CommandExecutor implements CommandVisitor {
                 e.printStackTrace();
             }
         }
-        // registercourier John Doe courier_john "busBoy" pass123
         // registerCourier <firstName> <lastName> <username> <position> <password>
         else if (command[0].equalsIgnoreCase("registercourier")) {
             if (systemState.getUserLoggedIn() != 1  && !systemState.getAuto()) {
@@ -402,6 +401,7 @@ public class CommandExecutor implements CommandVisitor {
 		    }
 			double totProfit = 0.0;
 			for (Order o : systemState.getActiveOrders()) {
+				System.out.println(o.getProfit());
 		    	totProfit += o.getProfit();
 		    	
 		    }
@@ -499,13 +499,15 @@ public class CommandExecutor implements CommandVisitor {
 		    for(User u : systemState.getActiveMembers()) {
 		    	if(u.getUserType().equalsIgnoreCase("Restaurant")) {
 		    		Restaurant r = (Restaurant) u;
-		    		Order o = new Order(command[2].trim());
-		    		o.setRestaurant(r);
-		    		o.setCustomer(systemState.getC());
-		    		systemState.getC().setActiveOrder(o);
-		    		//r.getMenu(((Customer)u.).getFidelity);
-			        System.out.println("Order Successfully created. Add items to your order and save it to confirm.");
-		    		return;
+		    		if(r.getName().equalsIgnoreCase(command[1].trim())) {
+		    			System.out.println(r.getName());
+			    		Order o = new Order(command[2].trim(), r);
+			    		o.setCustomer(systemState.getC());
+			    		systemState.getC().setActiveOrder(o); 
+				        System.out.println("Order Successfully created. Add items (see below) to your order and save it to confirm.");
+				        r.getMenu(o.getCustomer().getFidelity());
+			    		return;
+		    		}
 		    	}
 		    }
 		    System.out.println("Unable to find Restaurant. Try again using correct name.");
@@ -919,6 +921,9 @@ public class CommandExecutor implements CommandVisitor {
                             break;
                         case "customer":
                         	systemState.setC((Customer) systemState.getActiveMembers().get(i));
+                        	// SHow restaurants for users
+                        	System.out.printf("%n%n***** Available restaurants: *****%n%n");
+                        	systemState.showRestaurants();
                         	systemState.setUserLoggedIn(3);
                             break;
                         case "courier":

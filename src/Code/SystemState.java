@@ -96,9 +96,10 @@ public class SystemState {
     public void showRestaurants() {
         for (User user : getActiveMembers()) {
             if (user.getUserType().equalsIgnoreCase("Restaurant")) {
-                System.out.println(user.getName());
+                System.out.println("- " + user.getName());
             }
         }
+        System.out.printf("%n%n");
     }
 
     // Show Customers
@@ -130,6 +131,10 @@ public class SystemState {
             	}
             }
         }
+    	if(c == null) {
+    		// System.out.println("No couriers are available right now.");
+    		return null;
+    	}
     	bubbleSortCouriersByDeliveries(available);
     	return available;
     }

@@ -1,6 +1,9 @@
 package food;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 import user.*;
 import food.*;
@@ -19,10 +22,10 @@ public class Order {
 	Courier driver;
 	Customer c;
 	
-	public Order(String orderName) {
+	public Order(String orderName, Restaurant r) {
 		this.orderName = orderName;
 		this.date = null;
-		this.r = null;
+		this.r = r;
 		this.meals = new ArrayList<>();
 		this.dish = new ArrayList<>();
 		this.profit = 0.0;
@@ -30,7 +33,12 @@ public class Order {
 		this.completedDelivery = false;
 		// this.delivery = null;
 	}
-	
+	public Customer getCustomer(){
+		return this.c;
+	}
+	public void setDelivery(boolean t) {
+		this.completedDelivery = t;
+	}
 	public void addMeal(Meal m) {
 		this.meals.add(m);
 		this.profit += m.getPrice();
@@ -54,12 +62,14 @@ public class Order {
 	public String getOrderName() {
 		return this.orderName;
 	}
+	/*
 	public void createOrder(String orderName, Restaurant r) {
-    	Order o = new Order(orderName);
-    	o.setRestaurant(r);
+    	this.orderName = orderName;
+    	this.setRestaurant(r);
+    	// o.getRestaurant().getMenu();
     	//this.activeOrder = o;
     }
-    
+    */
     public Restaurant getRestaurant(String orderName) {
     	if(this.orderName.equalsIgnoreCase(orderName)) {
     		return this.r;
@@ -86,15 +96,59 @@ public class Order {
     	// How do I make them pay???
     	
     	
+        @SuppressWarnings("resource")
+        Scanner inputLine = new Scanner(System.in);
+        String payment = null;
+        String[] e = {"empty", "empty"};
+        if(!s.getAuto()) {
+            while (true) {
+            	System.out.printf("Please confirm payment of order (Y/N): $%.2f%n", this.getProfit());
+                payment = inputLine.nextLine().toString();
+                e = payment.split(" ");
+                if (e.length != 1) {
+                    System.out.println("Incorrect format. Enter in the following format: <Y/N>");
+                } else {
+                    break;
+                }
+            }
+        }
+        // Additional section for processing when systemState.getAuto() is true
+        else {
+            // System.out.println("Auto mode is enabled. Reading the next line...");
+            String nextLine = null;
+            // Read the next line from the startup.txt file
+            BufferedReader br = s.getBr();
+            try {
+				nextLine = br.readLine();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+            if (nextLine != null) {
+                e = nextLine.split(" ");
+                if (e.length != 1) {
+                    System.out.println("Incorrect format. Enter in the following format: <Y/N>");
+                }
+            } else {
+                System.out.println("No more lines found in the file.");
+            }
+        }
+        if(e[0].equalsIgnoreCase("N")) {
+        	System.out.println("Order canceled.");
+        	this.c.setActiveOrder(null);
+        	return;
+        }
     	s.addActiveOrder(this);
     	// Allocate a driver
-    	Courier c = s.getAvailableCourier().get(0);
-    	if(c == null) {
-    		System.out.println("Courier not available right now. Manager must manually find courier");
+    	ArrayList<Courier> c = s.getAvailableCourier();
+    	if(c == null || c.size() == 0) {
+    		System.out.println("Courier not available right now. Manager must manually find courier\n");
     		return;
     	}
-    	c.setOrder(this);
-		System.out.printf("Courier %s is on their way with your order!%n", c.getName());
+    	// System.out.println(c.size()); -> debugging purposes
+    	Courier active = c.get(0);
+    	active.setOrder(this);
+		System.out.printf("Courier %s is on their way with your order!%n", active.getName());
     	return;
     }
     public void setCustomer (Customer c) {

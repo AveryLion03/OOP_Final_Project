@@ -34,7 +34,7 @@ public class Meal {
     public String getMealName() {
         return mealName;
     }
-    protected boolean getDeal() {
+    public boolean getDeal() {
     	return this.deal;
     }
     protected void setDeal(boolean deal) {
