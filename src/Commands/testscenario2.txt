@@ -1,12 +1,27 @@
-login ceo 123456789
-registerrestaurant Taco_Bell 51.5074 -0.1278 taco_admin taco789
-registercustomer John Doe johndoe 40.7128 -74.0060 password123
-john.doe@example.com +1(123)456-7890
-registercourier Jane Doe janedoe Courier password123
-setdeliverypolicy Fast
-setprofitpolicy targetProfit_Markup
-associatecard johndoe basic
-showcourierdeliveries
-showrestauranttop
-showcustomers
+login burgerpalace_admin burger123
+addDishRestaurantMenu Cheeseburger Main Standard 5.99
+addDishRestaurantMenu Chicken_Nuggets Main Standard 3.99
+addDishRestaurantMenu Milkshake Dessert Standard 2.99
+createMeal Burger_Meal
+addDish2Meal Cheeseburger Burger_Meal
+addDish2Meal Milkshake Burger_Meal
+saveMeal Burger_Meal
+setDiscountPercentage 15.0
+showMenuItem Burger_Palace
+showMeal Burger_Meal
+logout
+
+login pizzahaven_admin pizza456
+addDishRestaurantMenu Margherita_Pizza Main Standard 8.99
+addDishRestaurantMenu Pepperoni_Pizza Main Standard 9.99
+addDishRestaurantMenu Garlic_Bread Starter Standard 3.99
+addDishRestaurantMenu Tiramisu Dessert Standard 4.99
+createMeal Family_Pizza_Meal
+addDish2Meal Margherita_Pizza Family_Pizza_Meal
+addDish2Meal Garlic_Bread Family_Pizza_Meal
+addDish2Meal Tiramisu Family_Pizza_Meal
+saveMeal Family_Pizza_Meal
+setDiscountPercentage 10.0
+showMenuItem Pizza_Haven
+showMeal Family_Pizza_Meal
 logout

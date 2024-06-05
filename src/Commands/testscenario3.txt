@@ -1,7 +1,33 @@
-login courier_john pass123
-onduty courier_john
-updatePosition 40.7128 -74.0060
-acceptDelivery true
-finishDelivery true
-offduty courier_john
+login ceo 123456789
+setDeliveryPolicy fast
+setProfitPolicy targetProfit_ServiceFee
+showCourierDeliveries
+showRestaurantTop
+showCustomers
+showMenuItem Burger_Palace
+showTotalProfit
+
+registerRestaurant KFC 52.33 -59.23 kfc_manager kfc_pass
+registerCustomer John Doe johndoe 50.11 -50.23 1542
+john.doe@gmail.com 512-375-2336
+registerCourier Jake Smith jakesmith Driver password123
+512-444-2435 48.22 -53.21
+registerManager Michael Scott michaelscott password123
+deactivateUser johndoe Customer
+activateUser johndoe Customer
+associateCard johndoe Basic
 logout
+
+
+login suzlee 12345
+createOrder Burger_Palace Order1
+addItem2Order Order1 Cheeseburger
+endOrder Order1 01/06/2024
+Y
+registerFidelity Basic
+accountInformation
+setNotification register
+showRestaurants
+logout
+
+
