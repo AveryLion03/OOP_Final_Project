@@ -1143,27 +1143,32 @@ public class CommandExecutor implements CommandVisitor {
         // System.out.println("Executing command for anyone: " + command);
     }
     public void runTest(String filename) {
+        // Check if the filename ends with .txt and append it if not
+        if (!filename.endsWith(".txt")) {
+            filename += ".txt";
+        }
+
         // Construct the file path dynamically based on the provided filename
-        String filePath = "Commands/" + filename + ".txt";
+        String filePath = "Commands/" + filename;
         systemState.setAuto(true);
         BufferedReader r;
-		try {
-			r = new BufferedReader(new FileReader(filePath));
-			systemState.setBr(r);
-	        String line;
-			while ((line = systemState.getBr().readLine()) != null) {
-			    if (!line.trim().isEmpty()) {
-			        systemState.getFoodSys().acceptCommandVisitor(line, systemState.getCommandExecutor());
-			    }
-			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+        try {
+            r = new BufferedReader(new FileReader(filePath));
+            systemState.setBr(r);
+            String line;
+            while ((line = systemState.getBr().readLine()) != null) {
+                if (!line.trim().isEmpty()) {
+                    systemState.getFoodSys().acceptCommandVisitor(line, systemState.getCommandExecutor());
+                }
+            }
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         System.out.println("End of file.");
         systemState.setAuto(false); // Set auto reading off again.
-
     }
+
 }
     
 
