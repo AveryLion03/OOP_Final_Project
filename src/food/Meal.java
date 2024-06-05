@@ -14,6 +14,7 @@ public class Meal {
     protected double price;
     protected boolean deal;
     protected double discount_rate;
+    protected boolean halfMeal;
 
     // Constructor
     public Meal(String mealName, double price, boolean deal) {
@@ -24,6 +25,7 @@ public class Meal {
         this.price = price;
         this.deal = deal;
         this.discount_rate = 10.0;
+        this.halfMeal = false;
     }
         // Single argument constructor
     public Meal(String mealName) {
@@ -84,12 +86,24 @@ public class Meal {
         switch (category.toLowerCase()) {
             case "starter":
                 this.starter = new Dishes(dish);
+                if(this.main != null && this.dessert == null) {
+                	this.halfMeal = true;
+                }
+                else if(this.main != null && this.dessert != null) {
+                	this.halfMeal = false;
+                }
                 break;
             case "main":
                 this.main = new Dishes(dish);
                 break;
             case "dessert":
                 this.dessert = new Dishes(dish);
+                if(this.main != null && this.starter == null) {
+                	this.halfMeal = true;
+                }
+                else if(this.main != null && this.starter != null) {
+                	this.halfMeal = false;
+                }
                 break;
         }
         if (deal) {
@@ -162,6 +176,9 @@ public class Meal {
         StringBuilder sb = new StringBuilder();
         int count = 0;
         sb.append("Meal Name: ").append(mealName).append("\n");
+        // Check if it's a half or full meal
+        if(this.halfMeal) sb.append("HALF_MEAL\n");
+        else sb.append("FULL_MEAL\n");
         if (starter != null) {
             sb.append("Starter: ").append(starter.getDishName()).append("\n");
             count++;
