@@ -1,31 +1,31 @@
-login burgerpalace_admin burger123
-adddishrestaurantmenu Burger main standard 8.50
-adddishrestaurantmenu Fries starter standard 3.00
-adddishrestaurantmenu Soda dessert standard 1.50
-createmeal BURGER_COMBO
-adddish2meal Burger BURGER_COMBO
-adddish2meal Fries BURGER_COMBO
-adddish2meal Soda BURGER_COMBO
-showmeal BURGER_COMBO
-savemeal BURGER_COMBO
-setspecialoffer BURGER_COMBO
-adddishrestaurantmenu ChickenSandwich main standard 7.00
-adddishrestaurantmenu OnionRings starter standard 2.50
-createmeal CHICKEN_COMBO
-adddish2meal ChickenSandwich CHICKEN_COMBO
-adddish2meal OnionRings CHICKEN_COMBO
-adddish2meal Soda CHICKEN_COMBO
-showmeal CHICKEN_COMBO
-savemeal CHICKEN_COMBO
-setspecialoffer CHICKEN_COMBO
-removefromspecialoffer CHICKEN_COMBO
-setDiscountPercentage 15.0
-adddishrestaurantmenu VeggieBurger main vegetarian 9.00
-createmeal VEGGIE_COMBO
-adddish2meal VeggieBurger VEGGIE_COMBO
-adddish2meal Fries VEGGIE_COMBO
-adddish2meal Soda VEGGIE_COMBO
-showmeal VEGGIE_COMBO
-savemeal VEGGIE_COMBO
-setspecialoffer VEGGIE_COMBO
+login ceo 123456789
+setDeliveryPolicy fast
+setProfitPolicy targetProfit_ServiceFee
+showCourierDeliveries
+showRestaurantTop
+showCustomers
+showMenuItem McDonalds
+showTotalProfit
+showTotalProfit 01/06/2024 30/06/2024
+
+registerRestaurant KFC 52.33 -59.23 kfc_manager kfc_pass
+registerCustomer John Doe johndoe 50.11 -50.23 1542
+john.doe@gmail.com 512-375-2336
+registerCourier Jake Smith jakesmith jake.smith@example.com courier password123
+registerCourier Jake Smith jakesmith Driver 123
+512-444-2435 48.22 -53.21 
+registerManager Michael Scott michaelscott password123
+login suzlee 12345
+logout
+
+login suzlee 12345
+createOrder McDonalds Order1
+createOrder burger_Palace Order1
+addItem2Order Order1 cheeseburger
+endOrder Order1 01/06/2024
+Y
+registerFidelity register
+accountInformation
+setNotification register
+showRestaurants
 logout
