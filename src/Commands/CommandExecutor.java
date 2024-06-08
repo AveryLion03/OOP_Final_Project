@@ -1292,7 +1292,7 @@ public class CommandExecutor implements CommandVisitor {
         }
 
         // Construct the file path dynamically based on the provided filename
-        String filePath = "test/" + filename;
+        String filePath = "eval/" + filename;
         systemState.setAuto(true);
         BufferedReader r;
         try {
